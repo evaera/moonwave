@@ -27,7 +27,7 @@ end
 
 
     -@static
-    @param name string - This is the name for this Module
+    @param name string -- This is the name for this Module
     -@returns Module - Returns the new Module!
 ]=]
 function Module:get(name)
