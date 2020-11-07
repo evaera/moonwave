@@ -1,5 +1,3 @@
-#![feature(bool_to_option)]
-
 use anyhow::Result;
 use full_moon::{
     self,
@@ -7,6 +5,8 @@ use full_moon::{
     node::Node,
     tokenizer::{Token, TokenType},
 };
+use parse_error::{ParseError, ParseErrors};
+// TODO: Don't blob import
 use std::{borrow::Cow, convert::TryFrom, fs};
 use walkdir::{self, WalkDir};
 
@@ -14,33 +14,25 @@ mod doc_entry;
 mod parse_error;
 mod tags;
 
-use doc_entry::{DocEntry, DocEntryKind};
+use doc_entry::DocEntry;
 
-fn extract_doc_comments<'a>(stmt: &'a Stmt<'a>) -> Vec<DocEntry> {
-    let mut tokens: Vec<Cow<Token>> = stmt.surrounding_trivia().0;
-
-    tokens.retain(|t| matches!(t.token_type(), TokenType::MultiLineComment { blocks: 1, .. }));
+fn extract_doc_comments<'a>(stmt: &'a Stmt<'a>) -> Vec<Result<DocEntry, ParseErrors>> {
+    let tokens: Vec<Cow<Token>> = stmt.surrounding_trivia().0;
 
     tokens
         .iter()
-        .map(|t| match t.token_type() {
-            TokenType::MultiLineComment { comment, .. } => comment,
-            _ => panic!("Can't deal with this type of token"),
+        .filter_map(|t| match t.token_type() {
+            TokenType::MultiLineComment { comment, blocks: 1 } => Some(comment),
+            _ => None,
         })
-        .map(|comment| {
-            DocEntry::parse(
-                comment.clone().into_owned(),
-                DocEntryKind::try_from(stmt).ok(),
-            )
-            .unwrap()
-        })
-        .collect::<Vec<DocEntry>>()
+        .map(|comment| DocEntry::parse(comment.clone().into_owned(), &stmt))
+        .collect::<Vec<_>>()
 }
 
 fn generate_for_file(source_code: &str) -> Result<()> {
     let ast = full_moon::parse(&source_code).unwrap();
 
-    let mut comments: Vec<DocEntry> = vec![];
+    let mut comments: Vec<Result<DocEntry, ParseErrors>> = vec![];
 
     for stmt in ast.nodes().iter_stmts() {
         comments.append(&mut extract_doc_comments(stmt));
@@ -65,5 +57,10 @@ fn generate_docs() -> Result<()> {
 }
 
 fn main() {
-    generate_docs().expect("Oh");
+    match generate_docs() {
+        Ok(_) => return,
+        Err(error) => eprintln!("{}", error),
+    };
+
+    std::process::exit(1);
 }
