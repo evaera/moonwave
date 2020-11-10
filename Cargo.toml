@@ -11,3 +11,4 @@ full_moon = "0.6.2" #{ path = "../full-moon/full-moon" }
 walkdir = "2"
 anyhow = "1.0.28"
 regex = "1.4.1"
+codespan-reporting = "0.9.5"

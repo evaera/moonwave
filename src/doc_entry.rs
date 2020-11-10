@@ -1,4 +1,5 @@
 use crate::{
+    doc_comment::DocComment,
     parse_error::{ParseError, ParseErrors},
     tags::{KindTag, KindTagType, ParamTag, Tag, WithinTag},
 };
@@ -221,8 +222,9 @@ fn determine_kind(stmt: &Stmt, tags: &[Tag]) -> Result<DocEntryKind, ParseError>
 }
 
 impl DocEntry {
-    pub fn parse(text: String, stmt: &Stmt) -> Result<Self, ParseErrors> {
-        let (tag_lines, desc_lines): (Vec<&str>, Vec<&str>) = text
+    pub fn parse(doc_comment: &DocComment) -> Result<Self, ParseErrors> {
+        let (tag_lines, desc_lines): (Vec<&str>, Vec<&str>) = doc_comment
+            .comment
             .lines()
             .map(str::trim)
             .filter(|line| !line.is_empty())
@@ -242,7 +244,8 @@ impl DocEntry {
             return Err(ParseErrors::from(errors));
         }
 
-        let kind = determine_kind(stmt, &tags).map_err(|err| ParseErrors::from(vec![err]))?;
+        let kind = determine_kind(doc_comment.attached_stmt, &tags)
+            .map_err(|err| ParseErrors::from(vec![err]))?;
 
         // Sift out the kind/within tags because those are only used for determining the kind
         tags.retain(|t| !matches!(t, Tag::Kind(_) | Tag::Within(_)));
