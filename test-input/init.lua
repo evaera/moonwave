@@ -1,5 +1,6 @@
 
---[==[
+--[=[
+    f
     @type CommandArgument
     @prop Type string
     @prop Name string
@@ -7,9 +8,11 @@
     @prop Optional boolean?
     @prop Default any
     @prop callback nil | (name: string, id: number) => part -- The part you need to go to
-]==]
 
---[=[
+    @function           
+]=]
+
+--[=[ asdfasdf
     @function
     @param thename the type -- the description
     @param thenameredux the type but twice -- the description again

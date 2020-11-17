@@ -1,0 +1,132 @@
+use std::{fmt, ops::Deref};
+
+use crate::{diagnostic::Diagnostic, doc_comment::DocComment};
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Span<'a> {
+    pub source: &'a str,
+    pub start: usize,
+    pub len: usize,
+    pub file_id: usize,
+    pub source_offset: usize,
+}
+
+impl<'a> Span<'a> {
+    pub fn from_source(source: &'a str, file_id: usize) -> Self {
+        Self {
+            source,
+            start: 0,
+            len: source.len(),
+            file_id,
+            source_offset: 0,
+        }
+    }
+
+    pub fn slice(&self, start: usize, len: usize) -> Self {
+        Self {
+            source: self.source,
+            file_id: self.file_id,
+            start: self.start + start,
+            len,
+            source_offset: self.source_offset,
+        }
+    }
+
+    pub fn as_str(&self) -> &'a str {
+        &self.source[self.start..self.start + self.len]
+    }
+
+    pub fn lines(self) -> impl Iterator<Item = Span<'a>> {
+        self.as_str().lines().map(move |line| self.from_slice(line))
+    }
+
+    pub fn splitn(self, n: usize, pat: &'static str) -> impl Iterator<Item = Span<'a>> {
+        self.as_str()
+            .splitn(n, pat)
+            .map(move |piece: &'a str| self.from_slice(piece))
+    }
+
+    pub fn trim(self) -> Span<'a> {
+        self.from_slice(self.as_str().trim())
+    }
+
+    pub fn diagnostic<S: Into<String>>(self, text: S) -> Diagnostic {
+        Diagnostic::from_span(text, self)
+    }
+
+    fn from_slice(&self, text: &'a str) -> Self {
+        let start = text.as_ptr() as usize - self.source.as_ptr() as usize;
+
+        Span {
+            source: self.source,
+            start,
+            len: text.len(),
+            file_id: self.file_id,
+            source_offset: self.source_offset,
+        }
+    }
+}
+
+impl fmt::Display for Span<'_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
+}
+
+impl<'a> Deref for Span<'a> {
+    type Target = str;
+    fn deref(&self) -> &str {
+        self.as_str()
+    }
+}
+
+impl<'a> From<&'a DocComment> for Span<'a> {
+    fn from(doc: &'a DocComment) -> Self {
+        Span {
+            source: &doc.comment,
+            start: 0,
+            len: doc.comment.len(),
+            file_id: doc.file_id,
+            source_offset: doc.start,
+        }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn correct_deref() {
+        let text = "abcdef";
+        let span = Span::from_source(text, 0);
+
+        let deref_check: &str = &span;
+        assert_eq!(deref_check, text);
+
+        let slice = span.slice(1, 3);
+        let deref_slice_check: &str = &slice;
+        assert_eq!(deref_slice_check, "bcd");
+
+        let slice = slice.slice(1, 2);
+        let deref_slice_check: &str = &slice;
+        assert_eq!(deref_slice_check, "cd");
+    }
+
+    #[test]
+    fn lines() {
+        let text = "hello\nworld!\nipsum";
+        let span = Span::from_source(text, 0);
+
+        let lines: Vec<_> = span.lines().map(|line| line.as_str()).collect();
+        assert_eq!(lines, &["hello", "world!", "ipsum"]);
+    }
+
+    #[test]
+    fn trim() {
+        let text = "    hello       ";
+        let span = Span::from_source(text, 0);
+
+        assert_eq!(span.trim().as_str(), "hello");
+    }
+}
