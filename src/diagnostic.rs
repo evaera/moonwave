@@ -4,12 +4,13 @@ use codespan_reporting::diagnostic::{Diagnostic as CodeSpanDiagnostic, Label};
 
 use crate::{doc_comment::DocComment, span::Span};
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Diagnostic {
     pub text: String,
     start: usize,
     len: usize,
     file_id: usize,
+    additional_diagnostics: Vec<Diagnostic>,
 }
 
 impl Diagnostic {
@@ -19,6 +20,7 @@ impl Diagnostic {
             start: span.start + span.source_offset,
             len: span.len,
             file_id: span.file_id,
+            ..Default::default()
         }
     }
 
@@ -28,7 +30,14 @@ impl Diagnostic {
             start: doc_comment.start,
             len: 1, // This is arbitrary
             file_id: doc_comment.file_id,
+            ..Default::default()
         }
+    }
+
+    pub fn attach_diagnostic(&mut self, diagnostic: Diagnostic) -> &Self {
+        self.additional_diagnostics.push(diagnostic);
+
+        self
     }
 }
 
@@ -42,13 +51,26 @@ impl fmt::Display for Diagnostic {
 
 impl From<Diagnostic> for CodeSpanDiagnostic<usize> {
     fn from(diagnostic: Diagnostic) -> Self {
+        let mut labels = vec![Label::primary(
+            diagnostic.file_id,
+            diagnostic.start..(diagnostic.start + diagnostic.len),
+        )
+        .with_message(&diagnostic.text)];
+
+        for additional_diagnostic in diagnostic.additional_diagnostics {
+            labels.push(
+                Label::secondary(
+                    additional_diagnostic.file_id,
+                    additional_diagnostic.start
+                        ..(additional_diagnostic.start + additional_diagnostic.len),
+                )
+                .with_message(&additional_diagnostic.text),
+            )
+        }
+
         CodeSpanDiagnostic::error()
             .with_message(&diagnostic.text)
-            .with_labels(vec![Label::primary(
-                diagnostic.file_id,
-                diagnostic.start..(diagnostic.start + diagnostic.len),
-            )
-            .with_message(&diagnostic.text)])
+            .with_labels(labels)
     }
 }
 

@@ -2,7 +2,7 @@ use std::{fmt, ops::Deref};
 
 use crate::{diagnostic::Diagnostic, doc_comment::DocComment};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Span<'a> {
     pub source: &'a str,
     pub start: usize,
@@ -15,20 +15,16 @@ impl<'a> Span<'a> {
     pub fn dummy(source: &'a str) -> Self {
         Self {
             source,
-            start: 0,
             len: source.len(),
-            file_id: 0,
-            source_offset: 0,
+            ..Default::default()
         }
     }
 
     pub fn slice(&self, start: usize, len: usize) -> Self {
         Self {
-            source: self.source,
-            file_id: self.file_id,
             start: self.start + start,
             len,
-            source_offset: self.source_offset,
+            ..*self
         }
     }
 
@@ -58,11 +54,9 @@ impl<'a> Span<'a> {
         let start = text.as_ptr() as usize - self.source.as_ptr() as usize;
 
         Span {
-            source: self.source,
             start,
             len: text.len(),
-            file_id: self.file_id,
-            source_offset: self.source_offset,
+            ..*self
         }
     }
 }
@@ -90,10 +84,10 @@ impl<'a> From<&'a DocComment> for Span<'a> {
     fn from(doc: &'a DocComment) -> Self {
         Span {
             source: &doc.comment,
-            start: 0,
             len: doc.comment.len(),
             file_id: doc.file_id,
             source_offset: doc.start,
+            ..Default::default()
         }
     }
 }

@@ -10,7 +10,7 @@ pub enum KindTagType {
 #[derive(Debug, PartialEq)]
 pub struct KindTag<'a> {
     pub name: Span<'a>,
-    pub tag_type: KindTagType,
+    pub kind_type: KindTagType,
     pub source: Span<'a>,
 }
 
@@ -22,7 +22,7 @@ impl<'a> KindTag<'a> {
 
         Ok(Self {
             name: text,
-            tag_type,
+            kind_type: tag_type,
             source: text,
         })
     }

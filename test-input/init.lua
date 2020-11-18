@@ -1,7 +1,9 @@
 
 --[=[
-    f
     @type CommandArgument
+
+    This is the description
+
     @prop Type string
     @prop Name string
     @prop Description string
@@ -9,7 +11,8 @@
     @prop Default any
     @prop callback nil | (name: string, id: number) => part -- The part you need to go to
 
-    @function           
+    @function         
+    @function asdf
 ]=]
 
 --[=[ asdfasdf

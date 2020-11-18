@@ -3,13 +3,44 @@ use std::convert::TryFrom;
 
 mod kind;
 mod param;
+mod validation;
 mod within;
 
 pub use kind::KindTag;
 pub use param::ParamTag;
+pub use validation::validate_tags;
 pub use within::WithinTag;
 
 pub use self::kind::KindTagType;
+
+#[allow(unused)]
+#[derive(Debug, PartialEq, Hash, Eq)]
+pub enum TagType {
+    Param,
+    Property,
+    Function,
+    Class,
+    Within,
+    // Unimplemented
+    Type,
+    Return,
+    Tag,
+    Deprecated,
+    Since,
+    Unreleased,
+    Server,
+    Client,
+    Private,
+    Ignore,
+    Error,
+    Yields,
+    Readonly,
+    Field,
+    External,
+    Link,
+    Interface,
+    Enum,
+}
 
 #[derive(Debug, PartialEq)]
 pub enum Tag<'a> {
@@ -24,6 +55,25 @@ impl<'a> Tag<'a> {
             Tag::Param(tag) => tag.source.diagnostic(text),
             Tag::Kind(tag) => tag.source.diagnostic(text),
             Tag::Within(tag) => tag.source.diagnostic(text),
+        }
+    }
+
+    pub fn tag_type(&self) -> TagType {
+        match self {
+            Tag::Param(_) => TagType::Param,
+            Tag::Kind(KindTag {
+                kind_type: KindTagType::Function,
+                ..
+            }) => TagType::Function,
+            Tag::Kind(KindTag {
+                kind_type: KindTagType::Property,
+                ..
+            }) => TagType::Property,
+            Tag::Kind(KindTag {
+                kind_type: KindTagType::Class,
+                ..
+            }) => TagType::Property,
+            Tag::Within(_) => TagType::Within,
         }
     }
 }

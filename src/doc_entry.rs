@@ -4,7 +4,7 @@ use crate::{
     diagnostic::{Diagnostic, Diagnostics},
     doc_comment::DocComment,
     span::Span,
-    tags::{KindTag, KindTagType, Tag, WithinTag},
+    tags::{validate_tags, KindTag, KindTagType, Tag, WithinTag},
 };
 use full_moon::ast::Stmt;
 
@@ -75,7 +75,7 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
 
     match the_kind_tag {
         Tag::Kind(KindTag {
-            tag_type: KindTagType::Class,
+            kind_type: KindTagType::Class,
             name,
             ..
         }) => {
@@ -85,7 +85,11 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                 name: name.as_str().to_owned(),
             }))
         }
-        Tag::Kind(KindTag { tag_type, name, .. }) => {
+        Tag::Kind(KindTag {
+            kind_type: tag_type,
+            name,
+            ..
+        }) => {
             if within_tags.is_empty() {
                 return Err(
                     the_kind_tag.diagnostic("Must specify containing class with @within tag")
@@ -183,7 +187,9 @@ impl<'a> DocEntry<'a> {
             .partition(Result::is_ok);
 
         let mut tags: Vec<_> = tags.into_iter().map(Result::unwrap).collect();
-        let errors: Vec<_> = errors.into_iter().map(Result::unwrap_err).collect();
+        let mut errors: Vec<_> = errors.into_iter().map(Result::unwrap_err).collect();
+
+        errors.extend(validate_tags(&tags));
 
         if !errors.is_empty() {
             return Err(Diagnostics::from(errors));
