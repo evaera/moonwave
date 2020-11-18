@@ -136,10 +136,7 @@ fn determine_kind(
                 let function_name = names.pop().unwrap().to_string();
 
                 if names.is_empty() {
-                    return Err(Diagnostic::from_doc_comment(
-                        "Function requires @within tag",
-                        doc_comment,
-                    ));
+                    return Err(doc_comment.diagnostic("Function requires @within tag"));
                 }
 
                 Ok(DocEntryKind::Function {
@@ -156,10 +153,8 @@ fn determine_kind(
 
         Stmt::LocalAssignment(_) => unimplemented!(),
         Stmt::LocalFunction(_) => unimplemented!(),
-        _ => Err(Diagnostic::from_doc_comment(
-            "Explicitly specify a kind tag, like @function, @property, or @class.",
-            doc_comment,
-        )),
+        _ => Err(doc_comment
+            .diagnostic("Explicitly specify a kind tag, like @function, @property, or @class.")),
     }
 }
 

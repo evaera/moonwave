@@ -2,6 +2,8 @@ use std::borrow::Cow;
 
 use full_moon::tokenizer::{Token, TokenType};
 
+use crate::diagnostic::Diagnostic;
+
 /// A class for representing an unparsed doc comment from Lua.
 #[derive(Debug)]
 pub struct DocComment {
@@ -20,5 +22,9 @@ impl DocComment {
             },
             _ => unreachable!(),
         }
+    }
+
+    pub fn diagnostic<S: Into<String>>(&self, text: S) -> Diagnostic {
+        Diagnostic::from_doc_comment(text, &self)
     }
 }
