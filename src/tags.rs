@@ -34,7 +34,7 @@ pub enum TagType {
     Ignore,
     Error,
     Yields,
-    Readonly,
+    ReadOnly,
     Field,
     External,
     Link,
@@ -76,6 +76,15 @@ impl<'a> Tag<'a> {
             Tag::Within(_) => TagType::Within,
         }
     }
+
+    /// Replaces the source span with a new span for error reporting clarity
+    pub fn blame(&mut self, span: Span<'a>) {
+        match self {
+            Tag::Param(tag) => tag.source.replace(span),
+            Tag::Kind(tag) => tag.source.replace(span),
+            Tag::Within(tag) => tag.source.replace(span),
+        }
+    }
 }
 
 impl<'a> TryFrom<Span<'a>> for Tag<'a> {
@@ -93,13 +102,17 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             None => return Err(text.diagnostic("This tag requires text following it")),
         };
 
-        match tag_name.as_str() {
+        let mut parsed_tag = match tag_name.as_str() {
             "@param" => ParamTag::try_from(tag_text).map(Tag::Param),
             "@within" => WithinTag::try_from(tag_text).map(Tag::Within),
             "@prop" => KindTag::parse(tag_text, KindTagType::Property).map(Tag::Kind),
             "@class" => KindTag::parse(tag_text, KindTagType::Class).map(Tag::Kind),
             "@function" => KindTag::parse(tag_text, KindTagType::Function).map(Tag::Kind),
             _ => Err(text.diagnostic("Unknown tag")),
-        }
+        }?;
+
+        parsed_tag.blame(text);
+
+        Ok(parsed_tag)
     }
 }

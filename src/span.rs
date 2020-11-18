@@ -50,6 +50,10 @@ impl<'a> Span<'a> {
         Diagnostic::from_span(text, self)
     }
 
+    pub fn replace(&mut self, span: Self) {
+        *self = span // Is this legal?
+    }
+
     fn from_slice(&self, text: &'a str) -> Self {
         let start = text.as_ptr() as usize - self.source.as_ptr() as usize;
 
