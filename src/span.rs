@@ -2,7 +2,7 @@ use std::{fmt, ops::Deref};
 
 use crate::{diagnostic::Diagnostic, doc_comment::DocComment};
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone)]
 pub struct Span<'a> {
     pub source: &'a str,
     pub start: usize,
@@ -12,12 +12,12 @@ pub struct Span<'a> {
 }
 
 impl<'a> Span<'a> {
-    pub fn from_source(source: &'a str, file_id: usize) -> Self {
+    pub fn dummy(source: &'a str) -> Self {
         Self {
             source,
             start: 0,
             len: source.len(),
-            file_id,
+            file_id: 0,
             source_offset: 0,
         }
     }
@@ -67,6 +67,12 @@ impl<'a> Span<'a> {
     }
 }
 
+impl PartialEq for Span<'_> {
+    fn eq(&self, other: &Self) -> bool {
+        self.as_str() == other.as_str()
+    }
+}
+
 impl fmt::Display for Span<'_> {
     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         formatter.write_str(self.as_str())
@@ -99,7 +105,7 @@ mod test {
     #[test]
     fn correct_deref() {
         let text = "abcdef";
-        let span = Span::from_source(text, 0);
+        let span = Span::dummy(text);
 
         let deref_check: &str = &span;
         assert_eq!(deref_check, text);
@@ -116,7 +122,7 @@ mod test {
     #[test]
     fn lines() {
         let text = "hello\nworld!\nipsum";
-        let span = Span::from_source(text, 0);
+        let span = Span::dummy(text);
 
         let lines: Vec<_> = span.lines().map(|line| line.as_str()).collect();
         assert_eq!(lines, &["hello", "world!", "ipsum"]);
@@ -125,7 +131,7 @@ mod test {
     #[test]
     fn trim() {
         let text = "    hello       ";
-        let span = Span::from_source(text, 0);
+        let span = Span::dummy(text);
 
         assert_eq!(span.trim().as_str(), "hello");
     }

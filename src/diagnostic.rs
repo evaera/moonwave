@@ -6,7 +6,7 @@ use crate::{doc_comment::DocComment, span::Span};
 
 #[derive(Debug)]
 pub struct Diagnostic {
-    text: String,
+    pub text: String,
     start: usize,
     len: usize,
     file_id: usize,
