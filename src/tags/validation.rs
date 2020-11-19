@@ -8,7 +8,7 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Property, TagType::Function),
     (TagType::Property, TagType::Class),
     (TagType::Function, TagType::Class),
-    // Class
+    // Classes aren't within other classes
     (TagType::Class, TagType::Within),
     // Param doesn't work with kinds other than function
     (TagType::Param, TagType::Property),
@@ -20,8 +20,9 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Return, TagType::Type),
     // Field is exclusive with function
     (TagType::Field, TagType::Function),
-    // Properties can't error
+    // Properties can't error or yield
     (TagType::Error, TagType::Property),
+    (TagType::Yields, TagType::Property),
 ];
 
 #[allow(unused)]

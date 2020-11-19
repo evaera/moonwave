@@ -51,7 +51,6 @@ struct DocEntryParseArguments<'a> {
 
 // TODO: Within tags > 1
 // TODO: Kind tags > 1
-// TODO: Within tag incompatible with class tag
 // TODO: Within tag required for kind tags other than class
 
 fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
@@ -78,13 +77,9 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
             kind_type: KindTagType::Class,
             name,
             ..
-        }) => {
-            // TODO: Within tag incompatible with class tag
-
-            Ok(Some(DocEntryKind::Class {
-                name: name.as_str().to_owned(),
-            }))
-        }
+        }) => Ok(Some(DocEntryKind::Class {
+            name: name.as_str().to_owned(),
+        })),
         Tag::Kind(KindTag {
             kind_type: tag_type,
             name,
