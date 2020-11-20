@@ -25,13 +25,41 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Yields, TagType::Property),
 ];
 
-#[allow(unused)]
+static DEPENDENT_TAGS: &[(TagType, TagType)] = &[
+    (TagType::Property, TagType::Within),
+    // TagType:: Type
+];
+
 static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Param,
     TagType::Return,
     TagType::Tag,
     TagType::Field,
 ];
+
+fn build_diagnostic(
+    tags: &[Tag],
+    types: &[&TagType],
+    primary: &str,
+    secondary: &str,
+) -> Diagnostic {
+    let mut iter = tags.iter().filter(|tag| types.contains(&&tag.tag_type()));
+
+    let first = iter.next().unwrap();
+    let other_tags: Vec<_> = iter.collect();
+
+    let mut diagnostic = first.diagnostic(primary);
+
+    if secondary.is_empty() {
+        return diagnostic;
+    }
+
+    for tag in other_tags {
+        diagnostic.attach_diagnostic(tag.diagnostic(secondary));
+    }
+
+    diagnostic
+}
 
 pub fn validate_tags(tags: &[Tag]) -> Vec<Diagnostic> {
     let mut tag_map: HashMap<TagType, usize> = HashMap::new();
@@ -45,22 +73,38 @@ pub fn validate_tags(tags: &[Tag]) -> Vec<Diagnostic> {
     let mut diagnostics: Vec<Diagnostic> = Vec::new();
 
     for (left, right) in MUTUALLY_EXCLUSIVE {
-        if tag_map.get(left).is_some() && tag_map.get(right).is_some() {
-            let mut iter = tags.iter().filter(|tag| {
-                let tag_type = tag.tag_type();
+        if tag_map.contains_key(left) && tag_map.contains_key(right) {
+            diagnostics.push(build_diagnostic(
+                tags,
+                &[left, right],
+                "This tag is mutually exclusive...",
+                "...with this tag.",
+            ));
+        }
+    }
 
-                &tag_type == left || &tag_type == right
-            });
-            let first = iter.next().unwrap();
-            let other_tags: Vec<_> = iter.collect();
+    for (depender, dependee) in DEPENDENT_TAGS {
+        if tag_map.contains_key(depender) && !tag_map.contains_key(dependee) {
+            diagnostics.push(build_diagnostic(
+                tags,
+                &[depender, dependee],
+                &format!(
+                    "The @{} tag must also be present when using this tag.",
+                    format!("{:?}", dependee).to_ascii_lowercase()
+                ),
+                "",
+            ))
+        }
+    }
 
-            let mut diagnostic = first.diagnostic("This tag is mutually exclusive...");
-
-            for tag in other_tags {
-                diagnostic.attach_diagnostic(tag.diagnostic("...with this tag."));
-            }
-
-            diagnostics.push(diagnostic);
+    for (tag_type, occurrences) in tag_map {
+        if occurrences > 1 && !ALLOW_MULTIPLE.contains(&tag_type) {
+            diagnostics.push(build_diagnostic(
+                tags,
+                &[&tag_type],
+                "This tag cannot appear multiple times in a single doc entry.",
+                "Appears here",
+            ))
         }
     }
 

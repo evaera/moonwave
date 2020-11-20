@@ -49,9 +49,8 @@ struct DocEntryParseArguments<'a> {
     within: Option<String>,
 }
 
-// TODO: Within tags > 1
-// TODO: Kind tags > 1
 // TODO: Within tag required for kind tags other than class
+// TODO: Leftover tags, somehow?
 
 fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
     let kind_tags = tags

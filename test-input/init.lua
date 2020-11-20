@@ -1,4 +1,3 @@
-
 --[=[
     @type CommandArgument
 
@@ -13,6 +12,13 @@
 
     @function         
     @function asdf
+]=]
+
+--[=[
+    @interface CommandArgument
+    @field name string -- The name of the argument
+    .name string -- The name of the argument
+    .desc string -- The description of the argument
 ]=]
 
 --[=[ asdfasdf
@@ -39,7 +45,7 @@
     @param name string -- This is the name for this Module.
     -@return Module -- Returns the new Module!
 ]=] 
-function Module.new(name)
+function Module.new()
 
 end
 
@@ -47,10 +53,8 @@ end
     Gets a thingy
 
 
-
-    -@static
     @param name string -- This is the name for this Module
-    -@returns Module - Returns the new Module!
+    -@return Module - Returns the new Module!
 ]=]
 function Module:get(name)
 
