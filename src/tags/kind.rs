@@ -1,13 +1,14 @@
 use crate::{diagnostic::Diagnostic, span::Span};
+use serde::Serialize;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 pub enum KindTagType {
     Function,
     Property,
     Class,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 pub struct KindTag<'a> {
     pub name: Span<'a>,
     pub kind_type: KindTagType,
@@ -25,5 +26,30 @@ impl<'a> KindTag<'a> {
             kind_type: tag_type,
             source: text,
         })
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use insta::assert_yaml_snapshot;
+
+    use super::*;
+
+    #[test]
+    fn snapshot() {
+        assert_yaml_snapshot!(KindTag::parse(
+            Span::dummy("hey there"),
+            KindTagType::Function
+        ));
+        assert_yaml_snapshot!(KindTag::parse(
+            Span::dummy("hey there"),
+            KindTagType::Property
+        ));
+        assert_yaml_snapshot!(KindTag::parse(
+            Span::dummy("This is a class"),
+            KindTagType::Class
+        ));
+
+        assert_yaml_snapshot!(KindTag::parse(Span::dummy(""), KindTagType::Class));
     }
 }

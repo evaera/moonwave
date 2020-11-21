@@ -1,0 +1,8 @@
+---
+source: src/tags/param.rs
+expression: value
+---
+name: COOL_NAME
+desc: HEY! This is a sweet description
+lua_type: foo
+source: COOL_NAME foo -- HEY! This is a sweet description

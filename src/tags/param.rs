@@ -1,9 +1,10 @@
+use serde::Serialize;
 use std::convert::TryFrom;
 
 use crate::{diagnostic::Diagnostic, span::Span};
 
 // TODO: Instead of Option<String>, just give empty string
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 pub struct ParamTag<'a> {
     pub name: Span<'a>,
     pub desc: Option<Span<'a>>,
@@ -37,6 +38,8 @@ impl<'a> TryFrom<Span<'a>> for ParamTag<'a> {
 
 #[cfg(test)]
 mod test {
+    use insta::assert_yaml_snapshot;
+
     use super::*;
 
     #[test]
@@ -44,6 +47,7 @@ mod test {
         let source = Span::dummy("COOL_NAME foo -- HEY! This is a sweet description");
 
         let value = ParamTag::try_from(source).unwrap();
+        assert_yaml_snapshot!(value);
 
         assert_eq!(
             value,
@@ -60,6 +64,7 @@ mod test {
     fn lovecraftian_type() {
         let source = Span::dummy("foo Roact.Element<{ oh_no: string -> coroutine }> -- I'm sorry.");
         let value = ParamTag::try_from(source).unwrap();
+        assert_yaml_snapshot!(value);
 
         assert_eq!(
             value,
@@ -76,6 +81,7 @@ mod test {
     fn no_type() {
         let source = Span::dummy("coffee -- Ever heard of FlowJS?");
         let value = ParamTag::try_from(source);
+        assert_yaml_snapshot!(value);
 
         assert!(value.is_err());
         assert_eq!(value.unwrap_err().text, "Param type is required");
@@ -85,6 +91,7 @@ mod test {
     fn no_description() {
         let source = Span::dummy("coffee tasty");
         let value = ParamTag::try_from(source).unwrap();
+        assert_yaml_snapshot!(value);
 
         assert_eq!(
             value,
@@ -101,8 +108,14 @@ mod test {
     fn no_description_nor_type() {
         let source = Span::dummy("coffee");
         let value = ParamTag::try_from(source);
+        assert_yaml_snapshot!(value);
 
         assert!(value.is_err());
         assert_eq!(value.unwrap_err().text, "Param type is required");
+    }
+
+    #[test]
+    fn snapshot() {
+        assert_yaml_snapshot!(ParamTag::try_from(Span::dummy("coffee")))
     }
 }

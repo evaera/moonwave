@@ -1,10 +1,10 @@
 use std::{error, fmt};
 
-use codespan_reporting::diagnostic::{Diagnostic as CodeSpanDiagnostic, Label};
-
 use crate::{doc_comment::DocComment, span::Span};
+use codespan_reporting::diagnostic::{Diagnostic as CodeSpanDiagnostic, Label};
+use serde::Serialize;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize)]
 pub struct Diagnostic {
     pub text: String,
     start: usize,

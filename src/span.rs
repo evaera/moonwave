@@ -77,6 +77,12 @@ impl fmt::Display for Span<'_> {
     }
 }
 
+impl serde::Serialize for Span<'_> {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(self.as_str())
+    }
+}
+
 impl<'a> Deref for Span<'a> {
     type Target = str;
     fn deref(&self) -> &str {

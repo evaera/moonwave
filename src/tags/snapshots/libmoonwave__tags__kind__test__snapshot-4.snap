@@ -1,0 +1,10 @@
+---
+source: src/tags/kind.rs
+expression: "KindTag::parse(Span::dummy(\"\"), KindTagType::Class)"
+---
+Err:
+  text: This kind tag has stuff after it
+  start: 0
+  len: 0
+  file_id: 0
+  additional_diagnostics: []
