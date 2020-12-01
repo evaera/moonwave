@@ -42,7 +42,7 @@ impl<'a> Span<'a> {
             .map(move |piece: &'a str| self.from_slice(piece))
     }
 
-    pub fn trim(self) -> Span<'a> {
+    pub fn trim(self) -> Self {
         self.from_slice(self.as_str().trim())
     }
 
@@ -83,7 +83,7 @@ impl serde::Serialize for Span<'_> {
     }
 }
 
-impl<'a> Deref for Span<'a> {
+impl Deref for Span<'_> {
     type Target = str;
     fn deref(&self) -> &str {
         self.as_str()

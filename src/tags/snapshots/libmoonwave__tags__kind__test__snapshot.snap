@@ -5,4 +5,3 @@ expression: "KindTag::parse(Span::dummy(\"hey there\"), KindTagType::Function)"
 Ok:
   name: hey there
   kind_type: Function
-  source: hey there

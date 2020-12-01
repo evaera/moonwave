@@ -5,7 +5,7 @@ use full_moon::tokenizer::{Token, TokenType};
 use crate::diagnostic::Diagnostic;
 
 /// A class for representing an unparsed doc comment from Lua.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct DocComment {
     pub comment: String,
     pub file_id: usize,

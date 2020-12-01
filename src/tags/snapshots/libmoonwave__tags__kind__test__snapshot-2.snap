@@ -5,4 +5,3 @@ expression: "KindTag::parse(Span::dummy(\"hey there\"), KindTagType::Property)"
 Ok:
   name: hey there
   kind_type: Property
-  source: hey there

@@ -1,4 +1,5 @@
 use crate::{diagnostic::Diagnostic, span::Span};
+use serde::Serialize;
 use std::convert::TryFrom;
 
 mod kind;
@@ -21,8 +22,8 @@ pub enum TagType {
     Function,
     Class,
     Within,
-    // Unimplemented
     Type,
+    // Unimplemented
     Return,
     Tag,
     Deprecated,
@@ -42,7 +43,7 @@ pub enum TagType {
     Enum,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 pub enum Tag<'a> {
     Param(ParamTag<'a>),
     Kind(KindTag<'a>),
@@ -73,6 +74,10 @@ impl<'a> Tag<'a> {
                 kind_type: KindTagType::Class,
                 ..
             }) => TagType::Property,
+            Tag::Kind(KindTag {
+                kind_type: KindTagType::Type,
+                ..
+            }) => TagType::Type,
             Tag::Within(_) => TagType::Within,
         }
     }

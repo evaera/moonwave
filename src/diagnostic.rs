@@ -28,7 +28,7 @@ impl Diagnostic {
         Self {
             text: text.into(),
             start: doc_comment.start,
-            len: 1, // This is arbitrary
+            len: doc_comment.comment.len(),
             file_id: doc_comment.file_id,
             ..Default::default()
         }

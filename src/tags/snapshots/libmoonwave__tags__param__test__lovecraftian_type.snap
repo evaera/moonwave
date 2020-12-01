@@ -5,4 +5,3 @@ expression: value
 name: foo
 desc: "I'm sorry."
 lua_type: "Roact.Element<{ oh_no: string -> coroutine }>"
-source: "foo Roact.Element<{ oh_no: string -> coroutine }> -- I'm sorry."

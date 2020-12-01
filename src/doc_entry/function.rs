@@ -1,25 +1,30 @@
 use crate::{
     diagnostic::Diagnostics,
+    doc_comment::DocComment,
     tags::{ParamTag, Tag},
 };
+use serde::Serialize;
 
 use super::DocEntryParseArguments;
 
 /// Used to separate functions (called with a dot) from methods (called with a colon)
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub enum FunctionType {
     Method,
-    Function,
+    Static,
 }
 
 /// A DocEntry for a function or method.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 pub struct FunctionDocEntry<'a> {
-    name: String,
-    desc: String,
-    within: String,
-    params: Vec<ParamTag<'a>>,
-    function_type: FunctionType,
+    pub name: String,
+    pub desc: String,
+    pub within: String,
+    pub params: Vec<ParamTag<'a>>,
+    pub function_type: FunctionType,
+    #[serde(skip)]
+    pub source: &'a DocComment,
 }
 
 impl<'a> FunctionDocEntry<'a> {
@@ -32,6 +37,7 @@ impl<'a> FunctionDocEntry<'a> {
             desc,
             within,
             tags,
+            source,
         } = args;
 
         let within = within.unwrap();
@@ -51,6 +57,7 @@ impl<'a> FunctionDocEntry<'a> {
             params,
             function_type,
             within,
+            source,
         })
     }
 }

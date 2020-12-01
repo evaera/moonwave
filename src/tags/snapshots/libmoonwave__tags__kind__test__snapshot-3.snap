@@ -5,4 +5,3 @@ expression: "KindTag::parse(Span::dummy(\"This is a class\"), KindTagType::Class
 Ok:
   name: This is a class
   kind_type: Class
-  source: This is a class

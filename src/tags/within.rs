@@ -6,6 +6,7 @@ use crate::{diagnostic::Diagnostic, span::Span};
 #[derive(Debug, PartialEq, Serialize)]
 pub struct WithinTag<'a> {
     pub name: Span<'a>,
+    #[serde(skip)]
     pub source: Span<'a>,
 }
 

@@ -4,4 +4,3 @@ expression: "WithinTag::try_from(Span::dummy(\"hey there\"))"
 ---
 Ok:
   name: hey there
-  source: hey there

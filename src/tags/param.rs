@@ -9,6 +9,7 @@ pub struct ParamTag<'a> {
     pub name: Span<'a>,
     pub desc: Option<Span<'a>>,
     pub lua_type: Span<'a>,
+    #[serde(skip)]
     pub source: Span<'a>,
 }
 

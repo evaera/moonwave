@@ -6,12 +6,14 @@ pub enum KindTagType {
     Function,
     Property,
     Class,
+    Type,
 }
 
 #[derive(Debug, PartialEq, Serialize)]
 pub struct KindTag<'a> {
     pub name: Span<'a>,
     pub kind_type: KindTagType,
+    #[serde(skip)]
     pub source: Span<'a>,
 }
 

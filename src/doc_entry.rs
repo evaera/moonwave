@@ -1,3 +1,4 @@
+use serde::Serialize;
 use std::convert::TryFrom;
 
 use crate::{
@@ -11,10 +12,12 @@ use full_moon::ast::Stmt;
 mod class;
 mod function;
 mod property;
+mod type_definition;
 
 pub use class::ClassDocEntry;
 pub use function::{FunctionDocEntry, FunctionType};
 pub use property::PropertyDocEntry;
+pub use type_definition::TypeDocEntry;
 
 /// Enum used when determining the type of the DocEntry during parsing
 #[derive(Debug, PartialEq)]
@@ -28,17 +31,23 @@ enum DocEntryKind {
         within: String,
         name: String,
     },
+    Type {
+        within: String,
+        name: String,
+    },
     Class {
         name: String,
     },
 }
 
 /// An enum of all possible DocEntries
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
+#[serde(tag = "kind", rename_all = "camelCase")]
 pub enum DocEntry<'a> {
     Function(FunctionDocEntry<'a>),
     Property(PropertyDocEntry<'a>),
     Class(ClassDocEntry<'a>),
+    Type(TypeDocEntry<'a>),
 }
 
 #[derive(Debug)]
@@ -47,6 +56,7 @@ struct DocEntryParseArguments<'a> {
     tags: Vec<Tag<'a>>,
     desc: String,
     within: Option<String>,
+    source: &'a DocComment,
 }
 
 // TODO: Within tag required for kind tags other than class
@@ -100,9 +110,10 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                 KindTagType::Function => Ok(Some(DocEntryKind::Function {
                     name,
                     within,
-                    function_type: FunctionType::Function,
+                    function_type: FunctionType::Static,
                 })),
                 KindTagType::Property => Ok(Some(DocEntryKind::Property { name, within })),
+                KindTagType::Type => Ok(Some(DocEntryKind::Type { name, within })),
                 _ => panic!("Unhandled tag type {:?}", tag_type),
             }
         }
@@ -144,7 +155,7 @@ fn determine_kind(
                         .map(|token| token.to_string())
                         .collect::<Vec<_>>()
                         .join("."),
-                    function_type: FunctionType::Function,
+                    function_type: FunctionType::Static,
                 })
             }
         },
@@ -206,6 +217,7 @@ impl<'a> DocEntry<'a> {
                     name,
                     desc,
                     tags,
+                    source: doc_comment,
                 },
                 function_type,
             )?),
@@ -215,6 +227,16 @@ impl<'a> DocEntry<'a> {
                     name,
                     desc,
                     tags,
+                    source: doc_comment,
+                })?)
+            }
+            DocEntryKind::Type { within, name } => {
+                DocEntry::Type(TypeDocEntry::parse(DocEntryParseArguments {
+                    within: Some(within),
+                    name,
+                    desc,
+                    tags,
+                    source: doc_comment,
                 })?)
             }
             DocEntryKind::Class { name } => {
@@ -223,6 +245,7 @@ impl<'a> DocEntry<'a> {
                     name,
                     desc,
                     tags,
+                    source: doc_comment,
                 })?)
             }
         })
