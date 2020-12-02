@@ -1,12 +1,28 @@
 use crate::{diagnostic::Diagnostic, span::Span};
 use serde::Serialize;
 
+use super::TagType;
+
 #[derive(Debug, PartialEq, Serialize)]
 pub enum KindTagType {
     Function,
     Property,
     Class,
     Type,
+    #[allow(unused)]
+    External,
+}
+
+impl KindTagType {
+    pub fn tag_type(&self) -> TagType {
+        match self {
+            KindTagType::Function => TagType::Function,
+            KindTagType::Property => TagType::Property,
+            KindTagType::Class => TagType::Class,
+            KindTagType::Type => TagType::Type,
+            KindTagType::External => TagType::External,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize)]

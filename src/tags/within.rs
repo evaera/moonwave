@@ -1,5 +1,4 @@
 use serde::Serialize;
-use std::convert::TryFrom;
 
 use crate::{diagnostic::Diagnostic, span::Span};
 
@@ -10,10 +9,8 @@ pub struct WithinTag<'a> {
     pub source: Span<'a>,
 }
 
-impl<'a> TryFrom<Span<'a>> for WithinTag<'a> {
-    type Error = Diagnostic;
-
-    fn try_from(span: Span<'a>) -> Result<Self, Self::Error> {
+impl<'a> WithinTag<'a> {
+    pub fn parse(span: Span<'a>) -> Result<Self, Diagnostic> {
         if span.is_empty() {
             return Err(span.diagnostic("This tag has stuff after it"));
         }
@@ -33,7 +30,7 @@ mod test {
 
     #[test]
     fn snapshot() {
-        assert_yaml_snapshot!(WithinTag::try_from(Span::dummy("hey there")));
-        assert_yaml_snapshot!(WithinTag::try_from(Span::dummy("")));
+        assert_yaml_snapshot!(WithinTag::parse(Span::dummy("hey there")));
+        assert_yaml_snapshot!(WithinTag::parse(Span::dummy("")));
     }
 }

@@ -160,8 +160,6 @@ fn determine_kind(
             }
         },
 
-        Stmt::LocalAssignment(_) => unimplemented!(),
-        Stmt::LocalFunction(_) => unimplemented!(),
         _ => Err(doc_comment
             .diagnostic("Explicitly specify a kind tag, like @function, @property, or @class.")),
     }

@@ -1,5 +1,4 @@
 use serde::Serialize;
-use std::convert::TryFrom;
 
 use crate::{diagnostic::Diagnostic, span::Span};
 
@@ -13,12 +12,10 @@ pub struct ParamTag<'a> {
     pub source: Span<'a>,
 }
 
-impl<'a> TryFrom<Span<'a>> for ParamTag<'a> {
-    type Error = Diagnostic;
-
-    fn try_from(span: Span<'a>) -> Result<Self, Self::Error> {
+impl<'a> ParamTag<'a> {
+    pub fn parse(span: Span<'a>) -> Result<Self, Diagnostic> {
         let mut pieces = span.splitn(2, "--");
-        let name_and_maybe_type: Span<'a> = pieces.next().unwrap().trim();
+        let name_and_maybe_type: Span<'_> = pieces.next().unwrap().trim();
         let desc = pieces.next().map(|desc| desc.trim());
 
         let mut pieces = name_and_maybe_type.splitn(2, " ");
@@ -47,7 +44,7 @@ mod test {
     fn everything_sandwich() {
         let source = Span::dummy("COOL_NAME foo -- HEY! This is a sweet description");
 
-        let value = ParamTag::try_from(source).unwrap();
+        let value = ParamTag::parse(source).unwrap();
         assert_yaml_snapshot!(value);
 
         assert_eq!(
@@ -64,7 +61,7 @@ mod test {
     #[test]
     fn lovecraftian_type() {
         let source = Span::dummy("foo Roact.Element<{ oh_no: string -> coroutine }> -- I'm sorry.");
-        let value = ParamTag::try_from(source).unwrap();
+        let value = ParamTag::parse(source).unwrap();
         assert_yaml_snapshot!(value);
 
         assert_eq!(
@@ -81,7 +78,7 @@ mod test {
     #[test]
     fn no_type() {
         let source = Span::dummy("coffee -- Ever heard of FlowJS?");
-        let value = ParamTag::try_from(source);
+        let value = ParamTag::parse(source);
         assert_yaml_snapshot!(value);
 
         assert!(value.is_err());
@@ -91,7 +88,7 @@ mod test {
     #[test]
     fn no_description() {
         let source = Span::dummy("coffee tasty");
-        let value = ParamTag::try_from(source).unwrap();
+        let value = ParamTag::parse(source).unwrap();
         assert_yaml_snapshot!(value);
 
         assert_eq!(
@@ -108,7 +105,7 @@ mod test {
     #[test]
     fn no_description_nor_type() {
         let source = Span::dummy("coffee");
-        let value = ParamTag::try_from(source);
+        let value = ParamTag::parse(source);
         assert_yaml_snapshot!(value);
 
         assert!(value.is_err());
@@ -117,6 +114,6 @@ mod test {
 
     #[test]
     fn snapshot() {
-        assert_yaml_snapshot!(ParamTag::try_from(Span::dummy("coffee")))
+        assert_yaml_snapshot!(ParamTag::parse(Span::dummy("coffee")))
     }
 }

@@ -1,4 +1,4 @@
-use crate::{diagnostic::Diagnostics, tags::Tag};
+use crate::{diagnostic::Diagnostics, doc_comment::DocComment, tags::Tag};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -6,10 +6,13 @@ use super::DocEntryParseArguments;
 /// A DocEntry for a property of a class
 #[derive(Debug, PartialEq, Serialize)]
 pub struct PropertyDocEntry<'a> {
-    name: String,
-    desc: String,
+    pub name: String,
+    pub desc: String,
+    pub lua_type: String,
+    pub within: String,
+    #[serde(skip)]
+    pub source: &'a DocComment,
     blah: Tag<'a>,
-    lua_type: String,
 }
 
 impl<'a> PropertyDocEntry<'a> {

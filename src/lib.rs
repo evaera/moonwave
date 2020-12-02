@@ -8,9 +8,11 @@ use codespan_reporting::{
 };
 
 use diagnostic::{Diagnostic, Diagnostics};
+use doc_comment::DocComment;
 use doc_entry::{DocEntry, FunctionDocEntry, PropertyDocEntry, TypeDocEntry};
 use serde::Serialize;
-use std::{collections::HashMap, fs, io, path::Path};
+use std::{collections::HashMap, fs, io, mem, path::Path};
+use tags::MarkerTag;
 use walkdir::{self, WalkDir};
 
 mod cli;
@@ -34,6 +36,7 @@ struct OutputClass<'a> {
     functions: Vec<FunctionDocEntry<'a>>,
     properties: Vec<PropertyDocEntry<'a>>,
     types: Vec<TypeDocEntry<'a>>,
+    markers: Vec<MarkerTag<'a>>,
 }
 
 pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
@@ -76,16 +79,17 @@ pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, Diagnostics> {
+fn into_classes<'a>(mut entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, Diagnostics> {
     let mut map: HashMap<String, OutputClass<'a>> = HashMap::new();
 
-    for entry in &entries {
+    for entry in &mut entries {
         if let DocEntry::Class(class) = entry {
             map.insert(
                 class.name.to_owned(),
                 OutputClass {
-                    name: class.name.to_owned(),
-                    desc: class.desc.to_owned(),
+                    name: mem::take(&mut class.name),
+                    desc: mem::take(&mut class.desc),
+                    markers: mem::take(&mut class.markers),
                     ..Default::default()
                 },
             );
@@ -94,22 +98,26 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
 
     let mut diagnostics: Vec<Diagnostic> = Vec::new();
 
+    let mut emit_diagnostic = |source: &DocComment, within: &str| {
+        diagnostics.push(source.diagnostic(format!(
+            "This entry's parent class \"{}\" is missing a doc entry",
+            within
+        )));
+    };
+
     for entry in entries {
         match entry {
-            DocEntry::Function(entry) => {
-                if let Some(class) = map.get_mut(&entry.within) {
-                    class.functions.push(entry)
-                } else {
-                    diagnostics.push(entry.source.diagnostic(format!(
-                        "This function's parent class \"{}\" is missing a doc entry",
-                        &entry.within
-                    )))
-                }
-            }
-            DocEntry::Property(_) => {}
-            DocEntry::Type(_) => {}
+            DocEntry::Function(entry) => match map.get_mut(&entry.within) {
+                Some(class) => class.functions.push(entry),
+                None => emit_diagnostic(entry.source, &entry.within),
+            },
+            DocEntry::Property(entry) => match map.get_mut(&entry.within) {
+                Some(class) => class.properties.push(entry),
+                None => emit_diagnostic(entry.source, &entry.within),
+            },
             DocEntry::Class(_) => {}
-        }
+            _ => unimplemented!(),
+        };
     }
 
     if diagnostics.is_empty() {
