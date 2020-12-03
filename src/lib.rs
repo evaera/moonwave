@@ -1,3 +1,5 @@
+use std::{collections::BTreeMap, fs, io, mem, path::Path};
+
 use codespan_reporting::{
     diagnostic::Diagnostic as CodeSpanDiagnostic,
     files::SimpleFiles,
@@ -11,7 +13,7 @@ use diagnostic::{Diagnostic, Diagnostics};
 use doc_comment::DocComment;
 use doc_entry::{DocEntry, FunctionDocEntry, PropertyDocEntry, TypeDocEntry};
 use serde::Serialize;
-use std::{collections::HashMap, fs, io, mem, path::Path};
+
 use tags::MarkerTag;
 use walkdir::{self, WalkDir};
 
@@ -80,7 +82,7 @@ pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
 }
 
 fn into_classes<'a>(mut entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, Diagnostics> {
-    let mut map: HashMap<String, OutputClass<'a>> = HashMap::new();
+    let mut map: BTreeMap<String, OutputClass<'a>> = BTreeMap::new();
 
     for entry in &mut entries {
         if let DocEntry::Class(class) = entry {
