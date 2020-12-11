@@ -55,8 +55,6 @@ impl<'a> FunctionDocEntry<'a> {
         }
 
         if !unused_tags.is_empty() {
-            // TODO: report a diagnostic here?
-
             let mut diagnostics = Vec::new();
             for tag in unused_tags {
                 diagnostics.push(tag.diagnostic("This tag is unused by function doc entries."));
