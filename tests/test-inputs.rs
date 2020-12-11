@@ -7,8 +7,18 @@ fn everything_sandwich() -> anyhow::Result<()> {
 }
 
 #[test]
+fn class_with_function() -> anyhow::Result<()> {
+    run_moonwave("passing/class_with_function.lua", 0)
+}
+
+#[test]
 fn failing_function() -> anyhow::Result<()> {
     run_moonwave("failing/function.lua", 1)
+}
+
+#[test]
+fn failing_function_no_within() -> anyhow::Result<()> {
+    run_moonwave("failing/function_no_within.lua", 1)
 }
 
 fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {
@@ -26,13 +36,13 @@ fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {
     let stdout = String::from_utf8(output.stdout)?;
     let stderr = String::from_utf8(output.stderr)?;
 
-    assert_eq!(output.status.code(), Some(expected_status));
-
     let stdout_name = format!("{}-stdout", file_name);
     let stderr_name = format!("{}-stderr", file_name);
 
     insta::assert_snapshot!(stdout_name, stdout);
     insta::assert_snapshot!(stderr_name, stderr);
+
+    assert_eq!(output.status.code(), Some(expected_status));
 
     Ok(())
 }

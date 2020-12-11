@@ -1,0 +1,38 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "name": "aclass",
+    "desc": "This is a class",
+    "functions": [
+      {
+        "name": "f",
+        "desc": "This is a description\nThis is alos adid seictopu",
+        "within": "aclass",
+        "params": [
+          {
+            "name": "thename",
+            "desc": "the description",
+            "lua_type": "the type"
+          },
+          {
+            "name": "thenameredux",
+            "desc": "the description again",
+            "lua_type": "the type but twice"
+          }
+        ],
+        "markers": [],
+        "function_type": "static"
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "markers": [
+      "unreleased",
+      "private"
+    ]
+  }
+]
+
