@@ -30,7 +30,20 @@ mod test {
 
     #[test]
     fn snapshot() {
-        assert_yaml_snapshot!(WithinTag::parse(Span::dummy("hey there")));
-        assert_yaml_snapshot!(WithinTag::parse(Span::dummy("")));
+        assert_yaml_snapshot!(WithinTag::parse(Span::dummy("hey there")), @r###"
+        ---
+        Ok:
+          name: hey there
+        "###);
+
+        assert_yaml_snapshot!(WithinTag::parse(Span::dummy("")), @r###"
+        ---
+        Err:
+          text: This tag has stuff after it
+          start: 0
+          len: 0
+          file_id: 0
+          additional_diagnostics: []
+        "###);
     }
 }

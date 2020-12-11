@@ -54,7 +54,14 @@ mod test {
 
     #[test]
     fn snapshot() {
-        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Unreleased));
-        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Unreleased));
+        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Unreleased), @r###"
+        ---
+        Ok: unreleased
+        "###);
+
+        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Unreleased), @r###"
+        ---
+        Ok: unreleased
+        "###);
     }
 }

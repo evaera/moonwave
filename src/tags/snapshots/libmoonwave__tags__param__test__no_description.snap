@@ -1,7 +1,0 @@
----
-source: src/tags/param.rs
-expression: value
----
-name: coffee
-desc: ~
-lua_type: tasty

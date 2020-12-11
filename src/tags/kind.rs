@@ -58,16 +58,41 @@ mod test {
         assert_yaml_snapshot!(KindTag::parse(
             Span::dummy("hey there"),
             KindTagType::Function
-        ));
+        ), @r###"
+        ---
+        Ok:
+          name: hey there
+          kind_type: Function
+        "###);
+
         assert_yaml_snapshot!(KindTag::parse(
             Span::dummy("hey there"),
             KindTagType::Property
-        ));
+        ), @r###"
+        ---
+        Ok:
+          name: hey there
+          kind_type: Property
+        "###);
+
         assert_yaml_snapshot!(KindTag::parse(
             Span::dummy("This is a class"),
             KindTagType::Class
-        ));
+        ), @r###"
+        ---
+        Ok:
+          name: This is a class
+          kind_type: Class
+        "###);
 
-        assert_yaml_snapshot!(KindTag::parse(Span::dummy(""), KindTagType::Class));
+        assert_yaml_snapshot!(KindTag::parse(Span::dummy(""), KindTagType::Class), @r###"
+        ---
+        Err:
+          text: This kind tag has stuff after it
+          start: 0
+          len: 0
+          file_id: 0
+          additional_diagnostics: []
+        "###);
     }
 }

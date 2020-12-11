@@ -11,6 +11,16 @@ pub struct Span<'a> {
     pub source_offset: usize,
 }
 
+impl Span<'static> {
+    pub fn empty(file_id: usize) -> Self {
+        Span {
+            source: "",
+            file_id,
+            ..Default::default()
+        }
+    }
+}
+
 impl<'a> Span<'a> {
     pub fn dummy(source: &'a str) -> Self {
         Self {

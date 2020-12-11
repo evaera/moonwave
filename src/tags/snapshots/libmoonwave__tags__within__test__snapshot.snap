@@ -1,6 +1,0 @@
----
-source: src/tags/within.rs
-expression: "WithinTag::try_from(Span::dummy(\"hey there\"))"
----
-Ok:
-  name: hey there
