@@ -1,0 +1,20 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: This entry's parent class "aintclassy" is missing a doc entry
+  ┌─ test-input\failing/function.lua:1:6
+  │  
+1 │   --[=[ This is a description
+  │ ╭──────^
+2 │ │     This is alos adid seictopu
+3 │ │ 
+4 │ │     @function f
+5 │ │     @within aintclassy
+6 │ │     @param thename the type -- the description
+7 │ │     @param thenameredux the type but twice -- the description again
+8 │ │ ]=]
+  │ ╰^ This entry's parent class "aintclassy" is missing a doc entry
+
+error: aborting due to diagnostic error
+

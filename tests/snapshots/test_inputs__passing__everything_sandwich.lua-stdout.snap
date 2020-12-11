@@ -45,25 +45,6 @@ expression: stdout
     "desc": "This is the class",
     "functions": [
       {
-        "name": "f",
-        "desc": "asdfasdf",
-        "within": "theclass",
-        "params": [
-          {
-            "name": "thename",
-            "desc": "the description",
-            "lua_type": "the type"
-          },
-          {
-            "name": "thenameredux",
-            "desc": "the description again",
-            "lua_type": "the type but twice"
-          }
-        ],
-        "markers": [],
-        "function_type": "static"
-      },
-      {
         "name": "TheFunction",
         "desc": "Does the stuff",
         "within": "theclass",

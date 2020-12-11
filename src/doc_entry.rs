@@ -123,7 +123,7 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
 
 fn determine_kind(
     doc_comment: &DocComment,
-    stmt: &Stmt,
+    stmt: Option<&Stmt>,
     tags: &[Tag],
 ) -> Result<DocEntryKind, Diagnostic> {
     let explicit_kind = get_explicit_kind(tags)?;
@@ -133,7 +133,7 @@ fn determine_kind(
     }
 
     match stmt {
-        Stmt::FunctionDeclaration(function) => match function.name().method_name() {
+        Some(Stmt::FunctionDeclaration(function)) => match function.name().method_name() {
             Some(method_name) => Ok(DocEntryKind::Function {
                 name: method_name.to_string(),
                 within: function.name().names().to_string(),
@@ -168,7 +168,7 @@ fn determine_kind(
 impl<'a> DocEntry<'a> {
     pub fn parse(
         doc_comment: &'a DocComment,
-        stmt: &Stmt<'a>,
+        stmt: Option<&Stmt<'a>>,
     ) -> Result<DocEntry<'a>, Diagnostics> {
         let span: Span<'a> = doc_comment.into();
 

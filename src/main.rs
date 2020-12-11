@@ -19,7 +19,7 @@ fn main() {
     let args = Args::from_args();
 
     if let Err(error) = run(args) {
-        eprintln!("{}", error);
+        eprintln!("error: {}", error);
         std::process::exit(1);
     }
 }

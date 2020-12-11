@@ -1,5 +1,6 @@
 use std::{collections::BTreeMap, fs, io, mem, path::Path};
 
+use anyhow::bail;
 use codespan_reporting::{
     diagnostic::Diagnostic as CodeSpanDiagnostic,
     files::SimpleFiles,
@@ -75,7 +76,15 @@ pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
     }
 
     if !errors.is_empty() {
+        let count_errors = errors.len();
+
         report_errors(errors, &codespan_files);
+
+        if count_errors == 1 {
+            bail!("aborting due to diagnostic error");
+        } else {
+            bail!("aborting due to {} diagnostic errors", count_errors);
+        }
     }
 
     Ok(())

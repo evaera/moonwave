@@ -30,12 +30,6 @@
 	This is the class
 ]=]
 
---[=[ asdfasdf
-    @function f
-    @within theclass
-    @param thename the type -- the description
-    @param thenameredux the type but twice -- the description again
-]=]
 
 --[=[
     @function TheFunction
