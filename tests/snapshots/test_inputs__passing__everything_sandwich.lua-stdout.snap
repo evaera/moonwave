@@ -18,6 +18,7 @@ expression: stdout
             "lua_type": "string"
           }
         ],
+        "returns": [],
         "markers": [],
         "function_type": "static"
       },
@@ -32,6 +33,7 @@ expression: stdout
             "lua_type": "string"
           }
         ],
+        "returns": [],
         "markers": [],
         "function_type": "method"
       }
@@ -60,6 +62,7 @@ expression: stdout
             "lua_type": "the type but twice"
           }
         ],
+        "returns": [],
         "markers": [],
         "function_type": "static"
       }

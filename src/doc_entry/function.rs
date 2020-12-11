@@ -1,7 +1,7 @@
 use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
-    tags::{MarkerTag, ParamTag, Tag},
+    tags::{MarkerTag, ParamTag, ReturnTag, Tag},
 };
 use serde::Serialize;
 
@@ -22,6 +22,7 @@ pub struct FunctionDocEntry<'a> {
     pub desc: String,
     pub within: String,
     pub params: Vec<ParamTag<'a>>,
+    pub returns: Vec<ReturnTag<'a>>,
     pub markers: Vec<MarkerTag<'a>>,
     pub function_type: FunctionType,
     #[serde(skip)]
@@ -43,12 +44,14 @@ impl<'a> FunctionDocEntry<'a> {
 
         let within = within.unwrap();
         let mut params = Vec::new();
+        let mut returns = Vec::new();
         let mut markers = Vec::new();
         let mut unused_tags = Vec::new();
 
         for tag in tags {
             match tag {
                 Tag::Param(param) => params.push(param),
+                Tag::Return(return_tag) => returns.push(return_tag),
                 Tag::Marker(marker) => markers.push(marker),
                 _ => unused_tags.push(tag),
             }
@@ -67,6 +70,7 @@ impl<'a> FunctionDocEntry<'a> {
             name,
             desc,
             params,
+            returns,
             markers,
             function_type,
             within,

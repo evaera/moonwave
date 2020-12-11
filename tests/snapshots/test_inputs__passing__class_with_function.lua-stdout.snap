@@ -23,6 +23,12 @@ expression: stdout
             "lua_type": "the type but twice"
           }
         ],
+        "returns": [
+          {
+            "desc": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "lua_type": "string"
+          }
+        ],
         "markers": [],
         "function_type": "static"
       }

@@ -22,6 +22,11 @@ impl<'a> ParamTag<'a> {
 
         let mut pieces = name_and_maybe_type.splitn(2, " ");
         let name = pieces.next().unwrap().trim();
+
+        if name.is_empty() {
+            return Err(span.diagnostic("Param name is required"));
+        }
+
         let lua_type = pieces
             .next()
             .map(|name| name.trim())
@@ -104,6 +109,22 @@ mod test {
           text: Param type is required
           start: 0
           len: 6
+          file_id: 0
+          additional_diagnostics: []
+        "###);
+    }
+
+    #[test]
+    fn empty_type() {
+        let source = Span::dummy("a  -- HEY! This is a sweet description");
+
+        let value = ParamTag::parse(source);
+        assert_yaml_snapshot!(value, @r###"
+        ---
+        Err:
+          text: Param type is required
+          start: 0
+          len: 38
           file_id: 0
           additional_diagnostics: []
         "###);

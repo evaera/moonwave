@@ -12,5 +12,6 @@
     @function f
     @within aclass
     @param thename the type -- the description
-    @param thenameredux the type but twice -- the description again
+	@param thenameredux the type but twice -- the description again
+	@return string -- AAAAAAAAAAAAAAAAAAAAAAAAAA
 ]=]
