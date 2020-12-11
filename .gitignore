@@ -1,3 +1,6 @@
 /target
 **/*.rs.bk
 .vscode/settings.json
+
+# Unconfirmed Insta snapshots
+**/*.snap.new

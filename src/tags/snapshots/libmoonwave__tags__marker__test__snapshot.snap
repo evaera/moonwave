@@ -1,0 +1,5 @@
+---
+source: src/tags/marker.rs
+expression: "MarkerTag::parse(MarkerTagType::Unreleased)"
+---
+Ok: unreleased

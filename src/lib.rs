@@ -151,7 +151,7 @@ fn find_files(path: &Path) -> Result<(SimpleFiles<String, String>, Vec<usize>), 
 }
 
 fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String>) {
-    let writer = StandardStream::stderr(ColorChoice::Always);
+    let writer = StandardStream::stderr(ColorChoice::Auto);
     let config = codespan_reporting::term::Config::default();
 
     for error in errors {

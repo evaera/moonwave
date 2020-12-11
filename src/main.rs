@@ -1,19 +1,25 @@
 use libmoonwave::{generate_docs_from_path, Args, Subcommand};
-use std::path::Path;
+use std::env::current_dir;
 use structopt::StructOpt;
+
+fn run(args: Args) -> anyhow::Result<()> {
+    match args.subcommand {
+        Subcommand::Extract(subcommand) => {
+            let path = match subcommand.input_path {
+                Some(path) => path,
+                None => current_dir()?,
+            };
+
+            generate_docs_from_path(&path)
+        }
+    }
+}
 
 fn main() {
     let args = Args::from_args();
 
-    match args.subcommand {
-        Subcommand::Build => {
-            let path = Path::new("test-input");
-            match generate_docs_from_path(&path) {
-                Ok(_) => return,
-                Err(error) => eprintln!("{}", error),
-            };
-
-            std::process::exit(1);
-        }
+    if let Err(error) = run(args) {
+        eprintln!("{}", error);
+        std::process::exit(1);
     }
 }

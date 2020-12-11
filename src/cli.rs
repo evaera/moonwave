@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -9,5 +11,11 @@ pub struct Args {
 
 #[derive(Debug, StructOpt)]
 pub enum Subcommand {
-    Build,
+    /// Extracts doc comments from the given files
+    Extract(ExtractSubcommand),
+}
+
+#[derive(Debug, StructOpt)]
+pub struct ExtractSubcommand {
+    pub input_path: Option<PathBuf>,
 }
