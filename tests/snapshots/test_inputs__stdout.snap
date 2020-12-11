@@ -1,0 +1,93 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "name": "Module",
+    "desc": "This is a module lcass with thsf",
+    "functions": [
+      {
+        "name": "new",
+        "desc": "Creates a new instance of Module.\n-@deprecated 1.12 -- Use [[Module.somethingElse]] instead\n-@return Module -- Returns the new Module!",
+        "within": "Module",
+        "params": [
+          {
+            "name": "name",
+            "desc": "This is the name for this Module.",
+            "lua_type": "string"
+          }
+        ],
+        "markers": [],
+        "function_type": "static"
+      },
+      {
+        "name": "get",
+        "desc": "Gets a thingy\n-@return Module - Returns the new Module!",
+        "within": "Module",
+        "params": [
+          {
+            "name": "name",
+            "desc": "This is the name for this Module",
+            "lua_type": "string"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "markers": []
+  },
+  {
+    "name": "theclass",
+    "desc": "This is the class",
+    "functions": [
+      {
+        "name": "f",
+        "desc": "asdfasdf",
+        "within": "theclass",
+        "params": [
+          {
+            "name": "thename",
+            "desc": "the description",
+            "lua_type": "the type"
+          },
+          {
+            "name": "thenameredux",
+            "desc": "the description again",
+            "lua_type": "the type but twice"
+          }
+        ],
+        "markers": [],
+        "function_type": "static"
+      },
+      {
+        "name": "TheFunction",
+        "desc": "Does the stuff",
+        "within": "theclass",
+        "params": [
+          {
+            "name": "thename",
+            "desc": "the description",
+            "lua_type": "the type"
+          },
+          {
+            "name": "thenameredux",
+            "desc": "the description again",
+            "lua_type": "the type but twice"
+          }
+        ],
+        "markers": [],
+        "function_type": "static"
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "markers": [
+      "unreleased"
+    ]
+  }
+]
+
