@@ -5,12 +5,14 @@ use std::convert::TryFrom;
 mod kind;
 mod marker;
 mod param;
+mod return_tag;
 mod validation;
 mod within;
 
 pub use kind::KindTag;
 pub use marker::MarkerTag;
 pub use param::ParamTag;
+pub use return_tag::ReturnTag;
 pub use validation::validate_tags;
 pub use within::WithinTag;
 
@@ -33,11 +35,11 @@ pub enum TagType {
     Ignore,
     Yields,
     ReadOnly,
-    // Unimplemented
     Return,
-    Tag,
+    // Unimplemented
     Deprecated,
     Since,
+    Tag,
     Error,
     Field,
     External,
@@ -49,6 +51,7 @@ pub enum TagType {
 #[derive(Debug, PartialEq, Serialize)]
 pub enum Tag<'a> {
     Param(ParamTag<'a>),
+    Return(ReturnTag<'a>),
     Kind(KindTag<'a>),
     Within(WithinTag<'a>),
     Marker(MarkerTag<'a>),
@@ -58,6 +61,7 @@ impl<'a> Tag<'a> {
     pub fn diagnostic(&self, text: &str) -> Diagnostic {
         match self {
             Tag::Param(tag) => tag.source.diagnostic(text),
+            Tag::Return(tag) => tag.source.diagnostic(text),
             Tag::Kind(tag) => tag.source.diagnostic(text),
             Tag::Within(tag) => tag.source.diagnostic(text),
             Tag::Marker(tag) => tag.source.diagnostic(text),
@@ -67,6 +71,7 @@ impl<'a> Tag<'a> {
     pub fn tag_type(&self) -> TagType {
         match self {
             Tag::Param(_) => TagType::Param,
+            Tag::Return(_) => TagType::Return,
             Tag::Kind(KindTag { kind_type, .. }) => kind_type.tag_type(),
             Tag::Within(_) => TagType::Within,
             Tag::Marker(MarkerTag { marker_type, .. }) => marker_type.tag_type(),
@@ -77,6 +82,7 @@ impl<'a> Tag<'a> {
     pub fn blame(&mut self, span: Span<'a>) {
         match self {
             Tag::Param(tag) => tag.source.replace(span),
+            Tag::Return(tag) => tag.source.replace(span),
             Tag::Kind(tag) => tag.source.replace(span),
             Tag::Within(tag) => tag.source.replace(span),
             Tag::Marker(tag) => tag.source.replace(span),
@@ -109,6 +115,7 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
 
                 match tag_name.as_str() {
                     "@param" => ParamTag::parse(tag_text).map(Tag::Param),
+                    "@return" => ReturnTag::parse(tag_text).map(Tag::Return),
                     "@within" => WithinTag::parse(tag_text).map(Tag::Within),
                     "@prop" => KindTag::parse(tag_text, KindTagType::Property).map(Tag::Kind),
                     "@type" => KindTag::parse(tag_text, KindTagType::Type).map(Tag::Kind),

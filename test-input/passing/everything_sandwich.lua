@@ -52,7 +52,7 @@
 
     -@deprecated 1.12 -- Use [[Module.somethingElse]] instead
     @param name string -- This is the name for this Module.
-    -@return Module -- Returns the new Module!
+    @return Module -- Returns the new Module!
 ]=]
 function Module.new()
 
@@ -63,7 +63,7 @@ end
 
 
     @param name string -- This is the name for this Module
-    -@return Module - Returns the new Module!
+    @return Module - Returns the new Module!
 ]=]
 function Module:get(name)
 
