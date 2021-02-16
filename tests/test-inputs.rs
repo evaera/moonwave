@@ -12,6 +12,11 @@ fn class_with_function() -> anyhow::Result<()> {
 }
 
 #[test]
+fn fabric() -> anyhow::Result<()> {
+    run_moonwave("passing/fabric.lua", 0)
+}
+
+#[test]
 fn failing_function() -> anyhow::Result<()> {
     run_moonwave("failing/function.lua", 1)
 }
