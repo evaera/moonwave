@@ -27,7 +27,7 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Error, TagType::Class),
     (TagType::Yields, TagType::Class),
     // Can't be unreleased and released at the same time
-    (TagType::Unreleased, TagType::Since)
+    (TagType::Unreleased, TagType::Since),
 ];
 
 static DEPENDENT_TAGS: &[(TagType, TagType)] = &[
