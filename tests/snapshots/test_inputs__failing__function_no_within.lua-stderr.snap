@@ -3,7 +3,7 @@ source: tests/test-inputs.rs
 expression: stderr
 ---
 error: Must specify containing class with @within tag
-  ┌─ test-input\failing/function_no_within.lua:2:5
+  ┌─ test-input/failing/function_no_within.lua:2:5
   │
 2 │     @function TheFunction
   │     ^^^^^^^^^^^^^^^^^^^^^ Must specify containing class with @within tag

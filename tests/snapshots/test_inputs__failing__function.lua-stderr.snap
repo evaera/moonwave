@@ -3,7 +3,7 @@ source: tests/test-inputs.rs
 expression: stderr
 ---
 error: This entry's parent class "aintclassy" is missing a doc entry
-  ┌─ test-input\failing/function.lua:1:6
+  ┌─ test-input/failing/function.lua:1:6
   │  
 1 │   --[=[ This is a description
   │ ╭──────^

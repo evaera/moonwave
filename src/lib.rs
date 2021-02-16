@@ -1,4 +1,8 @@
-use std::{collections::BTreeMap, fs, io, mem, path::Path};
+use std::{
+    collections::BTreeMap,
+    fs, io, mem,
+    path::{self, Path},
+};
 
 use anyhow::bail;
 use codespan_reporting::{
@@ -151,7 +155,12 @@ fn find_files(path: &Path) -> Result<(SimpleFiles<String, String>, Vec<usize>), 
         let path = entry.path();
         let contents = fs::read_to_string(path)?;
 
-        let file_id = codespan_files.add(path.to_string_lossy().to_string(), contents);
+        let file_id = codespan_files.add(
+            // We need the separator to consistently be forward slashes for snapshot
+            // consistency across platforms
+            path.to_string_lossy().replace(path::MAIN_SEPARATOR, "/"),
+            contents,
+        );
 
         file_ids.push(file_id);
     }
