@@ -2,4 +2,195 @@
 source: tests/test-inputs.rs
 expression: stdout
 ---
+[
+  {
+    "name": "Fabric",
+    "desc": "",
+    "functions": [
+      {
+        "name": "registerUnit",
+        "desc": "Registers a unit. This function should be called before attempting to get or create the unit.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "unitDefinition",
+            "desc": "The definition of the unit",
+            "lua_type": "UnitDefinition"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "The passed unit definition",
+            "lua_type": "UnitDefinition"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "registerUnitsIn",
+        "desc": "Registers all units that are immmediate children of a container.\nSkips any test scripts (i.e. name of form `*.spec`) in the container.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "container",
+            "desc": "The container",
+            "lua_type": "Instance"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "nil"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "getUnitByRef",
+        "desc": "Returns the unit associated with a unit resolvable that is attached to a ref,\nor nil if it doesn't exist.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "unitResolvable",
+            "desc": "The unit to retrieve",
+            "lua_type": "UnitResolvable"
+          },
+          {
+            "name": "ref",
+            "desc": "The ref to retrieve the unit from",
+            "lua_type": "Ref"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "The attached unit",
+            "lua_type": "Unit?"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "getOrCreateUnitByRef",
+        "desc": "Returns the unit associated with a unit resolvable that is attached to ref.\nIf it does not exist, then creates and attaches the unit to ref and returns it.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "unitResolvable",
+            "desc": "The unit to retrieve",
+            "lua_type": "UnitResolvable"
+          },
+          {
+            "name": "ref",
+            "desc": "The ref to retrieve the attached unit from",
+            "lua_type": "Ref"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "The attached unit",
+            "lua_type": "Unit"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "removeAllUnitsWithRef",
+        "desc": "Removes all units attached to the passed ref.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "ref",
+            "desc": "The ref to remove all units from",
+            "lua_type": "Ref"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "nil"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "fire",
+        "desc": "Fires a fabric event.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "eventName",
+            "desc": "The event name to fire",
+            "lua_type": "string"
+          },
+          {
+            "name": "...",
+            "desc": "The arguments to fire the event with.",
+            "lua_type": "any"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "nil"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "on",
+        "desc": "Listens to a fabric event.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "eventName",
+            "desc": "The event name to listen to",
+            "lua_type": "string"
+          },
+          {
+            "name": "callback",
+            "desc": "The callback fired",
+            "lua_type": "function"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "nil"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      },
+      {
+        "name": "debug",
+        "desc": "Logs a debug message. Set fabric.DEBUG = true to enable.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "...",
+            "desc": "The debug information to log",
+            "lua_type": "any"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "nil"
+          }
+        ],
+        "markers": [],
+        "function_type": "method"
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "markers": []
+  }
+]
 
