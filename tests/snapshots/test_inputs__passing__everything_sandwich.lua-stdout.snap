@@ -9,7 +9,7 @@ expression: stdout
     "functions": [
       {
         "name": "new",
-        "desc": "Creates a new instance of Module.\n-@deprecated 1.12 -- Use [[Module.somethingElse]] instead\n-@return Module -- Returns the new Module!",
+        "desc": "Creates a new instance of Module.\n-@deprecated 1.12 -- Use [[Module.somethingElse]] instead",
         "within": "Module",
         "params": [
           {
@@ -18,13 +18,18 @@ expression: stdout
             "lua_type": "string"
           }
         ],
-        "returns": [],
+        "returns": [
+          {
+            "desc": "Returns the new Module!",
+            "lua_type": "Module"
+          }
+        ],
         "markers": [],
         "function_type": "static"
       },
       {
         "name": "get",
-        "desc": "Gets a thingy\n-@return Module - Returns the new Module!",
+        "desc": "Gets a thingy",
         "within": "Module",
         "params": [
           {
@@ -33,7 +38,12 @@ expression: stdout
             "lua_type": "string"
           }
         ],
-        "returns": [],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "Module - Returns the new Module!"
+          }
+        ],
         "markers": [],
         "function_type": "method"
       }

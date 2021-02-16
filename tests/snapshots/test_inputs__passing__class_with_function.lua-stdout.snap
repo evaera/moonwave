@@ -30,7 +30,12 @@ expression: stdout
           }
         ],
         "markers": [],
-        "function_type": "static"
+        "function_type": "static",
+        "since": "v1.0",
+        "deprecated": {
+          "version": "v1.2",
+          "desc": "This is no good."
+        }
       }
     ],
     "properties": [],

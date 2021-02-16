@@ -6,25 +6,25 @@ use super::TagType;
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum MarkerTagType {
-    Unreleased,
     Server,
     Client,
     Private,
     Ignore,
     Yields,
     ReadOnly,
+    Unreleased,
 }
 
 impl MarkerTagType {
     pub fn tag_type(&self) -> TagType {
         match self {
-            MarkerTagType::Unreleased => TagType::Unreleased,
             MarkerTagType::Server => TagType::Server,
             MarkerTagType::Client => TagType::Client,
             MarkerTagType::Private => TagType::Private,
             MarkerTagType::Ignore => TagType::Ignore,
             MarkerTagType::Yields => TagType::Yields,
             MarkerTagType::ReadOnly => TagType::ReadOnly,
+            MarkerTagType::Unreleased => TagType::Unreleased,
         }
     }
 }
@@ -54,14 +54,14 @@ mod test {
 
     #[test]
     fn snapshot() {
-        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Unreleased), @r###"
+        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Server), @r###"
         ---
-        Ok: unreleased
+        Ok: server
         "###);
 
-        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Unreleased), @r###"
+        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Client), @r###"
         ---
-        Ok: unreleased
+        Ok: client
         "###);
     }
 }

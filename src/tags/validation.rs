@@ -23,6 +23,11 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     // Properties can't error or yield
     (TagType::Error, TagType::Property),
     (TagType::Yields, TagType::Property),
+    // Classes can't error or yield
+    (TagType::Error, TagType::Class),
+    (TagType::Yields, TagType::Class),
+    // Can't be unreleased and released at the same time
+    (TagType::Unreleased, TagType::Since)
 ];
 
 static DEPENDENT_TAGS: &[(TagType, TagType)] = &[

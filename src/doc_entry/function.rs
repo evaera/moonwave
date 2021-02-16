@@ -1,7 +1,7 @@
 use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
-    tags::{MarkerTag, ParamTag, ReturnTag, Tag},
+    tags::{DeprecatedTag, MarkerTag, ParamTag, ReturnTag, Tag},
 };
 use serde::Serialize;
 
@@ -25,6 +25,13 @@ pub struct FunctionDocEntry<'a> {
     pub returns: Vec<ReturnTag<'a>>,
     pub markers: Vec<MarkerTag<'a>>,
     pub function_type: FunctionType,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub since: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deprecated: Option<DeprecatedTag<'a>>,
+
     #[serde(skip)]
     pub source: &'a DocComment,
 }
@@ -47,12 +54,16 @@ impl<'a> FunctionDocEntry<'a> {
         let mut returns = Vec::new();
         let mut markers = Vec::new();
         let mut unused_tags = Vec::new();
+        let mut deprecated = None;
+        let mut since = None;
 
         for tag in tags {
             match tag {
                 Tag::Param(param) => params.push(param),
                 Tag::Return(return_tag) => returns.push(return_tag),
                 Tag::Marker(marker) => markers.push(marker),
+                Tag::Deprecated(deprecated_tag) => deprecated = Some(deprecated_tag),
+                Tag::Since(since_tag) => since = Some(since_tag.version.to_string()),
                 _ => unused_tags.push(tag),
             }
         }
@@ -74,7 +85,9 @@ impl<'a> FunctionDocEntry<'a> {
             markers,
             function_type,
             within,
+            deprecated,
             source,
+            since,
         })
     }
 }
