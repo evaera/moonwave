@@ -69,6 +69,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b486ce3ccf7ffd79fdeb678eac06a9e6c09fc88d33836340becb8fffe87c5e33"
 
 [[package]]
+name = "cfg-if"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
 name = "clap"
 version = "2.33.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -138,12 +144,11 @@ checksum = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
 
 [[package]]
 name = "full_moon"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10ff67debb902ca15a8296249ca41f452dc3f89a8ea65bf0d83eb3acfea30614"
+version = "0.9.0"
+source = "git+https://github.com/Kampfkarren/full-moon#592dcda974d00fad0bd4065b9376375bcf516393"
 dependencies = [
  "bytecount",
- "cfg-if",
+ "cfg-if 1.0.0",
  "derive_more",
  "full_moon_derive",
  "nom",
@@ -154,8 +159,7 @@ dependencies = [
 [[package]]
 name = "full_moon_derive"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b801c06761a10d816ea4e151675ebafbec80e256e498369e559c1d53ed7a8f8b"
+source = "git+https://github.com/Kampfkarren/full-moon#592dcda974d00fad0bd4065b9376375bcf516393"
 dependencies = [
  "indexmap",
  "proc-macro2",
@@ -224,7 +228,7 @@ checksum = "f86d66d380c9c5a685aaac7a11818bdfa1f733198dfd9ec09c70b762cd12ad6f"
 dependencies = [
  "arrayvec",
  "bitflags",
- "cfg-if",
+ "cfg-if 0.1.9",
  "rustc_version",
  "ryu",
  "static_assertions",

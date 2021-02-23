@@ -12,10 +12,13 @@ path = "src/lib.rs"
 name = "moonwave"
 path = "src/main.rs"
 
+[profile.dev]
+opt-level = 1
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = "0.6.2" #{ path = "../full-moon/full-moon" }
+full_moon = { git = "https://github.com/Kampfkarren/full-moon" }
 walkdir = "2"
 anyhow = "1.0.28"
 regex = "1.4.1"
