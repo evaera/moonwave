@@ -44,10 +44,19 @@ fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {
     let stdout_name = format!("{}-stdout", file_name);
     let stderr_name = format!("{}-stderr", file_name);
 
+    let status_code = output.status.code();
+
+    if status_code != Some(expected_status) {
+        eprint!("{}", stderr);
+        panic!(
+            "Expected status code {}, but got {}",
+            expected_status,
+            status_code.map_or("none".to_owned(), |c| c.to_string())
+        )
+    }
+
     insta::assert_snapshot!(stdout_name, stdout);
     insta::assert_snapshot!(stderr_name, stderr);
-
-    assert_eq!(output.status.code(), Some(expected_status));
 
     Ok(())
 }
