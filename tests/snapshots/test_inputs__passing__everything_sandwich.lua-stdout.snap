@@ -9,7 +9,7 @@ expression: stdout
     "functions": [
       {
         "name": "new",
-        "desc": "Creates a new instance of Module.\n-@deprecated 1.12 -- Use [[Module.somethingElse]] instead",
+        "desc": "Creates a new instance of Module.",
         "within": "Module",
         "params": [
           {
@@ -24,8 +24,19 @@ expression: stdout
             "lua_type": "Module"
           }
         ],
-        "markers": [],
-        "function_type": "static"
+        "markers": [
+          "server",
+          "client"
+        ],
+        "tags": [
+          "this is a tag",
+          "this is another tag"
+        ],
+        "function_type": "static",
+        "deprecated": {
+          "version": "1.12",
+          "desc": "Use [[Module.somethingElse]] instead"
+        }
       },
       {
         "name": "get",
@@ -45,6 +56,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       }
     ],
@@ -74,6 +86,7 @@ expression: stdout
         ],
         "returns": [],
         "markers": [],
+        "tags": [],
         "function_type": "static"
       }
     ],

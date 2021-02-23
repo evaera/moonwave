@@ -2,6 +2,7 @@ use crate::{diagnostic::Diagnostic, span::Span};
 use serde::Serialize;
 use std::convert::TryFrom;
 
+mod custom;
 mod kind;
 mod marker;
 mod param;
@@ -10,6 +11,7 @@ mod status;
 mod validation;
 mod within;
 
+pub use custom::CustomTag;
 pub use kind::{KindTag, KindTagType};
 pub use marker::{MarkerTag, MarkerTagType};
 pub use param::ParamTag;
@@ -37,8 +39,8 @@ pub enum TagType {
     Return,
     Deprecated,
     Since,
+    Custom,
     // Unimplemented
-    Tag,
     Error,
     Field,
     External,
@@ -56,6 +58,7 @@ pub enum Tag<'a> {
     Marker(MarkerTag<'a>),
     Deprecated(DeprecatedTag<'a>),
     Since(SinceTag<'a>),
+    Custom(CustomTag<'a>),
 }
 
 impl<'a> Tag<'a> {
@@ -68,6 +71,7 @@ impl<'a> Tag<'a> {
             Tag::Marker(tag) => tag.source.diagnostic(text),
             Tag::Deprecated(tag) => tag.source.diagnostic(text),
             Tag::Since(tag) => tag.source.diagnostic(text),
+            Tag::Custom(tag) => tag.source.diagnostic(text),
         }
     }
 
@@ -80,6 +84,7 @@ impl<'a> Tag<'a> {
             Tag::Marker(MarkerTag { marker_type, .. }) => marker_type.tag_type(),
             Tag::Deprecated(_) => TagType::Deprecated,
             Tag::Since(_) => TagType::Since,
+            Tag::Custom(_) => TagType::Custom,
         }
     }
 
@@ -93,6 +98,7 @@ impl<'a> Tag<'a> {
             Tag::Marker(tag) => tag.source.replace(span),
             Tag::Deprecated(tag) => tag.source.replace(span),
             Tag::Since(tag) => tag.source.replace(span),
+            Tag::Custom(tag) => tag.source.replace(span),
         }
     }
 }
@@ -128,9 +134,9 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
                     "@type" => KindTag::parse(tag_text, KindTagType::Type).map(Tag::Kind),
                     "@class" => KindTag::parse(tag_text, KindTagType::Class).map(Tag::Kind),
                     "@function" => KindTag::parse(tag_text, KindTagType::Function).map(Tag::Kind),
-
                     "@deprecated" => DeprecatedTag::parse(tag_text).map(Tag::Deprecated),
                     "@since" => SinceTag::parse(tag_text).map(Tag::Since),
+                    "@tag" => CustomTag::parse(tag_text).map(Tag::Custom),
                     _ => Err(text.diagnostic("Unknown tag")),
                 }
             }

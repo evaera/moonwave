@@ -1,26 +1,26 @@
 --[==[
-    @type CommandArgument
+	@type CommandArgument
 
-    This is the description
+	This is the description
 
-    @prop Type string
-    @prop Name string
-    @prop Description string
-    @prop Optional boolean?
-    @prop Default any
-    @prop callback nil | (name: string, id: number) => part -- The part you need to go to
+	@prop Type string
+	@prop Name string
+	@prop Description string
+	@prop Optional boolean?
+	@prop Default any
+	@prop callback nil | (name: string, id: number) => part -- The part you need to go to
 
-    @param name string = "hi" --
+	@param name string = "hi" --
 
-    @function
-    @function asdf
+	@function
+	@function asdf
 ]==]
 
 --[==[
-    @interface CommandArgument
-    @field name string -- The name of the argument
-    .name string -- The name of the argument
-    .desc string -- The description of the argument
+	@interface CommandArgument
+	@field name string -- The name of the argument
+	.name string -- The name of the argument
+	.desc string -- The description of the argument
 ]==]
 
 --[=[
@@ -32,13 +32,13 @@
 
 
 --[=[
-    @function TheFunction
+	@function TheFunction
 
-    Does the stuff
+	Does the stuff
 
-    @within theclass
-    @param thename the type -- the description
-    @param thenameredux the type but twice -- the description again
+	@within theclass
+	@param thename the type -- the description
+	@param thenameredux the type but twice -- the description again
 ]=]
 
 --[=[
@@ -48,22 +48,26 @@
 ]=]
 
 --[=[
-    Creates a new instance of Module.
+	Creates a new instance of Module.
 
-    -@deprecated 1.12 -- Use [[Module.somethingElse]] instead
-    @param name string -- This is the name for this Module.
-    @return Module -- Returns the new Module!
+	@deprecated 1.12 -- Use [[Module.somethingElse]] instead
+	@param name string -- This is the name for this Module.
+	@return Module -- Returns the new Module!
+	@tag this is a tag
+	@tag this is another tag
+	@server
+	@client
 ]=]
 function Module.new()
 
 end
 
 --[=[
-    Gets a thingy
+	Gets a thingy
 
 
-    @param name string -- This is the name for this Module
-    @return Module - Returns the new Module!
+	@param name string -- This is the name for this Module
+	@return Module - Returns the new Module!
 ]=]
 function Module:get(name)
 

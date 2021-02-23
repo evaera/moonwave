@@ -25,6 +25,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -45,6 +46,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -70,6 +72,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -95,6 +98,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -115,6 +119,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -140,6 +145,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -165,6 +171,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       },
       {
@@ -185,6 +192,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "method"
       }
     ],

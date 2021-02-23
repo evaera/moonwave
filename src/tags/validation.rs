@@ -38,7 +38,7 @@ static DEPENDENT_TAGS: &[(TagType, TagType)] = &[
 static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Param,
     TagType::Return,
-    TagType::Tag,
+    TagType::Custom,
     TagType::Field,
 ];
 

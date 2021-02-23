@@ -30,6 +30,7 @@ expression: stdout
           }
         ],
         "markers": [],
+        "tags": [],
         "function_type": "static",
         "since": "v1.0",
         "deprecated": {
