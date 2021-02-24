@@ -40,6 +40,7 @@ static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Return,
     TagType::Custom,
     TagType::Field,
+    TagType::Error,
 ];
 
 fn build_diagnostic(

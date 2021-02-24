@@ -1,7 +1,7 @@
 use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
-    tags::{CustomTag, DeprecatedTag, MarkerTag, ParamTag, ReturnTag, Tag},
+    tags::{CustomTag, DeprecatedTag, ErrorTag, MarkerTag, ParamTag, ReturnTag, Tag},
 };
 use serde::Serialize;
 
@@ -25,6 +25,7 @@ pub struct FunctionDocEntry<'a> {
     pub returns: Vec<ReturnTag<'a>>,
     pub markers: Vec<MarkerTag<'a>>,
     pub tags: Vec<CustomTag<'a>>,
+    pub errors: Vec<ErrorTag<'a>>,
     pub function_type: FunctionType,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -50,23 +51,32 @@ impl<'a> FunctionDocEntry<'a> {
             source,
         } = args;
 
-        let within = within.unwrap();
-        let mut params = Vec::new();
-        let mut returns = Vec::new();
-        let mut markers = Vec::new();
+        let mut doc_entry = Self {
+            name,
+            desc,
+            source,
+            function_type,
+            since: None,
+            deprecated: None,
+            within: within.unwrap(),
+            params: Vec::new(),
+            returns: Vec::new(),
+            markers: Vec::new(),
+            tags: Vec::new(),
+            errors: Vec::new(),
+        };
+
         let mut unused_tags = Vec::new();
-        let mut custom_tags = Vec::new();
-        let mut deprecated = None;
-        let mut since = None;
 
         for tag in tags {
             match tag {
-                Tag::Param(param) => params.push(param),
-                Tag::Return(return_tag) => returns.push(return_tag),
-                Tag::Marker(marker) => markers.push(marker),
-                Tag::Deprecated(deprecated_tag) => deprecated = Some(deprecated_tag),
-                Tag::Since(since_tag) => since = Some(since_tag.version.to_string()),
-                Tag::Custom(custom_tag) => custom_tags.push(custom_tag),
+                Tag::Param(param) => doc_entry.params.push(param),
+                Tag::Return(return_tag) => doc_entry.returns.push(return_tag),
+                Tag::Marker(marker) => doc_entry.markers.push(marker),
+                Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
+                Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
+                Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
+                Tag::Error(error_tag) => doc_entry.errors.push(error_tag),
                 _ => unused_tags.push(tag),
             }
         }
@@ -80,18 +90,6 @@ impl<'a> FunctionDocEntry<'a> {
             return Err(Diagnostics::from(diagnostics));
         }
 
-        Ok(Self {
-            deprecated,
-            desc,
-            function_type,
-            markers,
-            name,
-            params,
-            returns,
-            since,
-            source,
-            tags: custom_tags,
-            within,
-        })
+        Ok(doc_entry)
     }
 }

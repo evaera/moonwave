@@ -32,6 +32,16 @@ expression: stdout
           "this is a tag",
           "this is another tag"
         ],
+        "errors": [
+          {
+            "lua_type": "\"Bad\"",
+            "desc": "This can error with the text Bad if there's a bad error."
+          },
+          {
+            "lua_type": "Error<F>",
+            "desc": "THis can error with an ERror object also. Maybe. We don't really know"
+          }
+        ],
         "function_type": "static",
         "deprecated": {
           "version": "1.12",
@@ -57,6 +67,7 @@ expression: stdout
         ],
         "markers": [],
         "tags": [],
+        "errors": [],
         "function_type": "method"
       }
     ],
@@ -87,6 +98,7 @@ expression: stdout
         "returns": [],
         "markers": [],
         "tags": [],
+        "errors": [],
         "function_type": "static"
       }
     ],

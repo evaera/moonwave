@@ -3,6 +3,7 @@ use serde::Serialize;
 use std::convert::TryFrom;
 
 mod custom;
+mod error;
 mod kind;
 mod marker;
 mod param;
@@ -12,6 +13,7 @@ mod validation;
 mod within;
 
 pub use custom::CustomTag;
+pub use error::ErrorTag;
 pub use kind::{KindTag, KindTagType};
 pub use marker::{MarkerTag, MarkerTagType};
 pub use param::ParamTag;
@@ -40,8 +42,8 @@ pub enum TagType {
     Deprecated,
     Since,
     Custom,
-    // Unimplemented
     Error,
+    // Unimplemented
     Field,
     External,
     Link,
@@ -59,6 +61,7 @@ pub enum Tag<'a> {
     Deprecated(DeprecatedTag<'a>),
     Since(SinceTag<'a>),
     Custom(CustomTag<'a>),
+    Error(ErrorTag<'a>),
 }
 
 impl<'a> Tag<'a> {
@@ -72,6 +75,7 @@ impl<'a> Tag<'a> {
             Tag::Deprecated(tag) => tag.source.diagnostic(text),
             Tag::Since(tag) => tag.source.diagnostic(text),
             Tag::Custom(tag) => tag.source.diagnostic(text),
+            Tag::Error(tag) => tag.source.diagnostic(text),
         }
     }
 
@@ -85,6 +89,7 @@ impl<'a> Tag<'a> {
             Tag::Deprecated(_) => TagType::Deprecated,
             Tag::Since(_) => TagType::Since,
             Tag::Custom(_) => TagType::Custom,
+            Tag::Error(_) => TagType::Error,
         }
     }
 
@@ -99,6 +104,7 @@ impl<'a> Tag<'a> {
             Tag::Deprecated(tag) => tag.source.replace(span),
             Tag::Since(tag) => tag.source.replace(span),
             Tag::Custom(tag) => tag.source.replace(span),
+            Tag::Error(tag) => tag.source.replace(span),
         }
     }
 }
@@ -137,6 +143,7 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
                     "@deprecated" => DeprecatedTag::parse(tag_text).map(Tag::Deprecated),
                     "@since" => SinceTag::parse(tag_text).map(Tag::Since),
                     "@tag" => CustomTag::parse(tag_text).map(Tag::Custom),
+                    "@error" => ErrorTag::parse(tag_text).map(Tag::Error),
                     _ => Err(text.diagnostic("Unknown tag")),
                 }
             }

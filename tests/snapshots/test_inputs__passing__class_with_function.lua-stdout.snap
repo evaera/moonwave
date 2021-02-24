@@ -31,6 +31,7 @@ expression: stdout
         ],
         "markers": [],
         "tags": [],
+        "errors": [],
         "function_type": "static",
         "since": "v1.0",
         "deprecated": {
