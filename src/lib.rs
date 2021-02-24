@@ -19,7 +19,7 @@ use doc_comment::DocComment;
 use doc_entry::{DocEntry, FunctionDocEntry, PropertyDocEntry, TypeDocEntry};
 use serde::Serialize;
 
-use tags::MarkerTag;
+use tags::{CustomTag, MarkerTag};
 use walkdir::{self, WalkDir};
 
 mod cli;
@@ -36,6 +36,7 @@ pub use cli::*;
 use error::Error;
 use source_file::SourceFile;
 
+/// The class struct that is used in the main output, which owns its members
 #[derive(Debug, Serialize, Default)]
 struct OutputClass<'a> {
     name: String,
@@ -44,6 +45,7 @@ struct OutputClass<'a> {
     properties: Vec<PropertyDocEntry<'a>>,
     types: Vec<TypeDocEntry<'a>>,
     markers: Vec<MarkerTag<'a>>,
+    tags: Vec<CustomTag<'a>>,
 }
 
 pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
@@ -105,6 +107,7 @@ fn into_classes<'a>(mut entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a
                     name: mem::take(&mut class.name),
                     desc: mem::take(&mut class.desc),
                     markers: mem::take(&mut class.markers),
+                    tags: mem::take(&mut class.tags),
                     ..Default::default()
                 },
             );
