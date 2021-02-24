@@ -1,7 +1,6 @@
 use serde::Serialize;
 
 use crate::{diagnostic::Diagnostic, span::Span};
-// Tag
 
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(transparent)]
