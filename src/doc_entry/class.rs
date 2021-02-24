@@ -1,7 +1,7 @@
 use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
-    tags::{MarkerTag, Tag},
+    tags::{CustomTag, MarkerTag, Tag},
 };
 use serde::Serialize;
 
@@ -13,6 +13,7 @@ pub struct ClassDocEntry<'a> {
     pub name: String,
     pub desc: String,
     pub markers: Vec<MarkerTag<'a>>,
+    pub tags: Vec<CustomTag<'a>>,
     #[serde(skip)]
     pub source: &'a DocComment,
 }
@@ -27,21 +28,33 @@ impl<'a> ClassDocEntry<'a> {
             source,
         } = args;
 
-        let mut markers = Vec::new();
+        let mut doc_entry = Self {
+            name,
+            desc,
+            source,
+            markers: Vec::new(),
+            tags: Vec::new(),
+        };
+
         let mut unused_tags = Vec::new();
 
         for tag in tags {
             match tag {
-                Tag::Marker(marker) => markers.push(marker),
+                Tag::Marker(tag) => doc_entry.markers.push(tag),
+                Tag::Custom(tag) => doc_entry.tags.push(tag),
                 _ => unused_tags.push(tag),
             }
         }
 
-        Ok(Self {
-            name,
-            desc,
-            markers,
-            source,
-        })
+        if !unused_tags.is_empty() {
+            let mut diagnostics = Vec::new();
+            for tag in unused_tags {
+                diagnostics.push(tag.diagnostic("This tag is unused by class doc entries."));
+            }
+
+            return Err(Diagnostics::from(diagnostics));
+        }
+
+        Ok(doc_entry)
     }
 }
