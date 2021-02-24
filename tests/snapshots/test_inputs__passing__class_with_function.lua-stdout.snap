@@ -45,7 +45,8 @@ expression: stdout
     "markers": [
       "unreleased",
       "private"
-    ]
+    ],
+    "tags": []
   }
 ]
 

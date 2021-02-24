@@ -10,6 +10,9 @@ local Serializer = require(script.Serializer)
 local HotReloader = require(script.HotReloader)
 local Symbol = require(script.Parent.Shared.Symbol)
 
+--[=[
+	@class Fabric
+]=]
 local Fabric = {
 	reducers = require(script.Operators.Reducers);
 	comparators = require(script.Operators.Comparators);
@@ -25,9 +28,11 @@ local Fabric = {
 }
 Fabric.__index = Fabric
 
-
 --[=[
-	@class Fabric
+	Creates a new instance of Fabric.
+
+	@param namespace string -- A unique namespace to distinguish from other instances of Fabric for network calls.
+	@return Fabric
 ]=]
 function Fabric.new(namespace)
 	local self = setmetatable({

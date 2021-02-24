@@ -73,7 +73,8 @@ expression: stdout
     ],
     "properties": [],
     "types": [],
-    "markers": []
+    "markers": [],
+    "tags": []
   },
   {
     "name": "theclass",
@@ -106,7 +107,8 @@ expression: stdout
     "types": [],
     "markers": [
       "unreleased"
-    ]
+    ],
+    "tags": []
   }
 ]
 

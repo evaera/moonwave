@@ -8,6 +8,28 @@ expression: stdout
     "desc": "",
     "functions": [
       {
+        "name": "new",
+        "desc": "Creates a new instance of Fabric.",
+        "within": "Fabric",
+        "params": [
+          {
+            "name": "namespace",
+            "desc": "A unique namespace to distinguish from other instances of Fabric for network calls.",
+            "lua_type": "string"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "Fabric"
+          }
+        ],
+        "markers": [],
+        "tags": [],
+        "errors": [],
+        "function_type": "static"
+      },
+      {
         "name": "registerUnit",
         "desc": "Registers a unit. This function should be called before attempting to get or create the unit.",
         "within": "Fabric",
@@ -206,7 +228,8 @@ expression: stdout
     ],
     "properties": [],
     "types": [],
-    "markers": []
+    "markers": [],
+    "tags": []
   }
 ]
 
