@@ -1,0 +1,32 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: This tag is mutually exclusive...
+  ┌─ test-input/failing/class_with_unused_tags.lua:2:2
+  │
+2 │     @class Foobar
+  │     ^^^^^^^^^^^^^ This tag is mutually exclusive...
+  ·
+5 │     @return string -- a string
+  │     -------------------------- ...with this tag.
+
+error: This tag is mutually exclusive...
+  ┌─ test-input/failing/class_with_unused_tags.lua:2:2
+  │
+2 │     @class Foobar
+  │     ^^^^^^^^^^^^^ This tag is mutually exclusive...
+3 │     @yields
+4 │     @error E -- This
+  │     ---------------- ...with this tag.
+
+error: This tag is mutually exclusive...
+  ┌─ test-input/failing/class_with_unused_tags.lua:2:2
+  │
+2 │     @class Foobar
+  │     ^^^^^^^^^^^^^ This tag is mutually exclusive...
+3 │     @yields
+  │     ------- ...with this tag.
+
+error: aborting due to diagnostic error
+

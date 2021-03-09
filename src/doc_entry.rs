@@ -5,7 +5,7 @@ use crate::{
     diagnostic::{Diagnostic, Diagnostics},
     doc_comment::DocComment,
     span::Span,
-    tags::{validate_tags, KindTag, KindTagType, Tag, WithinTag},
+    tags::{validate_tags, Tag},
 };
 use full_moon::ast::Stmt;
 
@@ -59,66 +59,37 @@ struct DocEntryParseArguments<'a> {
     source: &'a DocComment,
 }
 
-// TODO: Within tag required for kind tags other than class
-// TODO: Leftover tags, somehow?
+fn get_within_tag<'a>(tags: &'a [Tag], kind_tag: &Tag) -> Result<String, Diagnostic> {
+    for tag in tags {
+        if let Tag::Within(within_tag) = tag {
+            return Ok(within_tag.name.as_str().to_owned());
+        }
+    }
+
+    Err(kind_tag.diagnostic("Must specify containing class with @within tag"))
+}
 
 fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
-    let kind_tags = tags
-        .iter()
-        .filter(|t| matches!(**t, Tag::Kind(_)))
-        .collect::<Vec<_>>();
-
-    let within_tags = tags
-        .iter()
-        .filter(|t| matches!(**t, Tag::Within(_)))
-        .collect::<Vec<_>>();
-
-    if kind_tags.is_empty() {
-        return Ok(None);
-    } else if kind_tags.len() > 1 {
-        return Err(kind_tags[1].diagnostic("Only one kind tag is allowed"));
-    }
-
-    let the_kind_tag = kind_tags[0];
-
-    match the_kind_tag {
-        Tag::Kind(KindTag {
-            kind_type: KindTagType::Class,
-            name,
-            ..
-        }) => Ok(Some(DocEntryKind::Class {
-            name: name.as_str().to_owned(),
-        })),
-        Tag::Kind(KindTag {
-            kind_type: tag_type,
-            name,
-            ..
-        }) => {
-            if within_tags.is_empty() {
-                return Err(
-                    the_kind_tag.diagnostic("Must specify containing class with @within tag")
-                );
+    for tag in tags {
+        match tag {
+            Tag::Class(class_tag) => {
+                return Ok(Some(DocEntryKind::Class {
+                    name: class_tag.name.as_str().to_owned(),
+                }))
             }
-
-            let name = name.as_str().to_owned();
-            let within = match within_tags[0] {
-                Tag::Within(WithinTag { name, .. }) => name.as_str().to_owned(),
-                _ => unreachable!(),
-            };
-
-            match tag_type {
-                KindTagType::Function => Ok(Some(DocEntryKind::Function {
-                    name,
-                    within,
+            Tag::Function(function_tag) => {
+                return Ok(Some(DocEntryKind::Function {
+                    name: function_tag.name.as_str().to_owned(),
                     function_type: FunctionType::Static,
-                })),
-                KindTagType::Property => Ok(Some(DocEntryKind::Property { name, within })),
-                KindTagType::Type => Ok(Some(DocEntryKind::Type { name, within })),
-                _ => panic!("Unhandled tag type {:?}", tag_type),
+                    within: get_within_tag(tags, tag)?,
+                }));
             }
+            // TODO: prop, type, etc
+            _ => (),
         }
-        _ => unreachable!(),
     }
+
+    Ok(None)
 }
 
 fn determine_kind(
@@ -202,7 +173,7 @@ impl<'a> DocEntry<'a> {
             determine_kind(doc_comment, stmt, &tags).map_err(|err| Diagnostics::from(vec![err]))?;
 
         // Sift out the kind/within tags because those are only used for determining the kind
-        tags.retain(|t| !matches!(t, Tag::Kind(_) | Tag::Within(_)));
+        tags.retain(|t| !matches!(t, Tag::Function(_) | Tag::Within(_) | Tag::Class(_)));
 
         Ok(match kind {
             DocEntryKind::Function {

@@ -4,8 +4,6 @@ expression: stdout
 ---
 [
   {
-    "name": "aclass",
-    "desc": "This is a class",
     "functions": [
       {
         "name": "f",
@@ -29,10 +27,14 @@ expression: stdout
             "lua_type": "string"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
         "function_type": "static",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false,
         "since": "v1.0",
         "deprecated": {
           "version": "v1.2",
@@ -42,11 +44,13 @@ expression: stdout
     ],
     "properties": [],
     "types": [],
-    "markers": [
-      "unreleased",
-      "private"
-    ],
-    "tags": []
+    "name": "aclass",
+    "desc": "This is a class",
+    "tags": [],
+    "realm": [],
+    "private": true,
+    "unreleased": true,
+    "ignore": false
   }
 ]
 

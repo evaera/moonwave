@@ -2,111 +2,96 @@ use crate::{diagnostic::Diagnostic, span::Span};
 use serde::Serialize;
 use std::convert::TryFrom;
 
+mod class;
 mod custom;
 mod error;
-mod kind;
+mod function;
 mod marker;
 mod param;
+mod property;
 mod return_tag;
 mod status;
+mod type_definition;
 mod validation;
 mod within;
 
+pub use class::ClassTag;
 pub use custom::CustomTag;
 pub use error::ErrorTag;
-pub use kind::{KindTag, KindTagType};
-pub use marker::{MarkerTag, MarkerTagType};
+pub use function::FunctionTag;
+pub use marker::{
+    ClientTag, IgnoreTag, PrivateTag, ReadOnlyTag, ServerTag, UnreleasedTag, YieldsTag,
+};
 pub use param::ParamTag;
+pub use property::PropertyTag;
 pub use return_tag::ReturnTag;
 pub use status::{DeprecatedTag, SinceTag};
+pub use type_definition::TypeTag;
 pub use validation::validate_tags;
 pub use within::WithinTag;
 
-#[allow(unused)]
-#[derive(Debug, PartialEq, Hash, Eq)]
-pub enum TagType {
-    Param,
-    Property,
-    Function,
-    Class,
-    Within,
-    Type,
-    Unreleased,
-    Server,
-    Client,
-    Private,
-    Ignore,
-    Yields,
-    ReadOnly,
-    Return,
-    Deprecated,
-    Since,
-    Custom,
-    Error,
+macro_rules! define_tags {
+    ( $( $variant_name:ident($struct_name:ident),)* ) => {
+        #[derive(Debug, PartialEq, Serialize)]
+        pub enum Tag<'a> {
+            $( $variant_name($struct_name<'a>), )*
+        }
+
+        impl<'a> Tag<'a> {
+            pub fn diagnostic(&self, text: &str) -> Diagnostic {
+                match self {
+                    $( Tag::$variant_name(tag) => tag.source.diagnostic(text), )*
+                }
+            }
+
+            pub fn tag_type(&self) -> TagType {
+                match self {
+                    $( Tag::$variant_name(_) => TagType::$variant_name, )*
+                }
+            }
+
+            /// Replaces the source span with a new span for error reporting clarity
+            pub fn blame(&mut self, span: Span<'a>) {
+                match self {
+                    $( Tag::$variant_name(tag) => tag.source.replace(span), )*
+                }
+            }
+        }
+
+        #[allow(unused)]
+        #[derive(Debug, PartialEq, Hash, Eq)]
+        pub enum TagType {
+            $( $variant_name, )*
+        }
+    };
+}
+
+define_tags! {
+    Param(ParamTag),
+    Function(FunctionTag),
+    Property(PropertyTag),
+    Class(ClassTag),
+    Within(WithinTag),
+    Type(TypeTag),
+    Unreleased(UnreleasedTag),
+    Server(ServerTag),
+    Client(ClientTag),
+    Private(PrivateTag),
+    Ignore(IgnoreTag),
+    Yields(YieldsTag),
+    ReadOnly(ReadOnlyTag),
+    Return(ReturnTag),
+    Deprecated(DeprecatedTag),
+    Since(SinceTag),
+    Custom(CustomTag),
+    Error(ErrorTag),
+
     // Unimplemented
-    Field,
-    External,
-    Link,
-    Interface,
-    Enum,
-}
-
-#[derive(Debug, PartialEq, Serialize)]
-pub enum Tag<'a> {
-    Param(ParamTag<'a>),
-    Return(ReturnTag<'a>),
-    Kind(KindTag<'a>),
-    Within(WithinTag<'a>),
-    Marker(MarkerTag<'a>),
-    Deprecated(DeprecatedTag<'a>),
-    Since(SinceTag<'a>),
-    Custom(CustomTag<'a>),
-    Error(ErrorTag<'a>),
-}
-
-impl<'a> Tag<'a> {
-    pub fn diagnostic(&self, text: &str) -> Diagnostic {
-        match self {
-            Tag::Param(tag) => tag.source.diagnostic(text),
-            Tag::Return(tag) => tag.source.diagnostic(text),
-            Tag::Kind(tag) => tag.source.diagnostic(text),
-            Tag::Within(tag) => tag.source.diagnostic(text),
-            Tag::Marker(tag) => tag.source.diagnostic(text),
-            Tag::Deprecated(tag) => tag.source.diagnostic(text),
-            Tag::Since(tag) => tag.source.diagnostic(text),
-            Tag::Custom(tag) => tag.source.diagnostic(text),
-            Tag::Error(tag) => tag.source.diagnostic(text),
-        }
-    }
-
-    pub fn tag_type(&self) -> TagType {
-        match self {
-            Tag::Param(_) => TagType::Param,
-            Tag::Return(_) => TagType::Return,
-            Tag::Kind(KindTag { kind_type, .. }) => kind_type.tag_type(),
-            Tag::Within(_) => TagType::Within,
-            Tag::Marker(MarkerTag { marker_type, .. }) => marker_type.tag_type(),
-            Tag::Deprecated(_) => TagType::Deprecated,
-            Tag::Since(_) => TagType::Since,
-            Tag::Custom(_) => TagType::Custom,
-            Tag::Error(_) => TagType::Error,
-        }
-    }
-
-    /// Replaces the source span with a new span for error reporting clarity
-    pub fn blame(&mut self, span: Span<'a>) {
-        match self {
-            Tag::Param(tag) => tag.source.replace(span),
-            Tag::Return(tag) => tag.source.replace(span),
-            Tag::Kind(tag) => tag.source.replace(span),
-            Tag::Within(tag) => tag.source.replace(span),
-            Tag::Marker(tag) => tag.source.replace(span),
-            Tag::Deprecated(tag) => tag.source.replace(span),
-            Tag::Since(tag) => tag.source.replace(span),
-            Tag::Custom(tag) => tag.source.replace(span),
-            Tag::Error(tag) => tag.source.replace(span),
-        }
-    }
+    // Field,
+    // External,
+    // Link,
+    // Interface,
+    // Enum,
 }
 
 impl<'a> TryFrom<Span<'a>> for Tag<'a> {
@@ -118,13 +103,13 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
         let tag_name = pieces.next().unwrap().trim();
 
         let mut parsed_tag = match tag_name.as_str() {
-            "@server" => MarkerTag::parse(MarkerTagType::Server).map(Tag::Marker),
-            "@client" => MarkerTag::parse(MarkerTagType::Client).map(Tag::Marker),
-            "@private" => MarkerTag::parse(MarkerTagType::Private).map(Tag::Marker),
-            "@ignore" => MarkerTag::parse(MarkerTagType::Ignore).map(Tag::Marker),
-            "@yields" => MarkerTag::parse(MarkerTagType::Yields).map(Tag::Marker),
-            "@readonly" => MarkerTag::parse(MarkerTagType::ReadOnly).map(Tag::Marker),
-            "@unreleased" => MarkerTag::parse(MarkerTagType::Unreleased).map(Tag::Marker),
+            "@server" => ServerTag::parse().map(Tag::Server),
+            "@client" => ClientTag::parse().map(Tag::Client),
+            "@private" => PrivateTag::parse().map(Tag::Private),
+            "@ignore" => IgnoreTag::parse().map(Tag::Ignore),
+            "@yields" => YieldsTag::parse().map(Tag::Yields),
+            "@readonly" => ReadOnlyTag::parse().map(Tag::ReadOnly),
+            "@unreleased" => UnreleasedTag::parse().map(Tag::Unreleased),
 
             _ => {
                 let tag_text = match pieces.next().map(Span::trim) {
@@ -136,10 +121,10 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
                     "@param" => ParamTag::parse(tag_text).map(Tag::Param),
                     "@return" => ReturnTag::parse(tag_text).map(Tag::Return),
                     "@within" => WithinTag::parse(tag_text).map(Tag::Within),
-                    "@prop" => KindTag::parse(tag_text, KindTagType::Property).map(Tag::Kind),
-                    "@type" => KindTag::parse(tag_text, KindTagType::Type).map(Tag::Kind),
-                    "@class" => KindTag::parse(tag_text, KindTagType::Class).map(Tag::Kind),
-                    "@function" => KindTag::parse(tag_text, KindTagType::Function).map(Tag::Kind),
+                    "@type" => TypeTag::parse(tag_text).map(Tag::Type),
+                    "@prop" => PropertyTag::parse(tag_text).map(Tag::Property),
+                    "@class" => ClassTag::parse(tag_text).map(Tag::Class),
+                    "@function" => FunctionTag::parse(tag_text).map(Tag::Function),
                     "@deprecated" => DeprecatedTag::parse(tag_text).map(Tag::Deprecated),
                     "@since" => SinceTag::parse(tag_text).map(Tag::Since),
                     "@tag" => CustomTag::parse(tag_text).map(Tag::Custom),

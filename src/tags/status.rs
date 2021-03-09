@@ -47,18 +47,6 @@ impl<'a> SinceTag<'a> {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
-pub struct UnreleasedTag<'a> {
-    #[serde(skip)]
-    pub source: Span<'a>,
-}
-
-impl<'a> UnreleasedTag<'a> {
-    pub fn parse(span: Span<'a>) -> Result<Self, Diagnostic> {
-        Ok(Self { source: span })
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use insta::assert_yaml_snapshot;

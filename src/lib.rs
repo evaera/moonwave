@@ -1,6 +1,6 @@
 use std::{
     collections::BTreeMap,
-    fs, io, mem,
+    fs, io,
     path::{self, Path},
 };
 
@@ -16,10 +16,9 @@ use codespan_reporting::{
 
 use diagnostic::{Diagnostic, Diagnostics};
 use doc_comment::DocComment;
-use doc_entry::{DocEntry, FunctionDocEntry, PropertyDocEntry, TypeDocEntry};
+use doc_entry::{ClassDocEntry, DocEntry, FunctionDocEntry, PropertyDocEntry, TypeDocEntry};
 use serde::Serialize;
 
-use tags::{CustomTag, MarkerTag};
 use walkdir::{self, WalkDir};
 
 mod cli;
@@ -27,6 +26,7 @@ mod diagnostic;
 mod doc_comment;
 mod doc_entry;
 pub mod error;
+pub mod realm;
 pub mod source_file;
 mod span;
 mod tags;
@@ -37,15 +37,14 @@ use error::Error;
 use source_file::SourceFile;
 
 /// The class struct that is used in the main output, which owns its members
-#[derive(Debug, Serialize, Default)]
+#[derive(Debug, Serialize)]
 struct OutputClass<'a> {
-    name: String,
-    desc: String,
     functions: Vec<FunctionDocEntry<'a>>,
     properties: Vec<PropertyDocEntry<'a>>,
     types: Vec<TypeDocEntry<'a>>,
-    markers: Vec<MarkerTag<'a>>,
-    tags: Vec<CustomTag<'a>>,
+
+    #[serde(flatten)]
+    class: ClassDocEntry<'a>,
 }
 
 pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
@@ -96,19 +95,23 @@ pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn into_classes<'a>(mut entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, Diagnostics> {
+fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, Diagnostics> {
     let mut map: BTreeMap<String, OutputClass<'a>> = BTreeMap::new();
 
-    for entry in &mut entries {
+    let (classes, entries): (Vec<_>, Vec<_>) = entries
+        .into_iter()
+        .partition(|entry| matches!(*entry, DocEntry::Class(_)));
+
+    for entry in classes {
         if let DocEntry::Class(class) = entry {
+            let (functions, properties, types) = Default::default();
             map.insert(
                 class.name.to_owned(),
                 OutputClass {
-                    name: mem::take(&mut class.name),
-                    desc: mem::take(&mut class.desc),
-                    markers: mem::take(&mut class.markers),
-                    tags: mem::take(&mut class.tags),
-                    ..Default::default()
+                    class,
+                    functions,
+                    properties,
+                    types,
                 },
             );
         }

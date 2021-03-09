@@ -4,8 +4,6 @@ expression: stdout
 ---
 [
   {
-    "name": "Module",
-    "desc": "This is a module lcass with thsf",
     "functions": [
       {
         "name": "new",
@@ -24,10 +22,6 @@ expression: stdout
             "lua_type": "Module"
           }
         ],
-        "markers": [
-          "server",
-          "client"
-        ],
         "tags": [
           "this is a tag",
           "this is another tag"
@@ -43,6 +37,14 @@ expression: stdout
           }
         ],
         "function_type": "static",
+        "realm": [
+          "Client",
+          "Server"
+        ],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false,
         "deprecated": {
           "version": "1.12",
           "desc": "Use [[Module.somethingElse]] instead"
@@ -65,20 +67,27 @@ expression: stdout
             "lua_type": "Module - Returns the new Module!"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       }
     ],
     "properties": [],
     "types": [],
-    "markers": [],
-    "tags": []
+    "name": "Module",
+    "desc": "This is a module lcass with thsf",
+    "tags": [],
+    "realm": [],
+    "private": false,
+    "unreleased": false,
+    "ignore": false
   },
   {
-    "name": "theclass",
-    "desc": "This is the class",
     "functions": [
       {
         "name": "TheFunction",
@@ -97,18 +106,25 @@ expression: stdout
           }
         ],
         "returns": [],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "static"
+        "function_type": "static",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       }
     ],
     "properties": [],
     "types": [],
-    "markers": [
-      "unreleased"
-    ],
-    "tags": []
+    "name": "theclass",
+    "desc": "This is the class",
+    "tags": [],
+    "realm": [],
+    "private": false,
+    "unreleased": true,
+    "ignore": false
   }
 ]
 

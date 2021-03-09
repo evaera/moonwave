@@ -19,7 +19,7 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Return, TagType::Class),
     (TagType::Return, TagType::Type),
     // Field is exclusive with function
-    (TagType::Field, TagType::Function),
+    // (TagType::Field, TagType::Function),
     // Properties can't error or yield
     (TagType::Error, TagType::Property),
     (TagType::Yields, TagType::Property),
@@ -28,6 +28,8 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Yields, TagType::Class),
     // Can't be unreleased and released at the same time
     (TagType::Unreleased, TagType::Since),
+    // Readonly doesn't make sense on a function
+    (TagType::Function, TagType::ReadOnly),
 ];
 
 static DEPENDENT_TAGS: &[(TagType, TagType)] = &[
@@ -39,7 +41,7 @@ static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Param,
     TagType::Return,
     TagType::Custom,
-    TagType::Field,
+    // TagType::Field,
     TagType::Error,
 ];
 

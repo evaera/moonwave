@@ -1,7 +1,10 @@
+use std::collections::BTreeSet;
+
 use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
-    tags::{CustomTag, MarkerTag, Tag},
+    realm::Realm,
+    tags::{CustomTag, DeprecatedTag, Tag},
 };
 use serde::Serialize;
 
@@ -12,8 +15,19 @@ use super::DocEntryParseArguments;
 pub struct ClassDocEntry<'a> {
     pub name: String,
     pub desc: String,
-    pub markers: Vec<MarkerTag<'a>>,
     pub tags: Vec<CustomTag<'a>>,
+
+    pub realm: BTreeSet<Realm>,
+    pub private: bool,
+    pub unreleased: bool,
+    pub ignore: bool,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deprecated: Option<DeprecatedTag<'a>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub since: Option<String>,
+
     #[serde(skip)]
     pub source: &'a DocComment,
 }
@@ -32,16 +46,33 @@ impl<'a> ClassDocEntry<'a> {
             name,
             desc,
             source,
-            markers: Vec::new(),
             tags: Vec::new(),
+            realm: BTreeSet::new(),
+            private: false,
+            unreleased: false,
+            ignore: false,
+            deprecated: None,
+            since: None,
         };
 
         let mut unused_tags = Vec::new();
 
         for tag in tags {
             match tag {
-                Tag::Marker(tag) => doc_entry.markers.push(tag),
                 Tag::Custom(tag) => doc_entry.tags.push(tag),
+                Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
+                Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
+
+                Tag::Private(_) => doc_entry.private = true,
+                Tag::Unreleased(_) => doc_entry.unreleased = true,
+                Tag::Ignore(_) => doc_entry.ignore = true,
+
+                Tag::Server(_) => {
+                    doc_entry.realm.insert(Realm::Server);
+                }
+                Tag::Client(_) => {
+                    doc_entry.realm.insert(Realm::Client);
+                }
                 _ => unused_tags.push(tag),
             }
         }

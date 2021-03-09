@@ -4,8 +4,6 @@ expression: stdout
 ---
 [
   {
-    "name": "Fabric",
-    "desc": "",
     "functions": [
       {
         "name": "new",
@@ -24,10 +22,14 @@ expression: stdout
             "lua_type": "Fabric"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "static"
+        "function_type": "static",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "registerUnit",
@@ -46,10 +48,14 @@ expression: stdout
             "lua_type": "UnitDefinition"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "registerUnitsIn",
@@ -68,10 +74,14 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "getUnitByRef",
@@ -95,10 +105,14 @@ expression: stdout
             "lua_type": "Unit?"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "getOrCreateUnitByRef",
@@ -122,10 +136,14 @@ expression: stdout
             "lua_type": "Unit"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "removeAllUnitsWithRef",
@@ -144,10 +162,14 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "fire",
@@ -171,10 +193,14 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "on",
@@ -198,10 +224,14 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       },
       {
         "name": "debug",
@@ -220,16 +250,25 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "markers": [],
         "tags": [],
         "errors": [],
-        "function_type": "method"
+        "function_type": "method",
+        "realm": [],
+        "private": false,
+        "unreleased": false,
+        "yields": false,
+        "ignore": false
       }
     ],
     "properties": [],
     "types": [],
-    "markers": [],
-    "tags": []
+    "name": "Fabric",
+    "desc": ".reducers Reducers -- This is a property that is set to the reducers.",
+    "tags": [],
+    "realm": [],
+    "private": false,
+    "unreleased": false,
+    "ignore": false
   }
 ]
 

@@ -1,50 +1,31 @@
 use crate::{diagnostic::Diagnostic, span::Span};
 use serde::Serialize;
 
-use super::TagType;
-
-#[derive(Debug, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub enum MarkerTagType {
-    Server,
-    Client,
-    Private,
-    Ignore,
-    Yields,
-    ReadOnly,
-    Unreleased,
-}
-
-impl MarkerTagType {
-    pub fn tag_type(&self) -> TagType {
-        match self {
-            MarkerTagType::Server => TagType::Server,
-            MarkerTagType::Client => TagType::Client,
-            MarkerTagType::Private => TagType::Private,
-            MarkerTagType::Ignore => TagType::Ignore,
-            MarkerTagType::Yields => TagType::Yields,
-            MarkerTagType::ReadOnly => TagType::ReadOnly,
-            MarkerTagType::Unreleased => TagType::Unreleased,
+macro_rules! define_marker_tag {
+    ( $struct_name:ident ) => {
+        #[derive(Debug, PartialEq, Serialize)]
+        pub struct $struct_name<'a> {
+            #[serde(skip)]
+            pub source: Span<'a>,
         }
-    }
+
+        impl<'a> $struct_name<'a> {
+            pub fn parse() -> Result<Self, Diagnostic> {
+                Ok(Self {
+                    source: Span::dummy(""),
+                })
+            }
+        }
+    };
 }
 
-#[derive(Debug, PartialEq, Serialize)]
-#[serde(transparent)]
-pub struct MarkerTag<'a> {
-    pub marker_type: MarkerTagType,
-    #[serde(skip)]
-    pub source: Span<'a>,
-}
-
-impl<'a> MarkerTag<'a> {
-    pub fn parse(tag_type: MarkerTagType) -> Result<Self, Diagnostic> {
-        Ok(Self {
-            marker_type: tag_type,
-            source: Span::dummy(""),
-        })
-    }
-}
+define_marker_tag!(ServerTag);
+define_marker_tag!(ClientTag);
+define_marker_tag!(PrivateTag);
+define_marker_tag!(IgnoreTag);
+define_marker_tag!(YieldsTag);
+define_marker_tag!(ReadOnlyTag);
+define_marker_tag!(UnreleasedTag);
 
 #[cfg(test)]
 mod test {
@@ -54,14 +35,14 @@ mod test {
 
     #[test]
     fn snapshot() {
-        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Server), @r###"
+        assert_yaml_snapshot!(ServerTag::parse(), @r###"
         ---
-        Ok: server
+        Ok: {}
         "###);
 
-        assert_yaml_snapshot!(MarkerTag::parse(MarkerTagType::Client), @r###"
+        assert_yaml_snapshot!(ServerTag::parse(), @r###"
         ---
-        Ok: client
+        Ok: {}
         "###);
     }
 }

@@ -12,7 +12,17 @@ local Symbol = require(script.Parent.Shared.Symbol)
 
 --[=[
 	@class Fabric
+
+	.reducers Reducers -- This is a property that is set to the reducers.
 ]=]
+
+--[==[
+	@prop reducers Reducers
+	@within Fabric
+	@readonly
+
+	This is a property that is set to the reducers.
+]==]
 local Fabric = {
 	reducers = require(script.Operators.Reducers);
 	comparators = require(script.Operators.Comparators);
