@@ -1,0 +1,18 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: Unknown tag
+  ┌─ test-input/failing/unknown_tags.lua:3:2
+  │
+3 │     @what asdfs
+  │     ^^^^^^^^^^^ Unknown tag
+
+error: Unknown tag
+  ┌─ test-input/failing/unknown_tags.lua:7:2
+  │
+7 │     @huh
+  │     ^^^^ Unknown tag
+
+error: aborting due to diagnostic error
+

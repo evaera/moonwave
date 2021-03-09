@@ -102,6 +102,13 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
 
         let tag_name = pieces.next().unwrap().trim();
 
+        let mut tag_text = || {
+            pieces
+                .next()
+                .map(Span::trim)
+                .ok_or_else(|| text.diagnostic("This tag requires text following it"))
+        };
+
         let mut parsed_tag = match tag_name.as_str() {
             "@server" => ServerTag::parse().map(Tag::Server),
             "@client" => ClientTag::parse().map(Tag::Client),
@@ -110,28 +117,18 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             "@yields" => YieldsTag::parse().map(Tag::Yields),
             "@readonly" => ReadOnlyTag::parse().map(Tag::ReadOnly),
             "@unreleased" => UnreleasedTag::parse().map(Tag::Unreleased),
-
-            _ => {
-                let tag_text = match pieces.next().map(Span::trim) {
-                    Some(span) => span,
-                    None => return Err(text.diagnostic("This tag requires text following it")),
-                };
-
-                match tag_name.as_str() {
-                    "@param" => ParamTag::parse(tag_text).map(Tag::Param),
-                    "@return" => ReturnTag::parse(tag_text).map(Tag::Return),
-                    "@within" => WithinTag::parse(tag_text).map(Tag::Within),
-                    "@type" => TypeTag::parse(tag_text).map(Tag::Type),
-                    "@prop" => PropertyTag::parse(tag_text).map(Tag::Property),
-                    "@class" => ClassTag::parse(tag_text).map(Tag::Class),
-                    "@function" => FunctionTag::parse(tag_text).map(Tag::Function),
-                    "@deprecated" => DeprecatedTag::parse(tag_text).map(Tag::Deprecated),
-                    "@since" => SinceTag::parse(tag_text).map(Tag::Since),
-                    "@tag" => CustomTag::parse(tag_text).map(Tag::Custom),
-                    "@error" => ErrorTag::parse(tag_text).map(Tag::Error),
-                    _ => Err(text.diagnostic("Unknown tag")),
-                }
-            }
+            "@param" => ParamTag::parse(tag_text()?).map(Tag::Param),
+            "@return" => ReturnTag::parse(tag_text()?).map(Tag::Return),
+            "@within" => WithinTag::parse(tag_text()?).map(Tag::Within),
+            "@type" => TypeTag::parse(tag_text()?).map(Tag::Type),
+            "@prop" => PropertyTag::parse(tag_text()?).map(Tag::Property),
+            "@class" => ClassTag::parse(tag_text()?).map(Tag::Class),
+            "@function" => FunctionTag::parse(tag_text()?).map(Tag::Function),
+            "@deprecated" => DeprecatedTag::parse(tag_text()?).map(Tag::Deprecated),
+            "@since" => SinceTag::parse(tag_text()?).map(Tag::Since),
+            "@tag" => CustomTag::parse(tag_text()?).map(Tag::Custom),
+            "@error" => ErrorTag::parse(tag_text()?).map(Tag::Error),
+            _ => Err(text.diagnostic("Unknown tag")),
         }?;
 
         parsed_tag.blame(text);

@@ -36,6 +36,11 @@ fn class_with_unused_tags() -> anyhow::Result<()> {
     run_moonwave("failing/class_with_unused_tags.lua", 1)
 }
 
+#[test]
+fn unknown_tags() -> anyhow::Result<()> {
+    run_moonwave("failing/unknown_tags.lua", 1)
+}
+
 fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {
     let path = Path::new("test-input").join(file_name);
 
