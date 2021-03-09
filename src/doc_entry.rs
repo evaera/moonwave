@@ -84,6 +84,12 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                     within: get_within_tag(tags, tag)?,
                 }));
             }
+            Tag::Property(property_tag) => {
+                return Ok(Some(DocEntryKind::Property {
+                    name: property_tag.name.as_str().to_owned(),
+                    within: get_within_tag(tags, tag)?,
+                }))
+            }
             // TODO: prop, type, etc
             _ => (),
         }
@@ -173,7 +179,12 @@ impl<'a> DocEntry<'a> {
             determine_kind(doc_comment, stmt, &tags).map_err(|err| Diagnostics::from(vec![err]))?;
 
         // Sift out the kind/within tags because those are only used for determining the kind
-        tags.retain(|t| !matches!(t, Tag::Function(_) | Tag::Within(_) | Tag::Class(_)));
+        tags.retain(|t| {
+            !matches!(
+                t,
+                Tag::Function(_) | Tag::Within(_) | Tag::Class(_) | Tag::Property(_) | Tag::Type(_)
+            )
+        });
 
         Ok(match kind {
             DocEntryKind::Function {
