@@ -1,0 +1,143 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [
+      {
+        "name": "comingSoon",
+        "desc": "",
+        "params": [],
+        "returns": [],
+        "tags": [],
+        "errors": [],
+        "function_type": "static",
+        "realm": [],
+        "private": false,
+        "unreleased": true,
+        "yields": false,
+        "ignore": false
+      }
+    ],
+    "properties": [
+      {
+        "name": "notReady",
+        "desc": "",
+        "tags": [],
+        "realm": [],
+        "private": false,
+        "unreleased": true,
+        "readonly": false,
+        "ignore": false
+      }
+    ],
+    "types": [],
+    "name": "Bar",
+    "desc": "",
+    "tags": [],
+    "realm": [],
+    "private": false,
+    "unreleased": true,
+    "ignore": false
+  },
+  {
+    "functions": [
+      {
+        "name": "new",
+        "desc": "This function creates a new Foo",
+        "params": [
+          {
+            "name": "a",
+            "desc": "param a",
+            "lua_type": "A A A"
+          },
+          {
+            "name": "b",
+            "desc": "param b",
+            "lua_type": "B B B"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "return a",
+            "lua_type": "a"
+          },
+          {
+            "desc": "return b",
+            "lua_type": "b"
+          }
+        ],
+        "tags": [
+          "uno",
+          "dos"
+        ],
+        "errors": [
+          {
+            "lua_type": "c",
+            "desc": "this errors sometimes. shrug"
+          }
+        ],
+        "function_type": "static",
+        "realm": [
+          "Client",
+          "Server"
+        ],
+        "private": true,
+        "unreleased": false,
+        "yields": true,
+        "ignore": true,
+        "since": "v1.23",
+        "deprecated": {
+          "version": "v1.5",
+          "desc": "Use something else"
+        }
+      }
+    ],
+    "properties": [
+      {
+        "name": "ready",
+        "desc": "",
+        "tags": [
+          "salad",
+          "fries",
+          "nuggets"
+        ],
+        "realm": [
+          "Client",
+          "Server"
+        ],
+        "private": true,
+        "unreleased": false,
+        "readonly": true,
+        "ignore": true,
+        "since": "v0.1.1",
+        "deprecated": {
+          "version": "v1.3",
+          "desc": "Use blah"
+        }
+      }
+    ],
+    "types": [],
+    "name": "Foo",
+    "desc": "Here's a description for you",
+    "tags": [
+      "bark",
+      "meow",
+      "rawr"
+    ],
+    "realm": [
+      "Client",
+      "Server"
+    ],
+    "private": true,
+    "unreleased": false,
+    "ignore": true,
+    "deprecated": {
+      "version": "v1.2",
+      "desc": "Use x instead"
+    },
+    "since": "v1.0"
+  }
+]
+

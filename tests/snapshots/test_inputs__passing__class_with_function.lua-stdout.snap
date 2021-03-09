@@ -8,7 +8,6 @@ expression: stdout
       {
         "name": "f",
         "desc": "This is a description\nThis is alos adid seictopu",
-        "within": "aclass",
         "params": [
           {
             "name": "thename",

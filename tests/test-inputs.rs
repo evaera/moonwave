@@ -17,6 +17,11 @@ fn fabric() -> anyhow::Result<()> {
 }
 
 #[test]
+fn all_tags() -> anyhow::Result<()> {
+    run_moonwave("passing/all_tags.lua", 0)
+}
+
+#[test]
 fn failing_function() -> anyhow::Result<()> {
     run_moonwave("failing/function.lua", 1)
 }

@@ -23,7 +23,6 @@ pub enum FunctionType {
 pub struct FunctionDocEntry<'a> {
     pub name: String,
     pub desc: String,
-    pub within: String,
     pub params: Vec<ParamTag<'a>>,
     pub returns: Vec<ReturnTag<'a>>,
     pub tags: Vec<CustomTag<'a>>,
@@ -44,6 +43,9 @@ pub struct FunctionDocEntry<'a> {
 
     #[serde(skip)]
     pub source: &'a DocComment,
+
+    #[serde(skip)]
+    pub within: String,
 }
 
 impl<'a> FunctionDocEntry<'a> {

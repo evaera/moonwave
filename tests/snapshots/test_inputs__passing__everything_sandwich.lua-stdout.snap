@@ -8,7 +8,6 @@ expression: stdout
       {
         "name": "new",
         "desc": "Creates a new instance of Module.",
-        "within": "Module",
         "params": [
           {
             "name": "name",
@@ -53,7 +52,6 @@ expression: stdout
       {
         "name": "get",
         "desc": "Gets a thingy",
-        "within": "Module",
         "params": [
           {
             "name": "name",
@@ -92,7 +90,6 @@ expression: stdout
       {
         "name": "TheFunction",
         "desc": "Does the stuff",
-        "within": "theclass",
         "params": [
           {
             "name": "thename",
