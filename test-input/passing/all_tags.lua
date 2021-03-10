@@ -73,3 +73,18 @@
 
 	Nil or number matey
 ]=]
+
+--[=[
+	@interface Command
+	@within Foo
+	@private
+	@ignore
+	@tag cmdr
+	@tag lua
+
+	.Name string -- the name of the command
+	.Groups array<string> -- A list of groups that the command contains
+	.Recursion Command -- This breaks the universe
+
+	An object describing a command
+]=]

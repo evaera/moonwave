@@ -256,6 +256,7 @@ expression: stdout
         "name": "reducers",
         "desc": "This is a property that is set to the reducers.",
         "tags": [],
+        "lua_type": "Reducers",
         "realm": [],
         "private": false,
         "unreleased": false,
@@ -267,13 +268,39 @@ expression: stdout
       {
         "name": "stringOrNil",
         "desc": "A string or nil.",
+        "lua_type": "string | nil",
+        "tags": [],
+        "private": false,
+        "ignore": false
+      },
+      {
+        "name": "Instance",
+        "desc": "A Roblox Instance.",
+        "fields": [
+          {
+            "name": "Name",
+            "lua_type": "string"
+          },
+          {
+            "name": "ClassName",
+            "lua_type": "string"
+          },
+          {
+            "name": "CollisionGroup",
+            "lua_type": "number"
+          },
+          {
+            "name": "Blargh",
+            "lua_type": "boolean"
+          }
+        ],
         "tags": [],
         "private": false,
         "ignore": false
       }
     ],
     "name": "Fabric",
-    "desc": ".reducers Reducers -- This is a property that is set to the reducers.",
+    "desc": "-.reducers Reducers -- This is a property that is set to the reducers.",
     "tags": [],
     "realm": [],
     "private": false,

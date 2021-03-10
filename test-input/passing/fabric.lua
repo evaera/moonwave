@@ -13,7 +13,7 @@ local Symbol = require(script.Parent.Shared.Symbol)
 --[=[
 	@class Fabric
 
-	.reducers Reducers -- This is a property that is set to the reducers.
+	-.reducers Reducers -- This is a property that is set to the reducers.
 ]=]
 
 --[=[
@@ -21,6 +21,18 @@ local Symbol = require(script.Parent.Shared.Symbol)
 	@within Fabric
 
 	A string or nil.
+]=]
+
+--[=[
+	@interface Instance
+	@within Fabric
+
+	A Roblox Instance.
+
+	.Name string -- A name for this Instance.
+	.ClassName string -- The class name for this
+	.CollisionGroup number
+	@field Blargh boolean -- This uses @field explicitly
 ]=]
 
 --[=[

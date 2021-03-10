@@ -18,7 +18,7 @@ impl DocComment {
             TokenType::MultiLineComment { comment, .. } => Self {
                 comment: comment.to_string(),
                 file_id,
-                start: token.start_position().bytes() + 5, // 5, because --[=[
+                start: token.start_position().bytes() + "--[=[".len(),
             },
             _ => unreachable!(),
         }

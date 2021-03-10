@@ -17,6 +17,8 @@ pub struct PropertyDocEntry<'a> {
     pub desc: String,
     pub tags: Vec<CustomTag<'a>>,
 
+    pub lua_type: String,
+
     pub realm: BTreeSet<Realm>,
     pub private: bool,
     pub unreleased: bool,
@@ -50,6 +52,7 @@ impl<'a> PropertyDocEntry<'a> {
             name,
             desc,
             source,
+            lua_type: String::new(),
             since: None,
             deprecated: None,
             within: within.unwrap(),
@@ -65,6 +68,10 @@ impl<'a> PropertyDocEntry<'a> {
 
         for tag in tags {
             match tag {
+                Tag::Property(property_tag) => {
+                    doc_entry.lua_type = property_tag.lua_type.as_str().to_owned()
+                }
+
                 Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),

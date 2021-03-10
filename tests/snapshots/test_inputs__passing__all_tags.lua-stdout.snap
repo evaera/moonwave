@@ -25,6 +25,7 @@ expression: stdout
         "name": "notReady",
         "desc": "",
         "tags": [],
+        "lua_type": "boolean",
         "realm": [],
         "private": false,
         "unreleased": true,
@@ -103,6 +104,7 @@ expression: stdout
           "fries",
           "nuggets"
         ],
+        "lua_type": "boolean",
         "realm": [
           "Client",
           "Server"
@@ -122,9 +124,34 @@ expression: stdout
       {
         "name": "nilOrNumber",
         "desc": "Nil or number matey",
+        "lua_type": "nil | number",
         "tags": [
           "arrgh",
           "yarr"
+        ],
+        "private": true,
+        "ignore": true
+      },
+      {
+        "name": "Command",
+        "desc": "An object describing a command",
+        "fields": [
+          {
+            "name": "Name",
+            "lua_type": "string"
+          },
+          {
+            "name": "Groups",
+            "lua_type": "array<string>"
+          },
+          {
+            "name": "Recursion",
+            "lua_type": "Command"
+          }
+        ],
+        "tags": [
+          "cmdr",
+          "lua"
         ],
         "private": true,
         "ignore": true

@@ -96,7 +96,12 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                     within: get_within_tag(tags, tag)?,
                 }))
             }
-            // TODO: interface
+            Tag::Interface(interface_tag) => {
+                return Ok(Some(DocEntryKind::Type {
+                    name: interface_tag.name.as_str().to_owned(),
+                    within: get_within_tag(tags, tag)?,
+                }))
+            }
             _ => (),
         }
     }
@@ -159,7 +164,7 @@ impl<'a> DocEntry<'a> {
             .lines()
             .map(Span::trim)
             .filter(|line| !line.is_empty())
-            .partition(|line| line.starts_with('@'));
+            .partition(|line| line.starts_with(&['@', '.'][..]));
 
         let desc = desc_lines
             .iter()
@@ -188,7 +193,7 @@ impl<'a> DocEntry<'a> {
         tags.retain(|t| {
             !matches!(
                 t,
-                Tag::Function(_) | Tag::Within(_) | Tag::Class(_) | Tag::Property(_) | Tag::Type(_)
+                Tag::Function(_) | Tag::Within(_) | Tag::Class(_) | Tag::Interface(_)
             )
         });
 

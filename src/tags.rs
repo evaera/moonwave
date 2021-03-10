@@ -5,7 +5,9 @@ use std::convert::TryFrom;
 mod class;
 mod custom;
 mod error;
+mod field;
 mod function;
+mod interface;
 mod marker;
 mod param;
 mod property;
@@ -18,7 +20,9 @@ mod within;
 pub use class::ClassTag;
 pub use custom::CustomTag;
 pub use error::ErrorTag;
+pub use field::FieldTag;
 pub use function::FunctionTag;
+pub use interface::InterfaceTag;
 pub use marker::{
     ClientTag, IgnoreTag, PrivateTag, ReadOnlyTag, ServerTag, UnreleasedTag, YieldsTag,
 };
@@ -73,6 +77,8 @@ define_tags! {
     Class(ClassTag),
     Within(WithinTag),
     Type(TypeTag),
+    Interface(InterfaceTag),
+    Field(FieldTag),
     Unreleased(UnreleasedTag),
     Server(ServerTag),
     Client(ClientTag),
@@ -86,11 +92,9 @@ define_tags! {
     Custom(CustomTag),
     Error(ErrorTag),
 
-    // Unimplemented
-    // Field,
+    // Unimplemented:
     // External,
     // Link,
-    // Interface,
     // Enum,
 }
 
@@ -98,6 +102,13 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
     type Error = Diagnostic;
 
     fn try_from(text: Span<'a>) -> Result<Self, Diagnostic> {
+        if text.starts_with('.') {
+            let mut parsed_tag = FieldTag::parse(text.slice(1, text.len() - 1)).map(Tag::Field)?;
+            parsed_tag.blame(text);
+
+            return Ok(parsed_tag);
+        }
+
         let mut pieces = text.splitn(2, " ");
 
         let tag_name = pieces.next().unwrap().trim();
@@ -117,10 +128,13 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             "@yields" => YieldsTag::parse().map(Tag::Yields),
             "@readonly" => ReadOnlyTag::parse().map(Tag::ReadOnly),
             "@unreleased" => UnreleasedTag::parse().map(Tag::Unreleased),
+
             "@param" => ParamTag::parse(tag_text()?).map(Tag::Param),
             "@return" => ReturnTag::parse(tag_text()?).map(Tag::Return),
             "@within" => WithinTag::parse(tag_text()?).map(Tag::Within),
             "@type" => TypeTag::parse(tag_text()?).map(Tag::Type),
+            "@interface" => InterfaceTag::parse(tag_text()?).map(Tag::Interface),
+            "@field" => FieldTag::parse(tag_text()?).map(Tag::Field),
             "@prop" => PropertyTag::parse(tag_text()?).map(Tag::Property),
             "@class" => ClassTag::parse(tag_text()?).map(Tag::Class),
             "@function" => FunctionTag::parse(tag_text()?).map(Tag::Function),

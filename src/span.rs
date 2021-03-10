@@ -4,7 +4,7 @@ use crate::{diagnostic::Diagnostic, doc_comment::DocComment};
 
 #[derive(Debug, Copy, Clone, Default)]
 pub struct Span<'a> {
-    pub source: &'a str,
+    source: &'a str,
     pub start: usize,
     pub len: usize,
     pub file_id: usize,
