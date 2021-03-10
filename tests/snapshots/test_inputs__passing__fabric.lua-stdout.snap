@@ -263,7 +263,15 @@ expression: stdout
         "ignore": false
       }
     ],
-    "types": [],
+    "types": [
+      {
+        "name": "stringOrNil",
+        "desc": "A string or nil.",
+        "tags": [],
+        "private": false,
+        "ignore": false
+      }
+    ],
     "name": "Fabric",
     "desc": ".reducers Reducers -- This is a property that is set to the reducers.",
     "tags": [],

@@ -118,7 +118,18 @@ expression: stdout
         }
       }
     ],
-    "types": [],
+    "types": [
+      {
+        "name": "nilOrNumber",
+        "desc": "Nil or number matey",
+        "tags": [
+          "arrgh",
+          "yarr"
+        ],
+        "private": true,
+        "ignore": true
+      }
+    ],
     "name": "Foo",
     "desc": "Here's a description for you",
     "tags": [

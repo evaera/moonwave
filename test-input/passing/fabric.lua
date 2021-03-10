@@ -17,6 +17,13 @@ local Symbol = require(script.Parent.Shared.Symbol)
 ]=]
 
 --[=[
+	@type stringOrNil string | nil
+	@within Fabric
+
+	A string or nil.
+]=]
+
+--[=[
 	@prop reducers Reducers
 	@within Fabric
 	@readonly

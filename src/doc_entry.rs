@@ -90,7 +90,13 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                     within: get_within_tag(tags, tag)?,
                 }))
             }
-            // TODO: prop, type, etc
+            Tag::Type(type_tag) => {
+                return Ok(Some(DocEntryKind::Type {
+                    name: type_tag.name.as_str().to_owned(),
+                    within: get_within_tag(tags, tag)?,
+                }))
+            }
+            // TODO: interface
             _ => (),
         }
     }

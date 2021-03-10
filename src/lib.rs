@@ -136,8 +136,11 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
                 Some(class) => class.properties.push(entry),
                 None => emit_diagnostic(entry.source, &entry.within),
             },
-            DocEntry::Class(_) => {}
-            _ => unimplemented!(),
+            DocEntry::Type(entry) => match map.get_mut(&entry.within) {
+                Some(class) => class.types.push(entry),
+                None => emit_diagnostic(entry.source, &entry.within),
+            },
+            _ => unreachable!(),
         };
     }
 

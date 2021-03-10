@@ -62,3 +62,14 @@
 	@within Bar
 	@unreleased
 ]=]
+
+--[=[
+	@type nilOrNumber nil | number
+	@within Foo
+	@private
+	@ignore
+	@tag arrgh
+	@tag yarr
+
+	Nil or number matey
+]=]

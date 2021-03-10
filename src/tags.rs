@@ -11,7 +11,7 @@ mod param;
 mod property;
 mod return_tag;
 mod status;
-mod type_definition;
+mod type_tag;
 mod validation;
 mod within;
 
@@ -26,7 +26,7 @@ pub use param::ParamTag;
 pub use property::PropertyTag;
 pub use return_tag::ReturnTag;
 pub use status::{DeprecatedTag, SinceTag};
-pub use type_definition::TypeTag;
+pub use type_tag::TypeTag;
 pub use validation::validate_tags;
 pub use within::WithinTag;
 
