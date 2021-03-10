@@ -21,6 +21,7 @@ expression: stdout
             "lua_type": "Module"
           }
         ],
+        "function_type": "static",
         "tags": [
           "this is a tag",
           "this is another tag"
@@ -35,15 +36,10 @@ expression: stdout
             "desc": "THis can error with an ERror object also. Maybe. We don't really know"
           }
         ],
-        "function_type": "static",
         "realm": [
           "Client",
           "Server"
         ],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false,
         "deprecated": {
           "version": "1.12",
           "desc": "Use [[Module.somethingElse]] instead"
@@ -65,25 +61,13 @@ expression: stdout
             "lua_type": "Module - Returns the new Module!"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       }
     ],
     "properties": [],
     "types": [],
     "name": "Module",
-    "desc": "This is a module lcass with thsf",
-    "tags": [],
-    "realm": [],
-    "private": false,
-    "unreleased": false,
-    "ignore": false
+    "desc": "This is a module lcass with thsf"
   },
   {
     "functions": [
@@ -103,25 +87,14 @@ expression: stdout
           }
         ],
         "returns": [],
-        "tags": [],
-        "errors": [],
-        "function_type": "static",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "static"
       }
     ],
     "properties": [],
     "types": [],
     "name": "theclass",
     "desc": "This is the class",
-    "tags": [],
-    "realm": [],
-    "private": false,
-    "unreleased": true,
-    "ignore": false
+    "unreleased": true
   }
 ]
 

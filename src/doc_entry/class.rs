@@ -4,6 +4,7 @@ use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
     realm::Realm,
+    serde_util::is_false,
     tags::{CustomTag, DeprecatedTag, Tag},
 };
 use serde::Serialize;
@@ -15,18 +16,21 @@ use super::DocEntryParseArguments;
 pub struct ClassDocEntry<'a> {
     pub name: String,
     pub desc: String,
+
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<CustomTag<'a>>,
-
+    #[serde(skip_serializing_if = "BTreeSet::is_empty")]
     pub realm: BTreeSet<Realm>,
-    pub private: bool,
-    pub unreleased: bool,
-    pub ignore: bool,
-
     #[serde(skip_serializing_if = "Option::is_none")]
     pub deprecated: Option<DeprecatedTag<'a>>,
-
     #[serde(skip_serializing_if = "Option::is_none")]
     pub since: Option<String>,
+    #[serde(skip_serializing_if = "is_false")]
+    pub private: bool,
+    #[serde(skip_serializing_if = "is_false")]
+    pub unreleased: bool,
+    #[serde(skip_serializing_if = "is_false")]
+    pub ignore: bool,
 
     #[serde(skip)]
     pub source: &'a DocComment,

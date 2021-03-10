@@ -21,14 +21,7 @@ expression: stdout
             "lua_type": "Fabric"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "static",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "static"
       },
       {
         "name": "registerUnit",
@@ -46,14 +39,7 @@ expression: stdout
             "lua_type": "UnitDefinition"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "registerUnitsIn",
@@ -71,14 +57,7 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "getUnitByRef",
@@ -101,14 +80,7 @@ expression: stdout
             "lua_type": "Unit?"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "getOrCreateUnitByRef",
@@ -131,14 +103,7 @@ expression: stdout
             "lua_type": "Unit"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "removeAllUnitsWithRef",
@@ -156,14 +121,7 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "fire",
@@ -186,14 +144,7 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "on",
@@ -216,14 +167,7 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       },
       {
         "name": "debug",
@@ -241,37 +185,22 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "tags": [],
-        "errors": [],
-        "function_type": "method",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "yields": false,
-        "ignore": false
+        "function_type": "method"
       }
     ],
     "properties": [
       {
         "name": "reducers",
         "desc": "This is a property that is set to the reducers.",
-        "tags": [],
         "lua_type": "Reducers",
-        "realm": [],
-        "private": false,
-        "unreleased": false,
-        "readonly": true,
-        "ignore": false
+        "readonly": true
       }
     ],
     "types": [
       {
         "name": "stringOrNil",
         "desc": "A string or nil.",
-        "lua_type": "string | nil",
-        "tags": [],
-        "private": false,
-        "ignore": false
+        "lua_type": "string | nil"
       },
       {
         "name": "Instance",
@@ -293,19 +222,11 @@ expression: stdout
             "name": "Blargh",
             "lua_type": "boolean"
           }
-        ],
-        "tags": [],
-        "private": false,
-        "ignore": false
+        ]
       }
     ],
     "name": "Fabric",
-    "desc": "-.reducers Reducers -- This is a property that is set to the reducers.",
-    "tags": [],
-    "realm": [],
-    "private": false,
-    "unreleased": false,
-    "ignore": false
+    "desc": "-.reducers Reducers -- This is a property that is set to the reducers."
   }
 ]
 

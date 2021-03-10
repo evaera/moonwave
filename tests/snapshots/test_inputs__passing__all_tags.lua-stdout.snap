@@ -10,37 +10,22 @@ expression: stdout
         "desc": "",
         "params": [],
         "returns": [],
-        "tags": [],
-        "errors": [],
         "function_type": "static",
-        "realm": [],
-        "private": false,
-        "unreleased": true,
-        "yields": false,
-        "ignore": false
+        "unreleased": true
       }
     ],
     "properties": [
       {
         "name": "notReady",
         "desc": "",
-        "tags": [],
         "lua_type": "boolean",
-        "realm": [],
-        "private": false,
-        "unreleased": true,
-        "readonly": false,
-        "ignore": false
+        "unreleased": true
       }
     ],
     "types": [],
     "name": "Bar",
     "desc": "",
-    "tags": [],
-    "realm": [],
-    "private": false,
-    "unreleased": true,
-    "ignore": false
+    "unreleased": true
   },
   {
     "functions": [
@@ -69,6 +54,7 @@ expression: stdout
             "lua_type": "b"
           }
         ],
+        "function_type": "static",
         "tags": [
           "uno",
           "dos"
@@ -79,45 +65,42 @@ expression: stdout
             "desc": "this errors sometimes. shrug"
           }
         ],
-        "function_type": "static",
         "realm": [
           "Client",
           "Server"
         ],
-        "private": true,
-        "unreleased": false,
-        "yields": true,
-        "ignore": true,
         "since": "v1.23",
         "deprecated": {
           "version": "v1.5",
           "desc": "Use something else"
-        }
+        },
+        "private": true,
+        "yields": true,
+        "ignore": true
       }
     ],
     "properties": [
       {
         "name": "ready",
         "desc": "",
+        "lua_type": "boolean",
         "tags": [
           "salad",
           "fries",
           "nuggets"
         ],
-        "lua_type": "boolean",
         "realm": [
           "Client",
           "Server"
         ],
-        "private": true,
-        "unreleased": false,
-        "readonly": true,
-        "ignore": true,
         "since": "v0.1.1",
         "deprecated": {
           "version": "v1.3",
           "desc": "Use blah"
-        }
+        },
+        "private": true,
+        "readonly": true,
+        "ignore": true
       }
     ],
     "types": [
@@ -168,14 +151,13 @@ expression: stdout
       "Client",
       "Server"
     ],
-    "private": true,
-    "unreleased": false,
-    "ignore": true,
     "deprecated": {
       "version": "v1.2",
       "desc": "Use x instead"
     },
-    "since": "v1.0"
+    "since": "v1.0",
+    "private": true,
+    "ignore": true
   }
 ]
 

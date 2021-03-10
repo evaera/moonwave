@@ -1,6 +1,7 @@
 use crate::{
     diagnostic::Diagnostics,
     doc_comment::DocComment,
+    serde_util::is_false,
     tags::{CustomTag, FieldTag, Tag},
 };
 use serde::Serialize;
@@ -30,18 +31,18 @@ pub struct TypeDocEntry<'a> {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub lua_type: Option<String>,
-
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub fields: Vec<Field>,
 
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<CustomTag<'a>>,
-
+    #[serde(skip_serializing_if = "is_false")]
     pub private: bool,
+    #[serde(skip_serializing_if = "is_false")]
     pub ignore: bool,
 
     #[serde(skip)]
     pub source: &'a DocComment,
-
     #[serde(skip)]
     pub within: String,
 }
