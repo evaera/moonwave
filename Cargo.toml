@@ -21,7 +21,6 @@ opt-level = 1
 full_moon = { git = "https://github.com/Kampfkarren/full-moon" }
 walkdir = "2"
 anyhow = "1.0.28"
-regex = "1.4.1"
 codespan-reporting = "0.9.5"
 structopt = "0.3.18"
 serde = { version = "1.0.116", features = ["derive"] }
