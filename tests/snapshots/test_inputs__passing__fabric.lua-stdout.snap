@@ -208,19 +208,23 @@ expression: stdout
         "fields": [
           {
             "name": "Name",
-            "lua_type": "string"
+            "lua_type": "string",
+            "desc": "A name for this Instance."
           },
           {
             "name": "ClassName",
-            "lua_type": "string"
+            "lua_type": "string",
+            "desc": "The class name for this"
           },
           {
             "name": "CollisionGroup",
-            "lua_type": "number"
+            "lua_type": "number",
+            "desc": ""
           },
           {
             "name": "Blargh",
-            "lua_type": "boolean"
+            "lua_type": "boolean",
+            "desc": "This uses @field explicitly"
           }
         ]
       }

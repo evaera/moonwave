@@ -12,6 +12,7 @@ use super::DocEntryParseArguments;
 pub struct Field {
     pub name: String,
     pub lua_type: String,
+    pub desc: String,
 }
 
 impl<'a> From<FieldTag<'a>> for Field {
@@ -19,6 +20,7 @@ impl<'a> From<FieldTag<'a>> for Field {
         Self {
             name: field_tag.name.as_str().to_owned(),
             lua_type: field_tag.lua_type.as_str().to_owned(),
+            desc: field_tag.desc.as_str().to_owned(),
         }
     }
 }

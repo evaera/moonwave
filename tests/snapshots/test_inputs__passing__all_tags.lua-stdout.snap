@@ -121,15 +121,18 @@ expression: stdout
         "fields": [
           {
             "name": "Name",
-            "lua_type": "string"
+            "lua_type": "string",
+            "desc": "the name of the command"
           },
           {
             "name": "Groups",
-            "lua_type": "array<string>"
+            "lua_type": "array<string>",
+            "desc": "A list of groups that the command contains"
           },
           {
             "name": "Recursion",
-            "lua_type": "Command"
+            "lua_type": "Command",
+            "desc": "This breaks the universe"
           }
         ],
         "tags": [
