@@ -144,7 +144,7 @@ expression: stdout
       }
     ],
     "name": "Foo",
-    "desc": "Here's a description for you",
+    "desc": "Here's a description for you\n\n::: info\nwith an admonition\n:::",
     "tags": [
       "bark",
       "meow",

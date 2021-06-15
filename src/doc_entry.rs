@@ -163,14 +163,23 @@ impl<'a> DocEntry<'a> {
         let (tag_lines, desc_lines): (Vec<Span>, Vec<Span>) = span
             .lines()
             .map(Span::trim)
-            .filter(|line| !line.is_empty())
             .partition(|line| line.starts_with(&['@', '.'][..]));
 
-        let desc = desc_lines
-            .iter()
+        let mut desc_lines = desc_lines
+            .into_iter()
+            .skip_while(|line| line.is_empty())
             .map(|span| span.as_str())
-            .collect::<Vec<_>>()
-            .join("\n");
+            .collect::<Vec<_>>();
+
+        while let Some(line) = desc_lines.last() {
+            if !line.is_empty() {
+                break;
+            }
+
+            desc_lines.pop();
+        }
+
+        let desc = desc_lines.join("\n");
 
         let (tags, errors): (Vec<_>, Vec<_>) = tag_lines
             .into_iter()

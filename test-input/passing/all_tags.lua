@@ -11,6 +11,10 @@
 	@tag rawr
 
 	Here's a description for you
+
+	::: info
+	with an admonition
+	:::
 ]=]
 --[=[
 	@class Bar
