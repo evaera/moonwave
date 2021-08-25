@@ -107,6 +107,9 @@ impl<'a> FunctionDocEntry<'a> {
                 Tag::Client(_) => {
                     doc_entry.realm.insert(Realm::Client);
                 }
+                Tag::Plugin(_) => {
+                    doc_entry.realm.insert(Realm::Plugin);
+                }
                 _ => unused_tags.push(tag),
             }
         }

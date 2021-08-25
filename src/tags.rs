@@ -24,7 +24,7 @@ pub use field::FieldTag;
 pub use function::FunctionTag;
 pub use interface::InterfaceTag;
 pub use marker::{
-    ClientTag, IgnoreTag, PrivateTag, ReadOnlyTag, ServerTag, UnreleasedTag, YieldsTag,
+    ClientTag, IgnoreTag, PluginTag, PrivateTag, ReadOnlyTag, ServerTag, UnreleasedTag, YieldsTag,
 };
 pub use param::ParamTag;
 pub use property::PropertyTag;
@@ -82,6 +82,7 @@ define_tags! {
     Unreleased(UnreleasedTag),
     Server(ServerTag),
     Client(ClientTag),
+    Plugin(PluginTag),
     Private(PrivateTag),
     Ignore(IgnoreTag),
     Yields(YieldsTag),
@@ -123,6 +124,7 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
         let mut parsed_tag = match tag_name.as_str() {
             "@server" => ServerTag::parse().map(Tag::Server),
             "@client" => ClientTag::parse().map(Tag::Client),
+            "@plugin" => PluginTag::parse().map(Tag::Plugin),
             "@private" => PrivateTag::parse().map(Tag::Private),
             "@ignore" => IgnoreTag::parse().map(Tag::Ignore),
             "@yields" => YieldsTag::parse().map(Tag::Yields),

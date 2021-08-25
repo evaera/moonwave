@@ -20,6 +20,7 @@ macro_rules! define_marker_tag {
 }
 
 define_marker_tag!(ServerTag);
+define_marker_tag!(PluginTag);
 define_marker_tag!(ClientTag);
 define_marker_tag!(PrivateTag);
 define_marker_tag!(IgnoreTag);

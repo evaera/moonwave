@@ -2,6 +2,7 @@
 	@class aclass
 	@unreleased
 	@private
+	@plugin
 
 	This is a class
 ]=]

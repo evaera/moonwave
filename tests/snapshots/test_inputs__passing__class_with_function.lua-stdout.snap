@@ -1,6 +1,7 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
+
 ---
 [
   {
@@ -38,6 +39,9 @@ expression: stdout
     "types": [],
     "name": "aclass",
     "desc": "This is a class",
+    "realm": [
+      "Plugin"
+    ],
     "private": true,
     "unreleased": true
   }

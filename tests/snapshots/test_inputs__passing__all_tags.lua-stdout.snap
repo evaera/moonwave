@@ -1,6 +1,7 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
+
 ---
 [
   {
@@ -152,7 +153,8 @@ expression: stdout
     ],
     "realm": [
       "Client",
-      "Server"
+      "Server",
+      "Plugin"
     ],
     "deprecated": {
       "version": "v1.2",

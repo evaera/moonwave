@@ -2,6 +2,7 @@
 	@class Foo
 	@server
 	@client
+	@plugin
 	@private
 	@ignore
 	@deprecated v1.2 -- Use x instead
