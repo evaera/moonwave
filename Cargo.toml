@@ -18,7 +18,7 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = { git = "https://github.com/Kampfkarren/full-moon" }
+full_moon = { git = "https://github.com/Kampfkarren/full-moon", rev = "592dcda974d00fad0bd4065b9376375bcf516393" }
 walkdir = "2"
 anyhow = "1.0.28"
 codespan-reporting = "0.9.5"
