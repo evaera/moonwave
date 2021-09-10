@@ -8,7 +8,7 @@ pub struct SourceFile<'a> {
 }
 
 impl<'a> SourceFile<'a> {
-    pub fn from_str(source: &'a str, file_id: usize) -> Result<Self, Error> {
+    pub fn from_str(source: &'a str, file_id: usize, relative_path: String) -> Result<Self, Error> {
         let ast = full_moon::parse(source).map_err(|e| Error::FullMoonError(e.to_string()))?;
 
         let mut doc_comments: Vec<_> = ast
@@ -19,9 +19,10 @@ impl<'a> SourceFile<'a> {
                     .0
                     .into_iter()
                     .filter_map(|token| match token.token_type() {
-                        TokenType::MultiLineComment { blocks: 1, .. } => {
-                            Some((DocComment::new(token, file_id), Some(stmt.clone())))
-                        }
+                        TokenType::MultiLineComment { blocks: 1, .. } => Some((
+                            DocComment::new(token, file_id, relative_path.clone()),
+                            Some(stmt.clone()),
+                        )),
                         _ => None,
                     })
                     .collect::<Vec<_>>()
@@ -36,7 +37,7 @@ impl<'a> SourceFile<'a> {
                 .into_iter()
                 .filter_map(|token| match token.token_type() {
                     TokenType::MultiLineComment { blocks: 1, .. } => {
-                        Some((DocComment::new(token, file_id), None))
+                        Some((DocComment::new(token, file_id, relative_path.clone()), None))
                     }
                     _ => None,
                 }),

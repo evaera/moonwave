@@ -32,6 +32,10 @@ expression: stdout
         "deprecated": {
           "version": "v1.2",
           "desc": "This is no good."
+        },
+        "source": {
+          "line": 21,
+          "path": ""
         }
       }
     ],

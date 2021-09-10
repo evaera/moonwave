@@ -12,7 +12,11 @@ expression: stdout
         "params": [],
         "returns": [],
         "function_type": "static",
-        "unreleased": true
+        "unreleased": true,
+        "source": {
+          "line": 50,
+          "path": ""
+        }
       }
     ],
     "properties": [
@@ -77,7 +81,11 @@ expression: stdout
         },
         "private": true,
         "yields": true,
-        "ignore": true
+        "ignore": true,
+        "source": {
+          "line": 45,
+          "path": ""
+        }
       }
     ],
     "properties": [

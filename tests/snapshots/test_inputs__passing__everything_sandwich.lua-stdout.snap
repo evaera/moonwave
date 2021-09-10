@@ -1,6 +1,7 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
+
 ---
 [
   {
@@ -43,6 +44,10 @@ expression: stdout
         "deprecated": {
           "version": "1.12",
           "desc": "Use [[Module.somethingElse]] instead"
+        },
+        "source": {
+          "line": 63,
+          "path": ""
         }
       },
       {
@@ -61,7 +66,11 @@ expression: stdout
             "lua_type": "Module - Returns the new Module!"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 74,
+          "path": ""
+        }
       }
     ],
     "properties": [],
@@ -87,7 +96,11 @@ expression: stdout
           }
         ],
         "returns": [],
-        "function_type": "static"
+        "function_type": "static",
+        "source": {
+          "line": 43,
+          "path": ""
+        }
       }
     ],
     "properties": [],

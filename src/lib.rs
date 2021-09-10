@@ -1,7 +1,7 @@
 use std::{
     collections::BTreeMap,
     fs, io,
-    path::{self, Path},
+    path::{self, Path, PathBuf},
 };
 
 use anyhow::bail;
@@ -17,6 +17,7 @@ use codespan_reporting::{
 use diagnostic::{Diagnostic, Diagnostics};
 use doc_comment::DocComment;
 use doc_entry::{ClassDocEntry, DocEntry, FunctionDocEntry, PropertyDocEntry, TypeDocEntry};
+use pathdiff::diff_paths;
 use serde::Serialize;
 
 use walkdir::{self, WalkDir};
@@ -48,16 +49,28 @@ struct OutputClass<'a> {
     class: ClassDocEntry<'a>,
 }
 
+type CodespanFilesPaths = (PathBuf, usize);
+
 pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
-    let (codespan_files, file_ids) = find_files(path)?;
+    let (codespan_files, files) = find_files(path)?;
 
     let mut errors: Vec<Error> = Vec::new();
     let mut source_files: Vec<SourceFile> = Vec::new();
 
-    for file_id in file_ids {
+    for (file_path, file_id) in files {
         let source = codespan_files.get(file_id).unwrap().source();
 
-        match SourceFile::from_str(source, file_id) {
+        let human_path = match diff_paths(&file_path, path) {
+            Some(relative_path) => relative_path,
+            None => file_path,
+        };
+
+        let human_path = human_path
+            .to_string_lossy()
+            .to_string()
+            .replace(path::MAIN_SEPARATOR, "/");
+
+        match SourceFile::from_str(source, file_id, human_path) {
             Ok(source_file) => source_files.push(source_file),
             Err(error) => errors.push(error),
         }
@@ -152,9 +165,11 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
     }
 }
 
-fn find_files(path: &Path) -> Result<(SimpleFiles<String, String>, Vec<usize>), io::Error> {
+fn find_files(
+    path: &Path,
+) -> Result<(SimpleFiles<String, String>, Vec<CodespanFilesPaths>), io::Error> {
     let mut codespan_files = SimpleFiles::new();
-    let mut file_ids: Vec<usize> = Vec::new();
+    let mut files: Vec<CodespanFilesPaths> = Vec::new();
 
     let walker = WalkDir::new(path).follow_links(true).into_iter();
     for entry in walker
@@ -172,10 +187,10 @@ fn find_files(path: &Path) -> Result<(SimpleFiles<String, String>, Vec<usize>), 
             contents,
         );
 
-        file_ids.push(file_id);
+        files.push((path.to_path_buf(), file_id));
     }
 
-    Ok((codespan_files, file_ids))
+    Ok((codespan_files, files))
 }
 
 fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String>) {

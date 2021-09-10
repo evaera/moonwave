@@ -1,6 +1,7 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
+
 ---
 [
   {
@@ -21,7 +22,11 @@ expression: stdout
             "lua_type": "Fabric"
           }
         ],
-        "function_type": "static"
+        "function_type": "static",
+        "source": {
+          "line": 66,
+          "path": ""
+        }
       },
       {
         "name": "registerUnit",
@@ -39,7 +44,11 @@ expression: stdout
             "lua_type": "UnitDefinition"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 89,
+          "path": ""
+        }
       },
       {
         "name": "registerUnitsIn",
@@ -57,7 +66,11 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 105,
+          "path": ""
+        }
       },
       {
         "name": "getUnitByRef",
@@ -80,7 +93,11 @@ expression: stdout
             "lua_type": "Unit?"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 135,
+          "path": ""
+        }
       },
       {
         "name": "getOrCreateUnitByRef",
@@ -103,7 +120,11 @@ expression: stdout
             "lua_type": "Unit"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 147,
+          "path": ""
+        }
       },
       {
         "name": "removeAllUnitsWithRef",
@@ -121,7 +142,11 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 190,
+          "path": ""
+        }
       },
       {
         "name": "fire",
@@ -144,7 +169,11 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 201,
+          "path": ""
+        }
       },
       {
         "name": "on",
@@ -167,7 +196,11 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 225,
+          "path": ""
+        }
       },
       {
         "name": "debug",
@@ -185,7 +218,11 @@ expression: stdout
             "lua_type": "nil"
           }
         ],
-        "function_type": "method"
+        "function_type": "method",
+        "source": {
+          "line": 245,
+          "path": ""
+        }
       }
     ],
     "properties": [

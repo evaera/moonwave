@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::{
     diagnostic::Diagnostics,
-    doc_comment::DocComment,
+    doc_comment::{DocComment, OutputSource},
     realm::Realm,
     serde_util::is_false,
     tags::{CustomTag, DeprecatedTag, ErrorTag, ParamTag, ReturnTag, Tag},
@@ -47,6 +47,9 @@ pub struct FunctionDocEntry<'a> {
     #[serde(skip_serializing_if = "is_false")]
     pub ignore: bool,
 
+    #[serde(rename = "source")]
+    pub output_source: OutputSource,
+
     #[serde(skip)]
     pub source: &'a DocComment,
     #[serde(skip)]
@@ -83,6 +86,7 @@ impl<'a> FunctionDocEntry<'a> {
             unreleased: false,
             yields: false,
             ignore: false,
+            output_source: source.output_source.clone(),
         };
 
         let mut unused_tags = Vec::new();
