@@ -62,7 +62,9 @@ export default function ClassMember({
           <span className={styles.releaseVersion}>unreleased</span>
         )}
 
-        <SourceLink to={`${sourceUrl}/${source.path}#L${source.line}`} />
+        {sourceUrl && (
+          <SourceLink to={`${sourceUrl}/${source.path}#L${source.line}`} />
+        )}
       </div>
 
       {deprecated && (

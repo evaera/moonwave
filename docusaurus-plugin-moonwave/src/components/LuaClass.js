@@ -43,8 +43,6 @@ const ClassSection = ({
 }) => {
   const members = luaClass[section].filter(filter || (() => true))
 
-  console.log(members)
-
   if (members.length < 1) {
     return null
   }
