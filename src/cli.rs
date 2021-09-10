@@ -11,11 +11,16 @@ pub struct Args {
 
 #[derive(Debug, StructOpt)]
 pub enum Subcommand {
-    /// Extracts doc comments from the given files
     Extract(ExtractSubcommand),
 }
 
+/// Extracts doc comments from the given files
 #[derive(Debug, StructOpt)]
 pub struct ExtractSubcommand {
     pub input_path: Option<PathBuf>,
+
+    /// The base path that source paths in the output will be relative to.
+    /// If unspecified, the input path is used.
+    #[structopt(long = "base", short = "b")]
+    pub base_path: Option<PathBuf>,
 }

@@ -51,8 +51,8 @@ struct OutputClass<'a> {
 
 type CodespanFilesPaths = (PathBuf, usize);
 
-pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
-    let (codespan_files, files) = find_files(path)?;
+pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::Result<()> {
+    let (codespan_files, files) = find_files(input_path)?;
 
     let mut errors: Vec<Error> = Vec::new();
     let mut source_files: Vec<SourceFile> = Vec::new();
@@ -60,7 +60,7 @@ pub fn generate_docs_from_path(path: &Path) -> anyhow::Result<()> {
     for (file_path, file_id) in files {
         let source = codespan_files.get(file_id).unwrap().source();
 
-        let human_path = match diff_paths(&file_path, path) {
+        let human_path = match diff_paths(&file_path, base_path) {
             Some(relative_path) => relative_path,
             None => file_path,
         };

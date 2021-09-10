@@ -10,7 +10,12 @@ fn run(args: Args) -> anyhow::Result<()> {
                 None => current_dir()?,
             };
 
-            generate_docs_from_path(&path)
+            let base_path = match subcommand.base_path {
+                Some(path) => path,
+                None => path.clone(),
+            };
+
+            generate_docs_from_path(&path, &base_path)
         }
     }
 }
