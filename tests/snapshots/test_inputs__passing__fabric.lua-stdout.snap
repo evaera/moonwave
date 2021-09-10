@@ -230,14 +230,22 @@ expression: stdout
         "name": "reducers",
         "desc": "This is a property that is set to the reducers.",
         "lua_type": "Reducers",
-        "readonly": true
+        "readonly": true,
+        "source": {
+          "line": 45,
+          "path": ""
+        }
       }
     ],
     "types": [
       {
         "name": "stringOrNil",
         "desc": "A string or nil.",
-        "lua_type": "string | nil"
+        "lua_type": "string | nil",
+        "source": {
+          "line": 25,
+          "path": ""
+        }
       },
       {
         "name": "Instance",
@@ -263,11 +271,19 @@ expression: stdout
             "lua_type": "boolean",
             "desc": "This uses @field explicitly"
           }
-        ]
+        ],
+        "source": {
+          "line": 37,
+          "path": ""
+        }
       }
     ],
     "name": "Fabric",
-    "desc": "-.reducers Reducers -- This is a property that is set to the reducers."
+    "desc": "-.reducers Reducers -- This is a property that is set to the reducers.",
+    "source": {
+      "line": 18,
+      "path": ""
+    }
   }
 ]
 

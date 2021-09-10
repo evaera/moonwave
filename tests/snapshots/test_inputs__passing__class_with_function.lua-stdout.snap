@@ -47,7 +47,11 @@ expression: stdout
       "Plugin"
     ],
     "private": true,
-    "unreleased": true
+    "unreleased": true,
+    "source": {
+      "line": 9,
+      "path": ""
+    }
   }
 ]
 

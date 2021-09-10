@@ -76,7 +76,11 @@ expression: stdout
     "properties": [],
     "types": [],
     "name": "Module",
-    "desc": "This is a module lcass with thsf"
+    "desc": "This is a module lcass with thsf",
+    "source": {
+      "line": 49,
+      "path": ""
+    }
   },
   {
     "functions": [
@@ -107,7 +111,11 @@ expression: stdout
     "types": [],
     "name": "theclass",
     "desc": "This is the class",
-    "unreleased": true
+    "unreleased": true,
+    "source": {
+      "line": 32,
+      "path": ""
+    }
   }
 ]
 

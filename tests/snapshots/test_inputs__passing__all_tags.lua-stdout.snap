@@ -24,13 +24,21 @@ expression: stdout
         "name": "notReady",
         "desc": "",
         "lua_type": "boolean",
-        "unreleased": true
+        "unreleased": true,
+        "source": {
+          "line": 70,
+          "path": ""
+        }
       }
     ],
     "types": [],
     "name": "Bar",
     "desc": "",
-    "unreleased": true
+    "unreleased": true,
+    "source": {
+      "line": 24,
+      "path": ""
+    }
   },
   {
     "functions": [
@@ -109,7 +117,11 @@ expression: stdout
         },
         "private": true,
         "readonly": true,
-        "ignore": true
+        "ignore": true,
+        "source": {
+          "line": 65,
+          "path": ""
+        }
       }
     ],
     "types": [
@@ -122,7 +134,11 @@ expression: stdout
           "yarr"
         ],
         "private": true,
-        "ignore": true
+        "ignore": true,
+        "source": {
+          "line": 81,
+          "path": ""
+        }
       },
       {
         "name": "Command",
@@ -149,7 +165,11 @@ expression: stdout
           "lua"
         ],
         "private": true,
-        "ignore": true
+        "ignore": true,
+        "source": {
+          "line": 96,
+          "path": ""
+        }
       }
     ],
     "name": "Foo",
@@ -170,7 +190,11 @@ expression: stdout
     },
     "since": "v1.0",
     "private": true,
-    "ignore": true
+    "ignore": true,
+    "source": {
+      "line": 20,
+      "path": ""
+    }
   }
 ]
 
