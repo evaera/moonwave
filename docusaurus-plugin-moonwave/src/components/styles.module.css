@@ -1,0 +1,383 @@
+:global .navbar__search {
+  margin-left: 1rem;
+}
+
+.divider {
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+  padding-top: 10px;
+}
+
+.inlineDescription {
+  color: #9093a2;
+  margin-left: 10px;
+  font-size: 1rem;
+}
+
+.memberString {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  margin-left: 1rem;
+}
+
+.memberString p {
+  display: inline;
+}
+
+.inset {
+  margin-left: 3rem;
+}
+
+.docPage .member h3 {
+  display: inline-block;
+  margin: 0;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+
+  font-size: var(--ifm-h2-font-size);
+  font-family: inherit;
+}
+
+.docPage .member h3 {
+  display: inline-block;
+  margin: 0;
+  margin-right: 0.25rem;
+  margin-bottom: 1rem;
+
+  font-size: var(--ifm-h2-font-size);
+  font-family: inherit;
+}
+
+.docPage .member h3 code {
+  word-break: "break-word";
+  display: "inline";
+}
+
+.privateToggle {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-gap: 0.25em;
+  font-size: 1.25rem;
+  color: var(--color);
+  float: right;
+}
+
+.privateCheckboxContainer {
+  display: grid;
+  grid-template-areas: "checkbox";
+  align-items: center;
+}
+
+.privateCheckboxContainer > * {
+  grid-area: checkbox;
+}
+
+.privateCheckboxInternal {
+  opacity: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.privateToggle:focus-within {
+  outline: var(--ifm-font-color-base) auto 1px;
+}
+
+.privateCheckboxInternal:checked + .privateCheckboxControl svg {
+  transform: scale(1);
+}
+
+.privateCheckboxControl {
+  display: inline-grid;
+  width: 1em;
+  height: 1em;
+  border-radius: 0.25em;
+  border: 1px solid var(--ifm-font-color-base);
+  isolation: isolate; /* Resets stacking context for :hover to apply */
+}
+
+.privateCheckboxControl svg {
+  transition: transform 0.1s ease-in 25ms;
+  transform-origin: center;
+  transform: scale(0);
+}
+
+.privateCheckboxControl:hover {
+  background: var(--ifm-menu-color-background-active);
+  cursor: pointer;
+}
+
+.privateCheckboxLabel {
+  font-size: 1rem;
+}
+
+.privateCheckboxLabel:hover {
+  cursor: pointer;
+}
+
+.repositoryDetailsContainer {
+  float: right;
+}
+
+.sourceButton {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.sourceButton:hover,
+.sourceButton:focus {
+  text-decoration: none;
+}
+
+.sourceButtonText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--ifm-menu-color-background);
+  color: var(--ifm-font-color-base);
+  font-weight: var(--ifm-heading-font-weight);
+  font-family: var(--ifm-font-family-monospace);
+  width: 40px;
+  height: 24px;
+  border: 1px solid var(--ifm-font-color-base);
+  border-radius: 30px;
+}
+
+.sourceButtonText:hover,
+.sourceButtonText:focus {
+  background: var(--ifm-menu-color-background-active);
+}
+
+.member .releaseVersion {
+  display: inline-block;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.member code {
+  background: none;
+  border: none;
+  display: inline-block;
+  padding: 0;
+}
+
+.member code.blue {
+  color: rgb(130, 170, 255);
+}
+
+.member code.green {
+  color: #10ac84;
+}
+
+.member code.purple {
+  color: rgb(199, 146, 234);
+}
+
+.member code.yellow {
+  color: rgb(255, 203, 107);
+}
+
+.member code.orange {
+  color: rgb(247, 140, 108);
+}
+
+.member code.cyan {
+  color: rgb(137, 221, 255);
+}
+
+.member code.red {
+  color: rgb(255, 88, 116);
+}
+
+.errorTable {
+  display: table;
+  width: 100%;
+}
+
+.errorTable tr,
+.errorTable th,
+.errorTable td {
+  border: none;
+}
+
+.errorTable tbody tr:nth-child(2n + 1) {
+  background: var(--ifm-table-stripe-background);
+}
+
+.errorTable tbody tr:nth-child(2n) {
+  background: var(--ifm-table-background);
+}
+
+/* Copied from plugin-docs */
+.docPage,
+.docMainContainer {
+  display: flex;
+  width: 100%;
+}
+
+.docPage h2 {
+  font-size: 2.3rem;
+}
+
+.docItemContainer {
+  margin: 0 auto;
+  padding: 0 0.5rem;
+}
+
+.docTitle {
+  font-size: 3rem;
+  margin-bottom: calc(var(--ifm-leading-desktop) * var(--ifm-leading));
+  display: inline-block;
+}
+
+.docSidebarContainer {
+  display: block;
+  width: var(--doc-sidebar-width);
+  margin-top: calc(-1 * var(--ifm-navbar-height));
+  border-right: 1px solid var(--ifm-toc-border-color);
+  will-change: width;
+  transition: width var(--ifm-transition-fast) ease;
+  clip-path: inset(0);
+}
+
+@media screen and (max-width: 997px) {
+  .docSidebarContainer {
+    display: none;
+  }
+}
+
+.docSidebarContainerHidden {
+  width: var(--doc-sidebar-hidden-width);
+  cursor: pointer;
+}
+
+.luaClassTags {
+  display: inline-block;
+  margin-left: 2rem;
+  margin-top: -0.5rem;
+}
+
+.badge {
+  margin: 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.badge svg {
+  width: 1.8rem;
+  height: 1.8rem;
+  vertical-align: middle;
+}
+
+.docTag {
+  border-width: 1px;
+  border-style: solid;
+  transition: border var(--ifm-transition-fast);
+  align-items: center;
+  position: relative;
+  padding: 0 0.5rem 0 1rem;
+  border-left: 0;
+  display: inline-block;
+  margin: 0 0.8rem;
+  /* font-size: 16px;
+  line-height: 1.6; */
+}
+
+.docTag:before,
+.docTag:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  border-style: solid;
+  border-color: inherit;
+  transition: inherit;
+}
+
+.docTag:before {
+  right: 100%;
+  border-width: 1px;
+  transform: translate(50%, -50%) rotate(-45deg);
+  width: 1.18rem;
+  height: 1.18rem;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.docTag:after {
+  left: 0;
+  border-width: 1px;
+  transform: translateY(-50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.docTag span {
+  background: var(--ifm-color-secondary);
+  color: var(--ifm-color-black);
+  font-size: 0.7rem;
+  line-height: 1.2;
+  border-radius: var(--ifm-global-radius);
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.3rem;
+}
+
+@media (min-width: 997px) {
+  .docMainContainer {
+    flex-grow: 1;
+  }
+
+  .docMainContainerEnhanced {
+    max-width: none;
+  }
+
+  .docSidebarContainer {
+    width: var(--doc-sidebar-width);
+    margin-top: calc(-1 * var(--ifm-navbar-height));
+    border-right: 1px solid var(--ifm-toc-border-color);
+    will-change: width;
+    transition: width var(--ifm-transition-fast) ease;
+    clip-path: inset(0);
+  }
+
+  .docSidebarContainerHidden {
+    width: var(--doc-sidebar-hidden-width);
+    cursor: pointer;
+  }
+
+  .collapsedDocSidebar {
+    position: sticky;
+    top: 0;
+    height: 100%;
+    max-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--ifm-transition-fast) ease;
+  }
+
+  .collapsedDocSidebar:hover,
+  .collapsedDocSidebar:focus {
+    background-color: var(--ifm-color-emphasis-200);
+  }
+
+  .expandSidebarButtonIcon {
+    transform: rotate(0);
+  }
+  html[dir="rtl"] .expandSidebarButtonIcon {
+    transform: rotate(180deg);
+  }
+
+  html[data-theme="dark"] .collapsedDocSidebar:hover,
+  html[data-theme="dark"] .collapsedDocSidebar:focus {
+    background-color: var(--collapse-button-bg-color-dark);
+  }
+
+  .docItemWrapperEnhanced {
+    max-width: calc(var(--ifm-container-width) + var(--doc-sidebar-width));
+  }
+}
+
+@media (max-width: 996px) {
+  .docSidebarContainer {
+    margin-top: 0;
+  }
+}

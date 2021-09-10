@@ -5,6 +5,10 @@ end_of_line = lf
 charset = utf-8
 indent_size = 4
 
+[{*.js,*.ts,*.yml}]
+indent_style = space
+indent_size = 2
+
 [*.lua]
 indent_style = tab
 trim_trailing_whitespace = true
