@@ -1,5 +1,5 @@
 [package]
-name = "moonwave"
+name = "moonwave-extractor"
 version = "0.1.0"
 authors = ["eryn L. K. <eryn@eryn.io>"]
 edition = "2018"
@@ -9,7 +9,7 @@ name = "libmoonwave"
 path = "src/lib.rs"
 
 [[bin]]
-name = "moonwave"
+name = "moonwave-extractor"
 path = "src/main.rs"
 
 [profile.dev]

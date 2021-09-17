@@ -20,7 +20,10 @@ module.exports = (context, options) => ({
     const api = await Promise.all(
       options.code.map((root) =>
         exec(
-          `moonwave extract "${root.replace(/\\/g, "/")}" --base ${basePath}`
+          `moonwave-extractor extract "${root.replace(
+            /\\/g,
+            "/"
+          )}" --base ${basePath}`
         )
           .then(({ stdout, stderr }) => {
             if (stderr.length > 0) {
@@ -37,6 +40,16 @@ module.exports = (context, options) => ({
   },
 
   async contentLoaded({ content, actions: { addRoute, createData } }) {
+    content.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1
+      } else if (a.name > b.name) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+
     const allLuaClassNames = await createData(
       "sidebar.json",
       JSON.stringify(content.map((luaClass) => luaClass.name))
@@ -48,6 +61,15 @@ module.exports = (context, options) => ({
         sourceUrl: options.sourceUrl,
       })
     )
+
+    addRoute({
+      path: "/api/",
+      exact: true,
+      component: path.resolve(__dirname, "components/Redirect.js"),
+      modules: {
+        allLuaClassNames,
+      },
+    })
 
     for (const luaClass of content) {
       const apiDataPath = await createData(

@@ -1,0 +1,35 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "moonwave cli",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc --watch"
+  },
+  "bin": {
+    "moonwave": "dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UpliftGames/moonwave.git"
+  },
+  "author": "Uplift Games",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UpliftGames/moonwave/issues"
+  },
+  "homepage": "https://github.com/UpliftGames/moonwave#readme",
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "parse-git-config": "^3.0.0",
+    "toml": "^3.0.0",
+    "yargs": "^17.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.12",
+    "@types/node": "^16.9.1",
+    "@types/parse-git-config": "^3.0.1",
+    "@types/yargs": "^17.0.2"
+  }
+}

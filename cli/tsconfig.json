@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2018",
+		"noImplicitAny": true,
+		"strict": true,
+		"noUnusedLocals": true,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"outDir": "dist",
+		"lib": [
+			"es2015",
+			"es2017",
+			"esnext"
+		]
+	},
+	"include": [
+		"./src/**/*"
+	]
+}
