@@ -44,7 +44,7 @@ fn unknown_tags() -> anyhow::Result<()> {
 fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {
     let path = Path::new("test-input").join(file_name);
 
-    let child = Command::new(env!("CARGO_BIN_EXE_moonwave"))
+    let child = Command::new(env!("CARGO_BIN_EXE_moonwave-extractor"))
         .arg("extract")
         .arg(path)
         .stdout(Stdio::piped())
