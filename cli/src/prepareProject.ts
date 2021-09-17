@@ -9,6 +9,7 @@ import getDocusaurusConfig from "./getDocusaurusConfig"
 const TEMPLATE_PATH = path.join(__dirname, "../template")
 const ROOT_PATH = path.join(TEMPLATE_PATH, "root")
 
+const INDEX_EXTS = ["html", "js", "mdx", "md"]
 const COPY_FOLDERS = ["blog", "docs", "pages"] as const
 export type FoldersEnabled = { [index in typeof COPY_FOLDERS[number]]: boolean }
 
@@ -110,41 +111,17 @@ function getConfig(projectDir: string): Config {
   }
 }
 
-export function prepareProject(projectDir: string, args: Args): string {
-  const config = getConfig(projectDir)
-
-  const tempDir = path.join(projectDir, "./.moonwave-temp")
-
-  if (args.fresh && fs.existsSync(tempDir)) {
-    for (const file of fs
-      .readdirSync(tempDir)
-      .filter((name) => name !== "node_modules")) {
-      fs.removeSync(path.join(tempDir, file))
-    }
-  }
-
-  fs.copySync(ROOT_PATH, tempDir)
-
-  const foundFolders = Object.fromEntries(
-    COPY_FOLDERS.map((folder) => {
-      const folderPath = path.join(process.cwd(), folder)
-      const targetPath = path.join(tempDir, folder)
-      if (fs.existsSync(folderPath)) {
-        fs.copySync(folderPath, targetPath)
-        return true
-      } else {
-        return false
-      }
-    }).map((wasFound, index) => [COPY_FOLDERS[index], wasFound])
-  ) as FoldersEnabled
-
-  // Create home page or copy readme
+function makeHomePage(projectDir: string, tempDir: string, config: Config) {
   if (
-    ["html", "js", "mdx", "md"].filter((ext) =>
-      fs.existsSync(path.join(tempDir, "pages", "index" + ext))
+    INDEX_EXTS.filter((ext) =>
+      fs.existsSync(path.join(projectDir, "pages", "index." + ext))
     ).length === 0
   ) {
     fs.ensureDirSync(path.join(tempDir, "pages"))
+
+    INDEX_EXTS.forEach((ext) =>
+      fs.removeSync(path.join(tempDir, "pages", "index." + ext))
+    )
 
     if (config.home?.enabled) {
       const features = config.home?.features?.map((feature) => {
@@ -180,21 +157,99 @@ export function prepareProject(projectDir: string, args: Args): string {
       }
     }
   }
+}
 
-  fs.writeFileSync(
-    path.join(tempDir, "./docusaurus.config.js"),
+function writeDocusaurusConfig(
+  tempDir: string,
+  args: Args,
+  config: Config,
+  foundFolders: FoldersEnabled
+) {
+  const docusaurusConfigPath = path.join(tempDir, "./docusaurus.config.js")
+  const newDocusaurusConfig =
     "module.exports = " +
-      JSON.stringify(
-        getDocusaurusConfig({
-          codePaths: args.code,
-          enablePlugins: foundFolders,
-          config,
-        }),
-        null,
-        2
-      )
+    JSON.stringify(
+      getDocusaurusConfig({
+        codePaths: args.code,
+        enablePlugins: foundFolders,
+        config,
+      }),
+      null,
+      2
+    )
+
+  if (
+    fs.existsSync(docusaurusConfigPath) &&
+    fs.readFileSync(docusaurusConfigPath, { encoding: "utf-8" }) ===
+      newDocusaurusConfig
+  ) {
+    return false
+  } else {
+    fs.writeFileSync(docusaurusConfigPath, newDocusaurusConfig)
+    return true
+  }
+}
+
+function copyContentFolders(
+  projectDir: string,
+  tempDir: string
+): FoldersEnabled {
+  return Object.fromEntries(
+    COPY_FOLDERS.map((folder) => {
+      const folderPath = path.join(projectDir, folder)
+      const targetPath = path.join(tempDir, folder)
+
+      if (fs.existsSync(folderPath)) {
+        console.log("removed", targetPath)
+        fs.copySync(folderPath, targetPath)
+        return true
+      } else {
+        return false
+      }
+    }).map((wasFound, index) => [COPY_FOLDERS[index], wasFound])
+  ) as FoldersEnabled
+}
+
+export interface PreparedProject {
+  tempDir: string
+  projectDir: string
+
+  watchPaths: string[]
+
+  docusaurusConfigModified: boolean
+}
+
+export function prepareProject(
+  projectDir: string,
+  args: Args
+): PreparedProject {
+  const config = getConfig(projectDir)
+
+  const tempDir = path.join(projectDir, "./.moonwave-temp")
+
+  if (args.fresh && fs.existsSync(tempDir)) {
+    for (const file of fs
+      .readdirSync(tempDir)
+      .filter((name) => name !== "node_modules")) {
+      fs.removeSync(path.join(tempDir, file))
+    }
+  }
+
+  fs.copySync(ROOT_PATH, tempDir)
+
+  // Create home page or copy readme
+  makeHomePage(projectDir, tempDir, config)
+
+  const foundFolders = copyContentFolders(projectDir, tempDir)
+
+  const docusaurusConfigModified = writeDocusaurusConfig(
+    tempDir,
+    args,
+    config,
+    foundFolders
   )
 
+  // TODO: Hash package.json / lockfile and additionally reinstall when changed
   if (!fs.existsSync(path.join(tempDir, "./node_modules"))) {
     console.log("Installing dependencies (this might take awhile)...")
 
@@ -204,5 +259,17 @@ export function prepareProject(projectDir: string, args: Args): string {
     })
   }
 
-  return tempDir
+  return {
+    docusaurusConfigModified,
+    tempDir,
+    projectDir,
+    watchPaths: [
+      path.join(projectDir, "moonwave.toml"),
+      path.join(projectDir, "moonwave.json"),
+      ...Object.entries(foundFolders)
+        .filter(([_folder, wasFound]) => wasFound)
+        .map(([folder]) => folder)
+        .map((folder) => path.join(projectDir, folder)),
+    ],
+  }
 }

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/UpliftGames/moonwave#readme",
   "dependencies": {
+    "chokidar": "^3.5.2",
     "fs-extra": "^10.0.0",
     "parse-git-config": "^3.0.0",
     "toml": "^3.0.0",

@@ -4,7 +4,7 @@ import { prepareProject } from "../prepareProject"
 
 export default async function buildCommand(args: Args) {
   try {
-    const tempDir = prepareProject(process.cwd(), {
+    const { tempDir } = prepareProject(process.cwd(), {
       ...args,
       fresh: true,
     })
