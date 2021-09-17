@@ -1,4 +1,3 @@
-import { ThemeClassNames } from "@docusaurus/theme-common"
 import DocSidebar from "@theme/DocSidebar"
 import Heading from "@theme/Heading"
 import IconArrow from "@theme/IconArrow"
@@ -122,7 +121,11 @@ export default function LuaClass({
   })
 
   return (
-    <Layout wrapperClassName={ThemeClassNames.wrapper.docPages}>
+    <Layout
+      title={luaClass.name}
+      description={luaClass.desc}
+      wrapperClassName={clsx(styles.docPageContainer)}
+    >
       <div className={clsx(styles.docPage)}>
         <div
           className={clsx(styles.docSidebarContainer, {

@@ -2,6 +2,14 @@
   margin-left: 1rem;
 }
 
+.docPageContainer {
+  display: flex;
+}
+
+.docPage {
+  flex-grow: 1;
+}
+
 .divider {
   border-top: 1px solid var(--ifm-color-emphasis-300);
   padding-top: 10px;
