@@ -6,12 +6,12 @@ export default async function devCommand(args: Args) {
   try {
     const tempDir = prepareProject(process.cwd(), args)
 
-    const exitCode = await new Promise((resolve, reject) => {
+    const exitCode = await new Promise((resolve) => {
       spawn("npm" + (process.platform === "win32" ? ".cmd" : ""), ["start"], {
         cwd: tempDir,
         stdio: "inherit",
       })
-        .on("exit", (code) => resolve)
+        .on("exit", resolve)
         .on("error", console.error)
     })
 

@@ -115,8 +115,12 @@ export function prepareProject(projectDir: string, args: Args): string {
 
   const tempDir = path.join(projectDir, "./.moonwave-temp")
 
-  if (args.fresh) {
-    fs.removeSync(tempDir)
+  if (args.fresh && fs.existsSync(tempDir)) {
+    for (const file of fs
+      .readdirSync(tempDir)
+      .filter((name) => name !== "node_modules")) {
+      fs.removeSync(path.join(tempDir, file))
+    }
   }
 
   fs.copySync(ROOT_PATH, tempDir)
