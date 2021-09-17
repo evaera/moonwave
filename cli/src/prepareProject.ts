@@ -99,6 +99,7 @@ function getConfig(projectDir: string): Config {
       projectName: repoName,
       organizationName: repoAuthor,
       title: config.title ?? repoName,
+      baseUrl: repoName ? `/${repoName}/` : "/",
       ...config.docusaurus,
     },
 
@@ -142,14 +143,19 @@ export function prepareProject(projectDir: string, args: Args): string {
     fs.ensureDirSync(path.join(tempDir, "pages"))
 
     if (config.home?.enabled) {
+      const features = config.home?.features?.map((feature) => {
+        if (feature.image && feature.image.startsWith("/")) {
+          feature.image = config.docusaurus?.baseUrl + feature.image
+
+          return feature
+        }
+      })
+
       const indexSource = fs
         .readFileSync(path.join(TEMPLATE_PATH, "home", "index.js"), {
           encoding: "utf-8",
         })
-        .replace(
-          "/***features***/",
-          JSON.stringify(config.home.features ?? null)
-        )
+        .replace("/***features***/", JSON.stringify(features ?? null))
 
       fs.writeFileSync(path.join(tempDir, "pages", "index.js"), indexSource)
 

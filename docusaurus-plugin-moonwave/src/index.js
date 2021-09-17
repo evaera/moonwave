@@ -55,19 +55,22 @@ module.exports = (context, options) => ({
       JSON.stringify(content.map((luaClass) => luaClass.name))
     )
 
+    const baseUrl = context.baseUrl
     const pluginOptions = await createData(
       "options.json",
       JSON.stringify({
         sourceUrl: options.sourceUrl,
+        baseUrl: baseUrl,
       })
     )
 
     addRoute({
-      path: "/api/",
+      path: baseUrl + "api/",
       exact: true,
       component: path.resolve(__dirname, "components/Redirect.js"),
       modules: {
         allLuaClassNames,
+        pluginOptions,
       },
     })
 
@@ -80,7 +83,7 @@ module.exports = (context, options) => ({
       console.log(`Adding path /api/${luaClass.name}`)
 
       addRoute({
-        path: `/api/${luaClass.name}`,
+        path: `${baseUrl}api/${luaClass.name}`,
         component: path.resolve(__dirname, "components/LuaClass.js"),
         modules: {
           luaClass: apiDataPath,
