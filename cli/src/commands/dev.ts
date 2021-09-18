@@ -28,7 +28,7 @@ export default async function devCommand(args: Args) {
           })
         ) {
           if (event === "unlink" || event == "unlinkDir") {
-            const relativePath = path.relative(changedPath, projectDir)
+            const relativePath = path.relative(projectDir, changedPath)
             const targetPath = path.join(tempDir, relativePath)
 
             fs.removeSync(targetPath)
