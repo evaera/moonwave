@@ -3,7 +3,6 @@ import fs from "fs-extra"
 import parseGitConfig from "parse-git-config"
 import path from "path"
 import toml from "toml"
-import { Args } from "./argv"
 import getDocusaurusConfig from "./getDocusaurusConfig"
 
 const TEMPLATE_PATH = path.join(__dirname, "../template")
@@ -161,7 +160,7 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
 
 function writeDocusaurusConfig(
   tempDir: string,
-  args: Args,
+  codePaths: string[],
   config: Config,
   foundFolders: FoldersEnabled
 ) {
@@ -170,7 +169,7 @@ function writeDocusaurusConfig(
     "module.exports = " +
     JSON.stringify(
       getDocusaurusConfig({
-        codePaths: args.code,
+        codePaths,
         enablePlugins: foundFolders,
         config,
       }),
@@ -200,7 +199,6 @@ function copyContentFolders(
       const targetPath = path.join(tempDir, folder)
 
       if (fs.existsSync(folderPath)) {
-        console.log("removed", targetPath)
         fs.copySync(folderPath, targetPath)
         return true
       } else {
@@ -219,15 +217,21 @@ export interface PreparedProject {
   docusaurusConfigModified: boolean
 }
 
+export interface PrepareProjectOptions {
+  codePaths: string[]
+  skipRootCopy?: boolean
+  fresh?: boolean
+}
+
 export function prepareProject(
   projectDir: string,
-  args: Args
+  options: PrepareProjectOptions
 ): PreparedProject {
   const config = getConfig(projectDir)
 
   const tempDir = path.join(projectDir, "./.moonwave-temp")
 
-  if (args.fresh && fs.existsSync(tempDir)) {
+  if (options.fresh && fs.existsSync(tempDir)) {
     for (const file of fs
       .readdirSync(tempDir)
       .filter((name) => name !== "node_modules")) {
@@ -235,7 +239,9 @@ export function prepareProject(
     }
   }
 
-  fs.copySync(ROOT_PATH, tempDir)
+  if (!options.skipRootCopy) {
+    fs.copySync(ROOT_PATH, tempDir)
+  }
 
   // Create home page or copy readme
   makeHomePage(projectDir, tempDir, config)
@@ -244,7 +250,7 @@ export function prepareProject(
 
   const docusaurusConfigModified = writeDocusaurusConfig(
     tempDir,
-    args,
+    options.codePaths,
     config,
     foundFolders
   )
@@ -267,7 +273,7 @@ export function prepareProject(
       path.join(projectDir, "moonwave.toml"),
       path.join(projectDir, "moonwave.json"),
       ...Object.entries(foundFolders)
-        .filter(([_folder, wasFound]) => wasFound)
+        // .filter(([_folder, wasFound]) => wasFound)
         .map(([folder]) => folder)
         .map((folder) => path.join(projectDir, folder)),
     ],

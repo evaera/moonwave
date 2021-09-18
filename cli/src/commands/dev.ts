@@ -7,18 +7,25 @@ import { prepareProject } from "../prepareProject"
 
 export default async function devCommand(args: Args) {
   try {
-    const prepare = () => prepareProject(process.cwd(), args)
+    const { tempDir, watchPaths, projectDir } = prepareProject(process.cwd(), {
+      codePaths: args.code,
+      fresh: args.fresh,
+    })
 
-    let { tempDir, watchPaths, projectDir } = prepare()
-
-    const watcher = chokidar
+    chokidar
       .watch(projectDir, {
         ignoreInitial: true,
       })
       .on("all", (event, changedPath) => {
         if (
-          watchPaths.filter((watchPath) => changedPath.includes(watchPath))
-            .length > 0
+          watchPaths.some((watchPath) => {
+            const relative = path.relative(watchPath, changedPath)
+            return (
+              relative &&
+              !relative.startsWith("..") &&
+              !path.isAbsolute(relative)
+            )
+          })
         ) {
           if (event === "unlink" || event == "unlinkDir") {
             const relativePath = path.relative(changedPath, projectDir)
@@ -27,24 +34,11 @@ export default async function devCommand(args: Args) {
             fs.removeSync(targetPath)
           }
 
-          let { watchPaths: newWatchPaths } = prepareProject(process.cwd(), {
-            ...args,
+          prepareProject(process.cwd(), {
+            codePaths: args.code,
             fresh: false,
+            skipRootCopy: true,
           })
-
-          for (const watchPath of watchPaths) {
-            if (!newWatchPaths.includes(watchPath)) {
-              watcher.unwatch(watchPath)
-            }
-          }
-
-          for (const watchPath of newWatchPaths) {
-            if (!watchPaths.includes(watchPath)) {
-              watcher.add(watchPath)
-            }
-          }
-
-          watchPaths = newWatchPaths
         }
       })
 
