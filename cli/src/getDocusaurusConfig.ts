@@ -2,17 +2,19 @@ import fs from "fs-extra"
 import path from "path"
 import { Config, FoldersEnabled } from "./prepareProject"
 
+export interface GenerateConfigParams {
+  codePaths: string[]
+  enablePlugins: FoldersEnabled
+  config: Config
+  customCssExists: boolean
+}
+
 export default function getDocusaurusConfig({
   codePaths,
   enablePlugins,
   config,
   customCssExists,
-}: {
-  codePaths: string[]
-  enablePlugins: FoldersEnabled
-  config: Config
-  customCssExists: boolean
-}) {
+}: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
   const validCodePaths = codePaths
@@ -50,6 +52,7 @@ export default function getDocusaurusConfig({
           ...(validCodePaths.length > 0
             ? [{ to: "/api/", label: "API", position: "left" }]
             : []),
+          ...(config?.navbar?.items || []),
           ...(gitRepoUrl
             ? [
                 {
@@ -59,7 +62,6 @@ export default function getDocusaurusConfig({
                 },
               ]
             : []),
-          ...(config?.navbar?.items || []),
         ],
       },
       footer: {
