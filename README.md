@@ -1,3 +1,8 @@
+<div align="center">
+    <img src="brand/moonwave.svg" alt="Aurora" height="139" />
+</div>
+
+
 # Moonwave
 
 Moonwave is a command line tool for generating documentation from comments in Lua source code. Moonwave generates a JSON representation of your documentation, which can be used by other tools to do things like create websites or provide IntelliSense information.
