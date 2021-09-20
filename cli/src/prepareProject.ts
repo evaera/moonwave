@@ -3,7 +3,9 @@ import fs from "fs-extra"
 import parseGitConfig from "parse-git-config"
 import path from "path"
 import toml from "toml"
-import getDocusaurusConfig from "./getDocusaurusConfig"
+import getDocusaurusConfig, {
+  GenerateConfigParams,
+} from "./getDocusaurusConfig"
 
 const TEMPLATE_PATH = path.join(__dirname, "../template")
 const ROOT_PATH = path.join(TEMPLATE_PATH, "root")
@@ -168,24 +170,29 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
   }
 }
 
-function writeDocusaurusConfig(
-  tempDir: string,
-  codePaths: string[],
-  config: Config,
-  foundFolders: FoldersEnabled
-) {
+function copyMoonwaveFolder(
+  projectDir: string,
+  tempDir: string
+): { customCssExists: boolean } {
+  const staticDir = path.join(projectDir, ".moonwave", "static")
+  if (fs.existsSync(staticDir)) {
+    fs.copySync(staticDir, path.join(tempDir, "static"))
+  }
+
+  const customCssPath = path.join(projectDir, ".moonwave", "custom.css")
+  if (fs.existsSync(customCssPath)) {
+    fs.copySync(customCssPath, path.join(tempDir, "src", "css", "custom.css"))
+
+    return { customCssExists: true }
+  }
+
+  return { customCssExists: false }
+}
+
+function writeDocusaurusConfig(tempDir: string, params: GenerateConfigParams) {
   const docusaurusConfigPath = path.join(tempDir, "./docusaurus.config.js")
   const newDocusaurusConfig =
-    "module.exports = " +
-    JSON.stringify(
-      getDocusaurusConfig({
-        codePaths,
-        enablePlugins: foundFolders,
-        config,
-      }),
-      null,
-      2
-    )
+    "module.exports = " + JSON.stringify(getDocusaurusConfig(params), null, 2)
 
   if (
     fs.existsSync(docusaurusConfigPath) &&
@@ -258,12 +265,14 @@ export function prepareProject(
 
   const foundFolders = copyContentFolders(projectDir, tempDir)
 
-  const docusaurusConfigModified = writeDocusaurusConfig(
-    tempDir,
-    options.codePaths,
+  const { customCssExists } = copyMoonwaveFolder(projectDir, tempDir)
+
+  const docusaurusConfigModified = writeDocusaurusConfig(tempDir, {
     config,
-    foundFolders
-  )
+    enablePlugins: foundFolders,
+    customCssExists,
+    codePaths: options.codePaths,
+  })
 
   // TODO: Hash package.json / lockfile and additionally reinstall when changed
   if (!fs.existsSync(path.join(tempDir, "./node_modules"))) {
@@ -282,6 +291,7 @@ export function prepareProject(
     watchPaths: [
       path.join(projectDir, "moonwave.toml"),
       path.join(projectDir, "moonwave.json"),
+      path.join(projectDir, ".moonwave/"),
       ...Object.entries(foundFolders)
         // .filter(([_folder, wasFound]) => wasFound)
         .map(([folder]) => folder)

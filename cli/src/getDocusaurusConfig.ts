@@ -6,10 +6,12 @@ export default function getDocusaurusConfig({
   codePaths,
   enablePlugins,
   config,
+  customCssExists,
 }: {
   codePaths: string[]
   enablePlugins: FoldersEnabled
   config: Config
+  customCssExists: boolean
 }) {
   const gitRepoUrl = config.gitRepoUrl
 
@@ -20,7 +22,7 @@ export default function getDocusaurusConfig({
   return {
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
-    favicon: "img/favicon.ico",
+    favicon: "/favicon.ico",
     url: `https://${config.docusaurus?.organizationName}.github.io/`,
 
     ...config.docusaurus,
@@ -107,7 +109,10 @@ export default function getDocusaurusConfig({
             exclude: ["_*.*"],
           },
           theme: {
-            customCss: ["../src/css/moonwave.css"],
+            customCss: [
+              "../src/css/moonwave.css",
+              ...(customCssExists ? ["../src/css/custom.css"] : []),
+            ],
           },
         },
       ],
