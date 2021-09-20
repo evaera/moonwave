@@ -18,7 +18,6 @@ export default function getDocusaurusConfig({
     .filter((codePath) => fs.existsSync(codePath))
 
   return {
-    title: "You need to configure your title",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
     favicon: "img/favicon.ico",
@@ -62,7 +61,7 @@ export default function getDocusaurusConfig({
       footer: {
         style: "dark",
         copyright: `Copyright © ${new Date().getFullYear()} ${
-          config.docusaurus?.organizationName
+          config.docusaurus?.organizationName ?? ""
         }. Built with Moonwave and Docusaurus.`,
         ...config.footer,
       },

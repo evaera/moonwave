@@ -10,6 +10,15 @@ const ROOT_PATH = path.join(TEMPLATE_PATH, "root")
 
 const INDEX_EXTS = ["html", "js", "mdx", "md"]
 const COPY_FOLDERS = ["blog", "docs", "pages"] as const
+
+const NO_README_TEXT = (title: string) => `# ${title}
+This project doesn't have a README.
+If it had a README.md in its root directory, you would be reading that right now.`
+
+const NO_GIT_REPO_TEXT = `# This project has no configured title
+The site title is usually pulled from your Git repo, but no git repo could be detected.
+Either set this project up as a Git repo, or configure the website title in moonwave.toml`
+
 export type FoldersEnabled = { [index in typeof COPY_FOLDERS[number]]: boolean }
 
 export type Config = Partial<{
@@ -62,7 +71,7 @@ function getGitRepoUrl(): string | undefined {
   const gitConfig = parseGitConfig.sync()
 
   if (gitConfig) {
-    return gitConfig['remote "origin"'].url.replace(/\.git$/, "")
+    return gitConfig['remote "origin"']?.url?.replace(/\.git$/, "")
   }
 }
 
@@ -96,15 +105,15 @@ function getConfig(projectDir: string): Config {
     ...config,
 
     docusaurus: {
-      projectName: repoName,
-      organizationName: repoAuthor,
-      title: config.title ?? repoName,
+      projectName: repoName ?? undefined,
+      organizationName: repoAuthor ?? undefined,
+      title: config.title ?? repoName ?? "You need to configure your title",
       baseUrl: repoName ? `/${repoName}/` : "/",
       ...config.docusaurus,
     },
 
     navbar: {
-      title: config.title ?? config.docusaurus?.title ?? repoName,
+      title: config.title ?? config.docusaurus?.title ?? repoName ?? "No Title",
       ...config.navbar,
     },
   }
@@ -149,10 +158,11 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
       if (fs.existsSync(readmePath)) {
         fs.copyFileSync(readmePath, indexPath)
       } else {
-        fs.writeFileSync(
-          indexPath,
-          `# ${config.title}\nThis project doesn't have a README. If it had a README.md in its root directory, you would be reading that right now.`
-        )
+        const placeholderHomeText = config.title
+          ? NO_README_TEXT(config.title)
+          : NO_GIT_REPO_TEXT
+
+        fs.writeFileSync(indexPath, placeholderHomeText)
       }
     }
   }
