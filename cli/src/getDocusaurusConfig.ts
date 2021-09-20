@@ -107,7 +107,7 @@ export default function getDocusaurusConfig({
             exclude: ["_*.*"],
           },
           theme: {
-            customCss: ["../src/css/custom.css"],
+            customCss: ["../src/css/moonwave.css"],
           },
         },
       ],
