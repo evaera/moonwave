@@ -19,6 +19,10 @@ export default async function devCommand(args: Args) {
       .on("all", (event, changedPath) => {
         if (
           watchPaths.some((watchPath) => {
+            if (path.normalize(watchPath) === path.normalize(changedPath)) {
+              return true
+            }
+
             const relative = path.relative(watchPath, changedPath)
             return (
               relative &&
