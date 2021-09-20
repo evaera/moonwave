@@ -28,6 +28,7 @@ export type Config = Partial<{
   gitRepoUrl: string
   gitSourceBranch: string
   title: string
+  changelog: boolean
 
   // Docusaurus
   docusaurus: Partial<{
@@ -104,6 +105,7 @@ function getConfig(projectDir: string): Config {
   return {
     title: repoName,
     gitRepoUrl,
+    changelog: true,
     ...config,
 
     docusaurus: {
@@ -168,6 +170,27 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
       }
     }
   }
+}
+
+function copyChangelog(
+  projectDir: string,
+  tempDir: string,
+  config: Config
+): boolean {
+  const changelogPath = path.join(projectDir, "CHANGELOG.md")
+  const targetPath = path.join(tempDir, "pages", "CHANGELOG.md")
+
+  if (config.changelog && fs.existsSync(changelogPath)) {
+    fs.ensureDirSync(path.join(tempDir, "pages"))
+
+    fs.copyFileSync(changelogPath, targetPath)
+
+    return true
+  } else if (fs.existsSync(targetPath)) {
+    fs.removeSync(targetPath)
+  }
+
+  return false
 }
 
 function copyMoonwaveFolder(
@@ -262,6 +285,8 @@ export function prepareProject(
 
   // Create home page or copy readme
   makeHomePage(projectDir, tempDir, config)
+  // Copy CHANGELOG.md if it exists
+  const changelogExists = copyChangelog(projectDir, tempDir, config)
 
   const foundFolders = copyContentFolders(projectDir, tempDir)
 
@@ -272,6 +297,7 @@ export function prepareProject(
     enablePlugins: foundFolders,
     customCssExists,
     codePaths: options.codePaths,
+    changelogExists,
   })
 
   // TODO: Hash package.json / lockfile and additionally reinstall when changed
@@ -291,6 +317,7 @@ export function prepareProject(
     watchPaths: [
       path.join(projectDir, "moonwave.toml"),
       path.join(projectDir, "moonwave.json"),
+      path.join(projectDir, "CHANGELOG.md"),
       path.join(projectDir, ".moonwave/"),
       ...Object.entries(foundFolders)
         // .filter(([_folder, wasFound]) => wasFound)

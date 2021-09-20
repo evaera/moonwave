@@ -7,6 +7,7 @@ export interface GenerateConfigParams {
   enablePlugins: FoldersEnabled
   config: Config
   customCssExists: boolean
+  changelogExists: boolean
 }
 
 export default function getDocusaurusConfig({
@@ -14,6 +15,7 @@ export default function getDocusaurusConfig({
   enablePlugins,
   config,
   customCssExists,
+  changelogExists,
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
@@ -51,6 +53,9 @@ export default function getDocusaurusConfig({
             : []),
           ...(validCodePaths.length > 0
             ? [{ to: "/api/", label: "API", position: "left" }]
+            : []),
+          ...(changelogExists
+            ? [{ to: "/changelog", label: "Changelog", position: "left" }]
             : []),
           ...(config?.navbar?.items || []),
           ...(gitRepoUrl
