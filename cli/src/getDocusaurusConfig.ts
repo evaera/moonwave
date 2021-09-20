@@ -45,7 +45,9 @@ export default function getDocusaurusConfig({
           ...(enablePlugins.blog
             ? [{ to: "/blog", label: "Blog", position: "left" }]
             : []),
-          { to: "/api/", label: "API", position: "left" },
+          ...(validCodePaths.length > 0
+            ? [{ to: "/api/", label: "API", position: "left" }]
+            : []),
           ...(gitRepoUrl
             ? [
                 {
@@ -103,6 +105,9 @@ export default function getDocusaurusConfig({
 
             //exclude any file starting with an underscore
             exclude: ["_*.*"],
+          },
+          theme: {
+            customCss: ["../src/css/custom.css"],
           },
         },
       ],
