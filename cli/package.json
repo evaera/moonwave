@@ -1,6 +1,6 @@
 {
-  "name": "cli",
-  "version": "1.0.0",
+  "name": "moonwave",
+  "version": "0.0.1",
   "description": "moonwave cli",
   "main": "dist/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/UpliftGames/moonwave.git"
   },
-  "author": "Uplift Games",
+  "author": "eryn L. K. <e@eryn.io>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/UpliftGames/moonwave/issues"

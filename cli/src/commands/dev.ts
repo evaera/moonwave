@@ -12,6 +12,10 @@ export default async function devCommand(args: Args) {
       fresh: args.fresh,
     })
 
+    console.error(
+      `Moonwave: Temporary build directory is located at ${tempDir}`
+    )
+
     chokidar
       .watch(projectDir, {
         ignoreInitial: true,

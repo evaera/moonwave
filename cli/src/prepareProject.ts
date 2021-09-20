@@ -1,5 +1,6 @@
 import { execSync } from "child_process"
 import fs from "fs-extra"
+import os from "os"
 import parseGitConfig from "parse-git-config"
 import path from "path"
 import toml from "toml"
@@ -269,7 +270,8 @@ export function prepareProject(
 ): PreparedProject {
   const config = getConfig(projectDir)
 
-  const tempDir = path.join(projectDir, "./.moonwave-temp")
+  const folderName = projectDir.split(path.sep).slice(-1)[0] ?? "unknown"
+  const tempDir = path.join(os.tmpdir(), "moonwave", folderName)
 
   if (options.fresh && fs.existsSync(tempDir)) {
     for (const file of fs
