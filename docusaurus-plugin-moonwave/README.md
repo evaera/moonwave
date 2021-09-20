@@ -1,4 +1,10 @@
+<div align="center">
+    <img src="https://i.eryn.io/2139/moonwave.svg" alt="Moonwave" height="139" />
+</div>
+
 # Moonwave for Docusaurus
+
+This is the [https://docusaurus.io/] plugin for using [Moonwave](https://github.com/UpliftGames/moonwave). While you can use this package directly, it's recommended to use the Moonwave CLI, which can be found at the above link.
 
 
 ## Attribution for Icons

@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="brand/moonwave.svg" alt="Aurora" height="139" />
+    <img src="brand/moonwave.svg" alt="Moonwave" height="139" />
 </div>
 
 

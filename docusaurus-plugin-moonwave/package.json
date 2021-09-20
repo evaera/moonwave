@@ -8,6 +8,14 @@
   },
   "author": "eryn L. K. <e@eryn.io>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UpliftGames/moonwave.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UpliftGames/moonwave/issues"
+  },
+  "homepage": "https://github.com/UpliftGames/moonwave/tree/master/docusaurus-plugin-moonwave",
   "dependencies": {
     "hast-util-sanitize": "^4.0.0",
     "rehype-format": "^3.1.0",
