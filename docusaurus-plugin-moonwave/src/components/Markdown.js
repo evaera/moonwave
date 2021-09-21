@@ -1,4 +1,6 @@
+import rehypePrism from "@mapbox/rehype-prism"
 import { defaultSchema } from "hast-util-sanitize"
+import "prism-material-themes/themes/material-default.css"
 import React from "react"
 import format from "rehype-format"
 import sanitize from "rehype-sanitize"
@@ -24,6 +26,7 @@ export default function Markdown({ content, inline }) {
     .use(parse)
     .use(admonitions, {})
     .use(remark2rehype)
+    .use(rehypePrism)
     .use(format)
     .use(html)
     .use(sanitize, schema)

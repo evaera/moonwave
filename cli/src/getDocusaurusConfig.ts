@@ -34,6 +34,10 @@ export default function getDocusaurusConfig({
     themeConfig: {
       hideableSidebar: config.navbar?.hideableSidebar ?? true,
 
+      prism: {
+        additionalLanguages: ["lua"],
+      },
+
       navbar: {
         ...config.navbar,
 

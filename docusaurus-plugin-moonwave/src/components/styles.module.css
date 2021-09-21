@@ -209,6 +209,10 @@
   background: var(--ifm-table-background);
 }
 
+:global pre[class*="language-"][class*="language-"] {
+  padding: 1.5rem;
+}
+
 /* Copied from plugin-docs */
 .docPage,
 .docMainContainer {
