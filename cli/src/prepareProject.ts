@@ -262,6 +262,7 @@ export interface PrepareProjectOptions {
   codePaths: string[]
   skipRootCopy?: boolean
   fresh?: boolean
+  install?: boolean
 }
 
 export function prepareProject(
@@ -273,7 +274,12 @@ export function prepareProject(
   const folderName = projectDir.split(path.sep).slice(-1)[0] ?? "unknown"
   const tempDir = path.join(os.tmpdir(), "moonwave", folderName)
 
-  if (options.fresh && fs.existsSync(tempDir)) {
+  if (options.install && fs.existsSync(tempDir)) {
+    console.log(
+      `Deleting ${tempDir} for complete re-install, this may take a while...`
+    )
+    fs.removeSync(tempDir)
+  } else if (options.fresh && fs.existsSync(tempDir)) {
     for (const file of fs
       .readdirSync(tempDir)
       .filter((name) => name !== "node_modules")) {

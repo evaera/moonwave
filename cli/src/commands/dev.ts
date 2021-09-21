@@ -10,6 +10,7 @@ export default async function devCommand(args: Args) {
     const { tempDir, watchPaths, projectDir } = prepareProject(process.cwd(), {
       codePaths: args.code,
       fresh: args.fresh,
+      install: args.install,
     })
 
     console.error(

@@ -5,6 +5,7 @@ const version = require("../package.json").version as string
 
 export interface Args {
   fresh: boolean
+  install: boolean
   code: string[]
 }
 
@@ -22,15 +23,25 @@ const argv = yargs
   .showHelpOnFail(true)
 
   .command("build", "build the docs website", () => {}, buildCommand)
-  .command("dev", "run in development live-reload mode", () => {}, devCommand)
+  .command(
+    "dev",
+    "run in development live-reload mode",
+    (yargs) => {
+      yargs
+        .boolean("fresh")
+        .describe("fresh", "deletes build cache before building")
+        .alias("f", "fresh")
+    },
+    devCommand
+  )
 
   .array("code")
   .describe("code", "the path to your Lua code. e.g. 'src'")
   .default("code", ["lib", "src"])
 
-  .boolean("fresh")
-  .describe("fresh", "deletes build cache before building")
-  .alias("f", "fresh")
+  .boolean("install")
+  .describe("install", "re-install npm dependencies")
+  .alias("i", "install")
 
   .strictCommands()
   .demandCommand()

@@ -7,6 +7,7 @@ export default async function buildCommand(args: Args) {
     const { tempDir } = prepareProject(process.cwd(), {
       codePaths: args.code,
       fresh: true,
+      install: args.install,
     })
 
     const exitCode = await new Promise((resolve) => {
