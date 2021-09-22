@@ -22,8 +22,18 @@ fn all_tags() -> anyhow::Result<()> {
 }
 
 #[test]
+fn indentation() -> anyhow::Result<()> {
+    run_moonwave("passing/indentation.lua", 0)
+}
+
+#[test]
 fn failing_function() -> anyhow::Result<()> {
     run_moonwave("failing/function.lua", 1)
+}
+
+#[test]
+fn missing_starting_newline() -> anyhow::Result<()> {
+    run_moonwave("failing/missing_starting_newline.lua", 1)
 }
 
 #[test]

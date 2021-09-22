@@ -1,0 +1,19 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [],
+    "properties": [],
+    "types": [],
+    "name": "indentation",
+    "desc": "This description starts one line down,\n\nAnd has a line in the middle, followed by trailing lines.\n\n```lua\nfunction test()\n\tprint(\"indentation\")\n\n\tdo\n\t\tprint(\"more indented\")\n\tend\nend\n```",
+    "source": {
+      "line": 22,
+      "path": ""
+    }
+  }
+]
+

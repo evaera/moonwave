@@ -56,6 +56,10 @@ impl<'a> Span<'a> {
         self.from_slice(self.as_str().trim())
     }
 
+    pub fn strip_prefix(self, prefix: &str) -> Option<Self> {
+        Some(self.from_slice(self.as_str().strip_prefix(prefix)?))
+    }
+
     pub fn diagnostic<S: Into<String>>(self, text: S) -> Diagnostic {
         Diagnostic::from_span(text, self)
     }

@@ -160,9 +160,40 @@ impl<'a> DocEntry<'a> {
     ) -> Result<DocEntry<'a>, Diagnostics> {
         let span: Span<'a> = doc_comment.into();
 
+        let mut lines = span.lines();
+
+        let first_line = lines.next();
+
+        if let Some(first_line) = first_line {
+            if first_line.contains(|char: char| !char.is_whitespace()) {
+                return Err(Diagnostics::from(vec![
+                    span.diagnostic("There must be a new line after --[=[")
+                ]));
+            }
+        }
+
+        let indentation = lines
+            .find(|span| span.contains(|char: char| !char.is_whitespace()))
+            .map(|span| span.as_str())
+            .and_then(|str| {
+                let first_non_whitespace = str.find(|char: char| !char.is_whitespace())?;
+
+                Some(&str[..first_non_whitespace])
+            })
+            .unwrap_or("");
+
+        if !span
+            .lines()
+            .all(|span| span.is_empty() || span.starts_with(indentation))
+        {
+            return Err(Diagnostics::from(vec![
+                span.diagnostic("This doc comment has mixed indentation. All lines within the doc comment must start with the same indentation as the first line.")
+            ]));
+        }
+
         let (tag_lines, desc_lines): (Vec<Span>, Vec<Span>) = span
             .lines()
-            .map(Span::trim)
+            .map(|span| span.strip_prefix(indentation).unwrap_or(span))
             .partition(|line| line.starts_with(&['@', '.'][..]));
 
         let mut desc_lines = desc_lines

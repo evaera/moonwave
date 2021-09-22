@@ -1,0 +1,19 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+
+---
+error: There must be a new line after --[=[
+  ┌─ test-input/failing/missing_starting_newline.lua:1:6
+  │  
+1 │   --[=[ This is an invalid place for docs
+  │ ╭──────^
+2 │ │     Continuation of the docs
+3 │ │     text goes here
+4 │ │ 
+5 │ │     @function f
+6 │ │ ]=]
+  │ ╰^ There must be a new line after --[=[
+
+error: aborting due to diagnostic error
+
