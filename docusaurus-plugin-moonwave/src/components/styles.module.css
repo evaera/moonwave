@@ -1,3 +1,8 @@
+:root {
+  --doc-sidebar-width: 300px;
+  --doc-sidebar-hidden-width: 30px;
+}
+
 .docPageContainer {
   display: flex;
 }
