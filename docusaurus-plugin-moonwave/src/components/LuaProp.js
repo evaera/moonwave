@@ -15,7 +15,7 @@ export default function LuaProp({
         <code>
           {luaClassName}.{name}:{" "}
         </code>{" "}
-        <LuaType>{luaType}</LuaType>
+        <LuaType code={luaType} />
       </div>
       <Markdown content={desc} />
     </>

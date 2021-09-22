@@ -1,0 +1,27 @@
+import React from "react"
+import styles from "./styles.module.css"
+
+const DEPTH_CLASSES = [
+  styles.green,
+  styles.purple,
+  styles.yellow,
+  styles.cyan,
+  styles.orange,
+  styles.red,
+]
+
+// Operator
+export const Op = ({ children, depth = 0 }) => (
+  <code
+    className={
+      depth !== undefined
+        ? DEPTH_CLASSES[(depth - 1) % DEPTH_CLASSES.length]
+        : styles.op
+    }
+  >
+    {children}
+  </code>
+)
+
+// Prominent Operator
+export const PrOp = ({ children }) => <code>{children}</code>

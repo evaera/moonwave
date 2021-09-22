@@ -1,6 +1,12 @@
 :root {
   --doc-sidebar-width: 300px;
   --doc-sidebar-hidden-width: 30px;
+
+  --op-color: rgb(141 148 158);
+}
+
+[data-theme="dark"] {
+  --op-color: rgb(103 107 111);
 }
 
 .docPageContainer {
@@ -166,6 +172,10 @@
   border: none;
   display: inline-block;
   padding: 0;
+}
+
+.member code.op {
+  color: var(--op-color);
 }
 
 .member code.blue {

@@ -5,13 +5,14 @@ import InlineDescription from "./InlineDescription"
 import LuaType from "./LuaType"
 import Markdown from "./Markdown"
 import styles from "./styles.module.css"
+import { PrOp } from "./Syntax"
 
 const H3 = Heading("h3")
 
 const Param = ({ name, lua_type }) => (
   <>
     <code>{name}:&nbsp;</code>
-    <LuaType>{lua_type}</LuaType>
+    <LuaType code={lua_type} />
   </>
 )
 
@@ -32,7 +33,7 @@ export default function LuaFunction({
           {functionType === "static" ? "." : ":"}
         </code>
         <code className={styles.green}>{name}</code>
-        <code>(</code>
+        <PrOp>(</PrOp>
         {params.length < 2 && (!params[0] || !params[0].desc) ? (
           params[0] && <Param {...params[0]} />
         ) : (
@@ -48,11 +49,11 @@ export default function LuaFunction({
             </div>
           </>
         )}
-        <code>) →&nbsp;</code>
-        {returns.length !== 1 && <code>(</code>}
+        <PrOp>) →&nbsp;</PrOp>
+        {returns.length !== 1 && <PrOp>(</PrOp>}
         {returns.length === 1 ? (
           <>
-            <LuaType>{returns[0].lua_type}</LuaType>
+            <LuaType code={returns[0].lua_type} />
             {returns[0].desc && <InlineDescription content={returns[0].desc} />}
           </>
         ) : (
@@ -60,7 +61,7 @@ export default function LuaFunction({
             <div className={styles.inset}>
               {returns.map((ret, index) => (
                 <div key={index}>
-                  <LuaType>{ret.lua_type}</LuaType>
+                  <LuaType code={ret.lua_type} />
                   {index !== returns.length - 1 && <code>,</code>}
                   {ret.desc && <InlineDescription content={ret.desc} />}
                 </div>
@@ -68,7 +69,7 @@ export default function LuaFunction({
             </div>
           )
         )}
-        {returns.length !== 1 && <code>)</code>}
+        {returns.length !== 1 && <PrOp>)</PrOp>}
       </div>
       <Markdown content={desc} />
 

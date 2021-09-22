@@ -7,14 +7,14 @@ import styles from "./styles.module.css"
 const TypeAlias = ({ name, luaType }) => (
   <>
     <code className={styles.purple}>type</code> <code>{name} = </code>{" "}
-    <LuaType>{luaType}</LuaType>
+    <LuaType code={luaType} />
   </>
 )
 
 const Param = ({ name, luaType }) => (
   <>
     <code>{name}:&nbsp;</code>
-    <LuaType>{luaType}</LuaType>
+    <LuaType code={luaType} />
   </>
 )
 
