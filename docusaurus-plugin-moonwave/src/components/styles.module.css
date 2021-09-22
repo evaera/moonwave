@@ -8,7 +8,7 @@
 
 .divider {
   border-top: 1px solid var(--ifm-color-emphasis-300);
-  padding-top: 10px;
+  margin: 1rem 0;
 }
 
 .inlineDescription {
@@ -155,7 +155,8 @@
   color: var(--ifm-color-emphasis-500);
 }
 
-.member code {
+.member h3 code,
+.memberString code {
   background: none;
   border: none;
   display: inline-block;
