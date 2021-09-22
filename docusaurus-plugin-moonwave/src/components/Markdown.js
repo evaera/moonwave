@@ -1,3 +1,4 @@
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import rehypePrism from "@mapbox/rehype-prism"
 import { defaultSchema } from "hast-util-sanitize"
 import "prism-material-themes/themes/material-default.css"
@@ -21,11 +22,30 @@ const schema = {
   },
 }
 
+const linkTransformer = (baseUrl) => (node) => {
+  if (node.children) {
+    node.children.forEach(linkTransformer(baseUrl))
+  }
+
+  if (node.tagName === "a") {
+    const url = node.properties.href
+
+    if (url.startsWith("http")) {
+      node.properties.target = "_blank"
+    } else if (url.startsWith("/")) {
+      node.properties.href = baseUrl + url.slice(1)
+    }
+  }
+}
+
 export default function Markdown({ content, inline }) {
+  const { siteConfig } = useDocusaurusContext()
+
   const markdownHtml = unified()
     .use(parse)
     .use(admonitions, {})
     .use(remark2rehype)
+    .use(() => linkTransformer(siteConfig.baseUrl))
     .use(rehypePrism)
     .use(format)
     .use(html)
