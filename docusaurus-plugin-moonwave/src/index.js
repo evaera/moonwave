@@ -15,7 +15,7 @@ module.exports = (context, options) => ({
   },
 
   async loadContent() {
-    const basePath = path.resolve(process.cwd(), "..")
+    const basePath = options.projectDir || path.resolve(process.cwd(), "..")
 
     const api = await Promise.all(
       options.code.map((root) =>
@@ -106,6 +106,12 @@ module.exports.validateOptions = ({ options }) => {
   if (options.sourceUrl && typeof options.sourceUrl !== "string") {
     throw new Error(
       "Moonwave plugin: expected option `sourceUrl` to be a string."
+    )
+  }
+
+  if (options.projectDir && typeof options.projectDir !== "string") {
+    throw new Error(
+      "Moonwave plugin: expected option `projectDir` to be a string."
     )
   }
 

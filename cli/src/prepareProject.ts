@@ -306,6 +306,7 @@ export function prepareProject(
     customCssExists,
     codePaths: options.codePaths,
     changelogExists,
+    projectDir,
   })
 
   // TODO: Hash package.json / lockfile and additionally reinstall when changed
