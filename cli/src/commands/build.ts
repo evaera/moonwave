@@ -1,10 +1,11 @@
 import { spawn } from "child_process"
+import path from "path"
 import { Args } from "../argv"
 import { prepareProject } from "../prepareProject"
 
 export default async function buildCommand(args: Args) {
   try {
-    const { tempDir } = prepareProject(process.cwd(), {
+    const { tempDir, projectDir } = prepareProject(process.cwd(), {
       codePaths: args.code,
       fresh: true,
       install: args.install,
@@ -13,7 +14,7 @@ export default async function buildCommand(args: Args) {
     const exitCode = await new Promise((resolve) => {
       spawn(
         "npm" + (process.platform === "win32" ? ".cmd" : ""),
-        ["run", "build", "--", "--out-dir", "../build"],
+        ["run", "build", "--", "--out-dir", path.join(projectDir, "build")],
         {
           cwd: tempDir,
           stdio: "inherit",
@@ -26,6 +27,10 @@ export default async function buildCommand(args: Args) {
     if (exitCode !== 0) {
       throw new Error("Non-zero exit code")
     }
+
+    console.log(
+      "Moonwave: Website built into the `build` directory. Do not commit this folder: you should add it to your .gitignore file."
+    )
   } catch (e) {
     console.error(typeof e === "object" && e !== null ? e.toString() : e)
     console.error(
