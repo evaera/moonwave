@@ -1,0 +1,31 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [
+      {
+        "name": "freeFunction",
+        "desc": "",
+        "params": [],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 9,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "eieio",
+    "desc": "",
+    "source": {
+      "line": 4,
+      "path": ""
+    }
+  }
+]
+

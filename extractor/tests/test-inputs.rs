@@ -37,6 +37,11 @@ fn free_function() -> anyhow::Result<()> {
 }
 
 #[test]
+fn method_stmt_with_within() -> anyhow::Result<()> {
+    run_moonwave("passing/method_stmt_with_within.lua", 0)
+}
+
+#[test]
 fn triple_dash_but_wrong() -> anyhow::Result<()> {
     run_moonwave("failing/triple_dash_but_wrong.lua", 1)
 }

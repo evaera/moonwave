@@ -120,28 +120,36 @@ fn determine_kind(
         return Ok(kind);
     }
 
+    let within_tag = tags
+        .iter()
+        .find(|tag| matches!(tag, Tag::Within(_)))
+        .map(|tag| {
+            if let Tag::Within(within) = tag {
+                within
+            } else {
+                unreachable!();
+            }
+        });
+
     match stmt {
         Some(Stmt::FunctionDeclaration(function)) => match function.name().method_name() {
-            Some(method_name) => Ok(DocEntryKind::Function {
-                name: method_name.to_string(),
-                within: function.name().names().to_string(),
-                function_type: FunctionType::Method,
-            }),
+            Some(method_name) => {
+                let within = if let Some(within) = within_tag {
+                    within.name.as_str().to_owned()
+                } else {
+                    function.name().names().to_string()
+                };
+
+                Ok(DocEntryKind::Function {
+                    name: method_name.to_string(),
+                    within,
+                    function_type: FunctionType::Method,
+                })
+            }
             None => {
                 let mut names: Vec<_> = function.name().names().iter().collect();
 
                 let function_name = names.pop().unwrap().to_string();
-
-                let within_tag = tags
-                    .iter()
-                    .find(|tag| matches!(tag, Tag::Within(_)))
-                    .map(|tag| {
-                        if let Tag::Within(within) = tag {
-                            within
-                        } else {
-                            unreachable!();
-                        }
-                    });
 
                 let within = if let Some(within) = within_tag {
                     within.name.as_str().to_owned()
