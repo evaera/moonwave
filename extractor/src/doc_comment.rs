@@ -1,6 +1,3 @@
-use std::borrow::Cow;
-
-use full_moon::tokenizer::{Token, TokenType};
 use serde::{Deserialize, Serialize};
 
 use crate::diagnostic::Diagnostic;
@@ -23,18 +20,21 @@ pub struct DocComment {
 }
 
 impl DocComment {
-    pub fn new(token: Cow<Token>, file_id: usize, relative_path: String) -> Self {
-        match token.token_type() {
-            TokenType::MultiLineComment { comment, .. } => Self {
-                comment: comment.to_string(),
-                file_id,
-                start: token.start_position().bytes() + "--[=[".len(),
-                output_source: OutputSource {
-                    line: token.end_position().line() + 1,
-                    relative_path,
-                },
+    pub fn new(
+        comment: String,
+        start_position: usize,
+        target_line: usize,
+        file_id: usize,
+        relative_path: String,
+    ) -> Self {
+        Self {
+            comment,
+            file_id,
+            start: start_position,
+            output_source: OutputSource {
+                line: target_line,
+                relative_path,
             },
-            _ => unreachable!(),
         }
     }
 

@@ -1,5 +1,12 @@
+use std::borrow::Cow;
+
 use crate::{diagnostic::Diagnostics, doc_comment::DocComment, doc_entry::DocEntry, error::Error};
-use full_moon::{self, ast::Stmt, node::Node, tokenizer::TokenType};
+use full_moon::{
+    self,
+    ast::Stmt,
+    node::Node,
+    tokenizer::{Token, TokenType},
+};
 
 #[derive(Debug)]
 pub struct SourceFile<'a> {
@@ -11,37 +18,132 @@ impl<'a> SourceFile<'a> {
     pub fn from_str(source: &'a str, file_id: usize, relative_path: String) -> Result<Self, Error> {
         let ast = full_moon::parse(source).map_err(|e| Error::FullMoonError(e.to_string()))?;
 
+        struct Collector<'a, 'b> {
+            buffer: Vec<Token<'a>>,
+            last_line: usize,
+            file_id: usize,
+            relative_path: &'b str,
+        }
+
+        impl<'a, 'b> Collector<'a, 'b> {
+            fn new(file_id: usize, relative_path: &'b str) -> Self {
+                Self {
+                    buffer: Vec::new(),
+                    file_id,
+                    last_line: 0,
+                    relative_path,
+                }
+            }
+
+            fn scan(&mut self, token: Cow<Token<'a>>) -> Option<DocComment> {
+                match token.token_type() {
+                    TokenType::MultiLineComment { blocks: 1, comment } => {
+                        self.clear();
+
+                        Some(DocComment::new(
+                            comment.to_string(),
+                            token.start_position().unwrap().bytes() + "--[=[".len(),
+                            token.end_position().unwrap().line() + 1,
+                            self.file_id,
+                            self.relative_path.to_owned(),
+                        ))
+                    }
+                    TokenType::SingleLineComment { comment } => {
+                        if comment.starts_with('-') {
+                            self.buffer.push(token.into_owned());
+                        } else {
+                            return self.flush();
+                        }
+
+                        None
+                    }
+                    TokenType::Whitespace { .. } => {
+                        if token.start_position().unwrap().line() == self.last_line {
+                            return self.flush();
+                        }
+
+                        self.last_line = token.start_position().unwrap().line();
+
+                        None
+                    }
+                    _ => None,
+                }
+            }
+
+            fn clear(&mut self) {
+                self.buffer.clear();
+            }
+
+            fn flush(&mut self) -> Option<DocComment> {
+                if self.buffer.is_empty() {
+                    return None;
+                }
+
+                let comment = self
+                    .buffer
+                    .iter()
+                    .map(|token| match token.token_type() {
+                        TokenType::SingleLineComment { comment } => {
+                            format!("--{}", comment)
+                        }
+                        _ => unreachable!(),
+                    })
+                    .collect::<Vec<_>>()
+                    .join("\n");
+
+                let doc_comment = Some(DocComment::new(
+                    comment,
+                    self.buffer.first().unwrap().start_position().bytes(),
+                    self.buffer.last().unwrap().end_position().line() + 1,
+                    self.file_id,
+                    self.relative_path.to_owned(),
+                ));
+
+                self.clear();
+
+                doc_comment
+            }
+        }
+
+        let mut collector = Collector::new(file_id, &relative_path);
+
         let mut doc_comments: Vec<_> = ast
             .nodes()
             .iter_stmts()
             .map(|stmt| {
-                stmt.surrounding_trivia()
+                let mut comments = stmt
+                    .surrounding_trivia()
                     .0
                     .into_iter()
-                    .filter_map(|token| match token.token_type() {
-                        TokenType::MultiLineComment { blocks: 1, .. } => Some((
-                            DocComment::new(token, file_id, relative_path.clone()),
-                            Some(stmt.clone()),
-                        )),
-                        _ => None,
+                    .filter_map(|token| {
+                        collector
+                            .scan(token)
+                            .map(|comment| (comment, Some(stmt.clone())))
                     })
-                    .collect::<Vec<_>>()
+                    .collect::<Vec<_>>();
+
+                if let Some(doc_comment) = collector.flush() {
+                    comments.push((doc_comment, Some(stmt.clone())))
+                }
+
+                comments
             })
             .flatten()
             .collect();
+
+        let mut collector = Collector::new(file_id, &relative_path);
 
         doc_comments.extend(
             ast.eof()
                 .surrounding_trivia()
                 .0
                 .into_iter()
-                .filter_map(|token| match token.token_type() {
-                    TokenType::MultiLineComment { blocks: 1, .. } => {
-                        Some((DocComment::new(token, file_id, relative_path.clone()), None))
-                    }
-                    _ => None,
-                }),
+                .filter_map(|token| collector.scan(token).map(|comment| (comment, None))),
         );
+
+        if let Some(doc_comment) = collector.flush() {
+            doc_comments.push((doc_comment, None))
+        }
 
         Ok(Self {
             doc_comments,

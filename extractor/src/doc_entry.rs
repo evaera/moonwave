@@ -132,17 +132,32 @@ fn determine_kind(
 
                 let function_name = names.pop().unwrap().to_string();
 
-                if names.is_empty() {
-                    return Err(doc_comment.diagnostic("Function requires @within tag"));
-                }
+                let within_tag = tags
+                    .iter()
+                    .find(|tag| matches!(tag, Tag::Within(_)))
+                    .map(|tag| {
+                        if let Tag::Within(within) = tag {
+                            within
+                        } else {
+                            unreachable!();
+                        }
+                    });
 
-                Ok(DocEntryKind::Function {
-                    name: function_name,
-                    within: names
+                let within = if let Some(within) = within_tag {
+                    within.name.as_str().to_owned()
+                } else if !names.is_empty() {
+                    names
                         .into_iter()
                         .map(|token| token.to_string())
                         .collect::<Vec<_>>()
-                        .join("."),
+                        .join(".")
+                } else {
+                    return Err(doc_comment.diagnostic("Function requires @within tag"));
+                };
+
+                Ok(DocEntryKind::Function {
+                    name: function_name,
+                    within,
                     function_type: FunctionType::Static,
                 })
             }
@@ -164,35 +179,50 @@ impl<'a> DocEntry<'a> {
 
         let first_line = lines.next();
 
+        let mut indentation = None;
+
         if let Some(first_line) = first_line {
-            if first_line.contains(|char: char| !char.is_whitespace()) {
+            if first_line.starts_with("---") {
+                if first_line.len() == 3 {
+                    return Err(Diagnostics::from(vec![span.diagnostic(
+                        "The first line of a doc comment must have text after the triple dash",
+                    )]));
+                }
+
+                indentation = Some(&first_line.as_str()[..4]);
+            } else if first_line.contains(|char: char| !char.is_whitespace()) {
                 return Err(Diagnostics::from(vec![
                     span.diagnostic("There must be a new line after --[=[")
                 ]));
             }
         }
 
-        let indentation = lines
-            .find(|span| span.contains(|char: char| !char.is_whitespace()))
-            .map(|span| span.as_str())
-            .and_then(|str| {
-                let first_non_whitespace = str.find(|char: char| !char.is_whitespace())?;
+        let indentation = indentation.unwrap_or_else(|| {
+            lines
+                .find(|span| span.contains(|char: char| !char.is_whitespace()))
+                .map(|span| span.as_str())
+                .and_then(|str| {
+                    let first_non_whitespace = str.find(|char: char| !char.is_whitespace())?;
 
-                Some(&str[..first_non_whitespace])
-            })
-            .unwrap_or("");
+                    Some(&str[..first_non_whitespace])
+                })
+                .unwrap_or("")
+        });
 
         if !span
             .lines()
-            .all(|span| span.is_empty() || span.starts_with(indentation))
+            .all(|span| span.is_empty() || span.starts_with(indentation) || span.as_str() == "---")
         {
-            return Err(Diagnostics::from(vec![
-                span.diagnostic("This doc comment has mixed indentation. All lines within the doc comment must start with the same indentation as the first line.")
-            ]));
+            return Err(Diagnostics::from(vec![span.diagnostic(
+                "This doc comment has mixed indentation. \
+                All lines within the doc comment must start with the same indentation. \
+                Try using your editor's \"Convert Indentation to Tabs\" code action.",
+            )]));
         }
 
         let (tag_lines, desc_lines): (Vec<Span>, Vec<Span>) = span
             .lines()
+            .filter(|span| span.as_str() != "---")
             .map(|span| span.strip_prefix(indentation).unwrap_or(span))
             .partition(|line| line.starts_with(&['@', '.'][..]));
 

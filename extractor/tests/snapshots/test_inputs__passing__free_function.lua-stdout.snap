@@ -1,0 +1,31 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [
+      {
+        "name": "example",
+        "desc": "a function",
+        "params": [],
+        "returns": [],
+        "function_type": "static",
+        "source": {
+          "line": 8,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "free",
+    "desc": "",
+    "source": {
+      "line": 2,
+      "path": ""
+    }
+  }
+]
+

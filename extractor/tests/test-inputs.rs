@@ -27,6 +27,21 @@ fn indentation() -> anyhow::Result<()> {
 }
 
 #[test]
+fn triple_dash() -> anyhow::Result<()> {
+    run_moonwave("passing/triple_dash.lua", 0)
+}
+
+#[test]
+fn free_function() -> anyhow::Result<()> {
+    run_moonwave("passing/free_function.lua", 0)
+}
+
+#[test]
+fn triple_dash_but_wrong() -> anyhow::Result<()> {
+    run_moonwave("failing/triple_dash_but_wrong.lua", 1)
+}
+
+#[test]
 fn failing_function() -> anyhow::Result<()> {
     run_moonwave("failing/function.lua", 1)
 }

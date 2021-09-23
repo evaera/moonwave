@@ -1,0 +1,58 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [],
+    "properties": [],
+    "types": [
+      {
+        "name": "hello",
+        "desc": "some more text",
+        "lua_type": "x",
+        "source": {
+          "line": 29,
+          "path": ""
+        }
+      }
+    ],
+    "name": "b8f83",
+    "desc": "",
+    "source": {
+      "line": 26,
+      "path": ""
+    }
+  },
+  {
+    "functions": [
+      {
+        "name": "example",
+        "desc": "",
+        "params": [
+          {
+            "name": "eher",
+            "desc": "fhef",
+            "lua_type": "efe"
+          }
+        ],
+        "returns": [],
+        "function_type": "static",
+        "source": {
+          "line": 32,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "triple",
+    "desc": "This description starts one line down,\n\t\tsome indented text\nAnd has a line in the middle, followed by trailing lines.\n```lua\nfunction test()\n\tprint(\"indentation\")\n\tdo\n\t\tprint(\"more indented\")\n\tend\nend\n```",
+    "source": {
+      "line": 20,
+      "path": ""
+    }
+  }
+]
+
