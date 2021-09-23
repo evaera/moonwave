@@ -7,19 +7,21 @@ import styles from "./index.module.css"
 
 const FEATURES = /***features***/
 
-function Feature({ image, title, description }) {
-  return (
-    <div className={clsx("col col--4")}>
-      <div className="text--center">
-        <img className={styles.featureSvg} alt={title} src={image} />
+  function Feature({ image, title, description }) {
+    return (
+      <div className={clsx("col col--4")}>
+        {image && (
+          <div className="text--center">
+            <img className={styles.featureSvg} alt={title} src={image} />
+          </div>
+        )}
+        <div className="text--center padding-horiz--md">
+          <h3>{title}</h3>
+          <p>{description}</p>
+        </div>
       </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-    </div>
-  )
-}
+    )
+  }
 
 export function HomepageFeatures() {
   if (!FEATURES) return null
@@ -40,7 +42,7 @@ export function HomepageFeatures() {
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext()
   return (
-    <header className={clsx("hero hero--primary", styles.heroBanner)}>
+    <header className={clsx("hero", styles.heroBanner)}>
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
@@ -64,6 +66,7 @@ export default function Home() {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+        <div className="container">{/***readme***/}</div>
       </main>
     </Layout>
   )

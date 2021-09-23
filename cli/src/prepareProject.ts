@@ -11,6 +11,7 @@ import getDocusaurusConfig, {
 const TEMPLATE_PATH = path.join(__dirname, "../template")
 const ROOT_PATH = path.join(TEMPLATE_PATH, "root")
 
+const SNIP = "<!--moonwave-hide-before-this-line-->"
 const INDEX_EXTS = ["html", "js", "mdx", "md"]
 const COPY_FOLDERS = ["blog", "docs", "pages"] as const
 
@@ -53,6 +54,7 @@ export type Config = Partial<{
 
   home: Partial<{
     enabled: boolean
+    includeReadme: boolean
 
     features: {
       title: string
@@ -140,16 +142,37 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
       const features = config.home?.features?.map((feature) => {
         if (feature.image && feature.image.startsWith("/")) {
           feature.image = config.docusaurus?.baseUrl + feature.image
-
-          return feature
         }
+
+        return feature
       })
 
-      const indexSource = fs
+      let indexSource = fs
         .readFileSync(path.join(TEMPLATE_PATH, "home", "index.js"), {
           encoding: "utf-8",
         })
         .replace("/***features***/", JSON.stringify(features ?? null))
+
+      const readmePath = path.join(
+        projectDir,
+        typeof config.home?.includeReadme === "string"
+          ? config.home.includeReadme
+          : "README.md"
+      )
+      if (config.home?.includeReadme && fs.existsSync(readmePath)) {
+        fs.copyFileSync(readmePath, path.join(tempDir, "README.md"))
+
+        let readmeContent = fs.readFileSync(readmePath, { encoding: "utf-8" })
+
+        const snip = readmeContent.indexOf(SNIP)
+        if (snip > 0) {
+          readmeContent = readmeContent.slice(snip + SNIP.length)
+        }
+
+        fs.writeFileSync(path.join(tempDir, "README.md"), readmeContent)
+        indexSource = 'import README from "../README.md"\n' + indexSource
+        indexSource = indexSource.replace("{/***readme***/}", "<README />")
+      }
 
       fs.writeFileSync(path.join(tempDir, "pages", "index.js"), indexSource)
 
@@ -324,6 +347,9 @@ export function prepareProject(
     tempDir,
     projectDir,
     watchPaths: [
+      typeof config.home?.includeReadme === "string"
+        ? config.home.includeReadme
+        : "README.md",
       path.join(projectDir, "moonwave.toml"),
       path.join(projectDir, "moonwave.json"),
       path.join(projectDir, "CHANGELOG.md"),
