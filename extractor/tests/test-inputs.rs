@@ -42,6 +42,11 @@ fn method_stmt_with_within() -> anyhow::Result<()> {
 }
 
 #[test]
+fn class_with_index() -> anyhow::Result<()> {
+    run_moonwave("passing/class_with_index.lua", 0)
+}
+
+#[test]
 fn triple_dash_but_wrong() -> anyhow::Result<()> {
     run_moonwave("failing/triple_dash_but_wrong.lua", 1)
 }

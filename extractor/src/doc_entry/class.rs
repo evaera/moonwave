@@ -36,6 +36,9 @@ pub struct ClassDocEntry<'a> {
     pub output_source: OutputSource,
 
     #[serde(skip)]
+    pub __index: String,
+
+    #[serde(skip)]
     pub source: &'a DocComment,
 }
 
@@ -61,6 +64,7 @@ impl<'a> ClassDocEntry<'a> {
             deprecated: None,
             since: None,
             output_source: source.output_source.clone(),
+            __index: "__index".to_owned(),
         };
 
         let mut unused_tags = Vec::new();
@@ -70,6 +74,7 @@ impl<'a> ClassDocEntry<'a> {
                 Tag::Custom(tag) => doc_entry.tags.push(tag),
                 Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
+                Tag::Index(index_tag) => doc_entry.__index = index_tag.name.to_string(),
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Unreleased(_) => doc_entry.unreleased = true,

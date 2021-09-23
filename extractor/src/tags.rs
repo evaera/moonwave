@@ -7,6 +7,7 @@ mod custom;
 mod error;
 mod field;
 mod function;
+mod index;
 mod interface;
 mod marker;
 mod param;
@@ -22,6 +23,7 @@ pub use custom::CustomTag;
 pub use error::ErrorTag;
 pub use field::FieldTag;
 pub use function::FunctionTag;
+pub use index::IndexTag;
 pub use interface::InterfaceTag;
 pub use marker::{
     ClientTag, IgnoreTag, PluginTag, PrivateTag, ReadOnlyTag, ServerTag, UnreleasedTag, YieldsTag,
@@ -92,6 +94,7 @@ define_tags! {
     Since(SinceTag),
     Custom(CustomTag),
     Error(ErrorTag),
+    Index(IndexTag),
 
     // Unimplemented:
     // External,
@@ -134,6 +137,7 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             "@param" => ParamTag::parse(tag_text()?).map(Tag::Param),
             "@return" => ReturnTag::parse(tag_text()?).map(Tag::Return),
             "@within" => WithinTag::parse(tag_text()?).map(Tag::Within),
+            "@__index" => IndexTag::parse(tag_text()?).map(Tag::Index),
             "@type" => TypeTag::parse(tag_text()?).map(Tag::Type),
             "@interface" => InterfaceTag::parse(tag_text()?).map(Tag::Interface),
             "@field" => FieldTag::parse(tag_text()?).map(Tag::Field),

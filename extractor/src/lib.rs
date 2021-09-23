@@ -1,5 +1,5 @@
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     fs, io,
     path::{self, Path, PathBuf},
 };
@@ -116,11 +116,17 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
         .into_iter()
         .partition(|entry| matches!(*entry, DocEntry::Class(_)));
 
+    let mut alias_map: HashMap<String, String> = HashMap::new();
+
     for entry in classes {
         if let DocEntry::Class(class) = entry {
             let (functions, properties, types) = Default::default();
+
+            let class_name = class.name.to_owned();
+            let __index = class.__index.to_owned();
+
             map.insert(
-                class.name.to_owned(),
+                class_name.clone(),
                 OutputClass {
                     class,
                     functions,
@@ -128,6 +134,12 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
                     types,
                 },
             );
+
+            alias_map.insert(
+                format!("{}.{}", class_name.clone(), __index),
+                class_name.clone(),
+            );
+            alias_map.insert(class_name.clone(), class_name);
         }
     }
 
@@ -142,16 +154,16 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
 
     for entry in entries {
         match entry {
-            DocEntry::Function(entry) => match map.get_mut(&entry.within) {
-                Some(class) => class.functions.push(entry),
+            DocEntry::Function(entry) => match alias_map.get(&entry.within) {
+                Some(class_name) => map.get_mut(class_name).unwrap().functions.push(entry),
                 None => emit_diagnostic(entry.source, &entry.within),
             },
-            DocEntry::Property(entry) => match map.get_mut(&entry.within) {
-                Some(class) => class.properties.push(entry),
+            DocEntry::Property(entry) => match alias_map.get(&entry.within) {
+                Some(class_name) => map.get_mut(class_name).unwrap().properties.push(entry),
                 None => emit_diagnostic(entry.source, &entry.within),
             },
-            DocEntry::Type(entry) => match map.get_mut(&entry.within) {
-                Some(class) => class.types.push(entry),
+            DocEntry::Type(entry) => match alias_map.get(&entry.within) {
+                Some(class_name) => map.get_mut(class_name).unwrap().types.push(entry),
                 None => emit_diagnostic(entry.source, &entry.within),
             },
             _ => unreachable!(),

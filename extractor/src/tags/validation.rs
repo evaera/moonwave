@@ -10,6 +10,10 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Function, TagType::Class),
     // Classes aren't within other classes
     (TagType::Class, TagType::Within),
+    // __index only works on classes
+    (TagType::Index, TagType::Property),
+    (TagType::Index, TagType::Function),
+    (TagType::Index, TagType::Type),
     // Param doesn't work with kinds other than function
     (TagType::Param, TagType::Property),
     (TagType::Param, TagType::Class),

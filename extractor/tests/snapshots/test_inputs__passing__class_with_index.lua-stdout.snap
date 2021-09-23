@@ -1,0 +1,54 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [
+      {
+        "name": "methodName",
+        "desc": "A method within abc's __index",
+        "params": [],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 8,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "abc",
+    "desc": "",
+    "source": {
+      "line": 4,
+      "path": ""
+    }
+  },
+  {
+    "functions": [
+      {
+        "name": "methodName",
+        "desc": "A method within xyz's __index",
+        "params": [],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 20,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "xyz",
+    "desc": "",
+    "source": {
+      "line": 16,
+      "path": ""
+    }
+  }
+]
+
