@@ -102,7 +102,7 @@ export default function getDocusaurusConfig({
             ? {
                 // Please change this to your repo.
                 editUrl: gitRepoUrl
-                  ? `${gitRepoUrl}/edit/${config.gitSourceBranch}/docs/`
+                  ? `${gitRepoUrl}/edit/${config.gitSourceBranch ?? "master"}/`
                   : undefined, // Omitting this variable entirely will disable edit links
                 sidebarCollapsible: true,
               }
@@ -112,7 +112,7 @@ export default function getDocusaurusConfig({
                 showReadingTime: true,
                 // Please change this to your repo.
                 editUrl: gitRepoUrl
-                  ? `${gitRepoUrl}/edit/${config.gitSourceBranch}/blog/`
+                  ? `${gitRepoUrl}/edit/${config.gitSourceBranch ?? "master"}/`
                   : undefined, // Omitting this variable entirely will disable edit links
               }
             : false,
