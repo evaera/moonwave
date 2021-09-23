@@ -29,7 +29,7 @@ export default function getDocusaurusConfig({
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
     favicon: "/favicon.ico",
-    url: `https://${config.docusaurus?.organizationName}.github.io/`,
+    url: `https://${config.docusaurus?.organizationName}.github.io`,
 
     ...config.docusaurus,
 
