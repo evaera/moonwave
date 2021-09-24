@@ -89,7 +89,7 @@ const BADGES = {
   },
   "Read Only": {
     color: "#e74c3c",
-    title: "This item is only intended to be used by the module's authors.",
+    title: "This item is read only and cannot be modified.",
     image: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
