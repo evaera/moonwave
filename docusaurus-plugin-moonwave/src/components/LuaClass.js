@@ -115,6 +115,17 @@ export default function LuaClass({
         } else if (memberA.deprecated && !memberB.deprecated) {
           return 1
         } else {
+          if (
+            memberA.function_type === "static" &&
+            memberB.function_type === "method"
+          ) {
+            return -1
+          } else if (
+            memberA.function_type === "method" &&
+            memberB.function_type === "static"
+          ) {
+            return 1
+          }
           return 0
         }
       })
