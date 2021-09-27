@@ -25,6 +25,12 @@ export default function getDocusaurusConfig({
     .map((codePath) => path.join(process.cwd(), codePath))
     .filter((codePath) => fs.existsSync(codePath))
 
+  const classOrderInput = [
+    "TestClass",
+    "zzz",
+    "AB"
+  ]
+
   return {
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
@@ -89,6 +95,7 @@ export default function getDocusaurusConfig({
           code: validCodePaths,
           sourceUrl: gitRepoUrl + `/blob/${config.gitSourceBranch ?? "master"}`,
           projectDir,
+          classOrder: classOrderInput
         },
       ],
       "docusaurus-lunr-search",

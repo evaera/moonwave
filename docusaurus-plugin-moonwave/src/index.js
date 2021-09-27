@@ -50,9 +50,30 @@ module.exports = (context, options) => ({
       }
     })
 
+    const classOrderSortArray = options.classOrder
+
     const allLuaClassNames = await createData(
       "sidebar.json",
-      JSON.stringify(content.map((luaClass) => luaClass.name))
+      JSON.stringify(
+        content
+          .map((luaClass) => luaClass.name)
+          .sort((a, b) => {
+            if (
+              !classOrderSortArray.includes(a) &&
+              !classOrderSortArray.includes(b)
+            ) {
+              return a.localeCompare(b)
+            } else if (!classOrderSortArray.includes(a)) {
+              return 1
+            } else if (!classOrderSortArray.includes(b)) {
+              return -1
+            }
+
+            return (
+              classOrderSortArray.indexOf(a) - classOrderSortArray.indexOf(b)
+            )
+          })
+      )
     )
 
     const baseUrl = context.baseUrl
@@ -61,6 +82,7 @@ module.exports = (context, options) => ({
       JSON.stringify({
         sourceUrl: options.sourceUrl,
         baseUrl: baseUrl,
+        classOrder: classOrderSortArray,
       })
     )
 
