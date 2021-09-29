@@ -5,7 +5,7 @@ import parseGitConfig from "parse-git-config"
 import path from "path"
 import toml from "toml"
 import getDocusaurusConfig, {
-  GenerateConfigParams,
+  GenerateConfigParams
 } from "./getDocusaurusConfig"
 
 const TEMPLATE_PATH = path.join(__dirname, "../template")
@@ -312,8 +312,19 @@ export function prepareProject(
 
   if (!options.skipRootCopy) {
     fs.copySync(ROOT_PATH, tempDir)
-  }
 
+    const moonwavePluginPath = process.env.MOONWAVE_PLUGIN_PATH
+
+    if (moonwavePluginPath) {
+      const packageJsonPath = path.join(tempDir, "package.json")
+
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+      packageJson.dependencies["docusaurus-plugin-moonwave"] = moonwavePluginPath === "DEV" ? path.resolve(__dirname, "../../docusaurus-plugin-moonwave") : path.resolve(process.cwd(), moonwavePluginPath)
+
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
+    }
+  }
+  
   // Create home page or copy readme
   makeHomePage(projectDir, tempDir, config)
   // Copy CHANGELOG.md if it exists
