@@ -58,6 +58,41 @@ const ClassSection = ({
   )
 }
 
+const PrivateToggle = ({ showPrivate, setShowPrivate }) => (
+  <label className={styles.privateToggle}>
+    <span className={styles.privateCheckboxContainer}>
+      <input
+        className={styles.privateCheckboxInternal}
+        type="checkbox"
+        name="checkbox"
+        onChange={(event) => {
+          setShowPrivate(event.currentTarget.checked)
+          event.currentTarget.checked
+            ? localStorage.setItem("showPrivate", "true")
+            : localStorage.removeItem("showPrivate")
+        }}
+        checked={showPrivate}
+      />
+      <span className={styles.privateCheckboxControl}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            d="M4 11.91l5.37 5.37L19.79 5.59"
+          />
+        </svg>
+      </span>
+    </span>
+    <span className={styles.privateCheckboxLabel}>Show Private</span>
+  </label>
+)
+
 export default function LuaClass({
   luaClass: rawLuaClass,
   allLuaClassNames,
@@ -181,43 +216,10 @@ export default function LuaClass({
                         </div>
 
                         {anyPrivateFunctions && (
-                          <label className={styles.privateToggle}>
-                            <span className={styles.privateCheckboxContainer}>
-                              <input
-                                className={styles.privateCheckboxInternal}
-                                type="checkbox"
-                                name="checkbox"
-                                onChange={(event) => {
-                                  setShowPrivate(event.currentTarget.checked)
-                                  event.currentTarget.checked
-                                    ? localStorage.setItem(
-                                        "showPrivate",
-                                        "true"
-                                      )
-                                    : localStorage.removeItem("showPrivate")
-                                }}
-                                checked={showPrivate}
-                              />
-                              <span className={styles.privateCheckboxControl}>
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  aria-hidden="true"
-                                  focusable="false"
-                                >
-                                  <path
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="3"
-                                    d="M4 11.91l5.37 5.37L19.79 5.59"
-                                  />
-                                </svg>
-                              </span>
-                            </span>
-                            <span className={styles.privateCheckboxLabel}>
-                              Show Private
-                            </span>
-                          </label>
+                          <PrivateToggle
+                            showPrivate={showPrivate}
+                            setShowPrivate={setShowPrivate}
+                          />
                         )}
 
                         <Markdown content={luaClass.desc} />
