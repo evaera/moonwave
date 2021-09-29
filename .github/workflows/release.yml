@@ -38,7 +38,7 @@ jobs:
     - name: Zip up binary
       shell: powershell
       working-directory: extractor/target/release/
-      run: Compress-Archive moonwave-extractor.exe $GITHUB_WORKSPACE/release.zip
+      run: Compress-Archive moonwave-extractor.exe $env:GITHUB_WORKSPACE/release.zip
 
     - name: Get Tag Version
       env:
