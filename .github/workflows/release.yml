@@ -36,11 +36,13 @@ jobs:
       run: cargo build --verbose --locked --release
     
     - name: Zip up binary
+      shell: bash
       run: zip release.zip extractor/target/release/moonwave-extractor.exe
 
     - name: Get Tag Version
       env:
         github_ref: ${{ github.ref }}
+      shell: bash
       run: |
         echo "REF=${github_ref/refs\/tags\//}" >> $GITHUB_ENV
 
