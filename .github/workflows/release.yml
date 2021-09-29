@@ -20,7 +20,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: rojo-win64
+        name: moonwave-extractor-win64
         path: extractor/target/release/moonwave-extractor.exe
 
   macos:
@@ -45,7 +45,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: rojo-macos
+        name: moonwave-extractor-macos
         path: extractor/target/release/moonwave-extractor
 
   linux:
@@ -65,5 +65,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: rojo-linux
+        name: moonwave-extractor-linux
         path: extractor/target/release/moonwave-extractor
