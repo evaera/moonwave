@@ -37,7 +37,8 @@ jobs:
     
     - name: Zip up binary
       shell: bash
-      run: zip release.zip extractor/target/release/moonwave-extractor.exe
+      working-directory: extractor/target/release/
+      run: tar.exe -a -c -f $GITHUB_WORKSPACE/release.zip moonwave-extractor.exe
 
     - name: Get Tag Version
       env:
@@ -84,7 +85,9 @@ jobs:
         OPENSSL_STATIC: 1
 
     - name: Zip up binary
-      run: zip release.zip extractor/target/release/moonwave-extractor
+      shell: bash
+      working-directory: extractor/target/release/
+      run: zip $GITHUB_WORKSPACE/release.zip moonwave-extractor
 
     - name: Get Tag Version
       env:
@@ -125,7 +128,9 @@ jobs:
         OPENSSL_STATIC: 1
 
     - name: Zip up binary
-      run: zip release.zip extractor/target/release/moonwave-extractor
+      shell: bash
+      working-directory: extractor/target/release/
+      run: zip $GITHUB_WORKSPACE/release.zip moonwave-extractor
 
     - name: Get Tag Version
       env:
