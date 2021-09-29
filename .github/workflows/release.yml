@@ -5,7 +5,25 @@ on:
     tags: ["*"]
 
 jobs:
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Moonwave ${{ github.ref }}
+          draft: false
+          prerelease: false
+
   windows:
+    needs: create_release
     runs-on: windows-latest
 
     steps:
@@ -23,6 +41,16 @@ jobs:
       run: |
         echo "REF=${github_ref/refs\/tags\//}" >> $GITHUB_ENV
 
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: extractor/target/release/moonwave-extractor.exe
+        asset_name: moonwave-extractor-${{ env.REF }}-win64
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
@@ -30,6 +58,7 @@ jobs:
         path: extractor/target/release/moonwave-extractor.exe
 
   macos:
+    needs: create_release
     runs-on: macos-latest
 
     steps:
@@ -54,6 +83,16 @@ jobs:
       run: |
         echo "REF=${github_ref/refs\/tags\//}" >> $GITHUB_ENV
 
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }} 
+        asset_path: extractor/target/release/moonwave-extractor
+        asset_name: moonwave-extractor-${{ env.REF }}-macos
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
@@ -61,6 +100,7 @@ jobs:
         path: extractor/target/release/moonwave-extractor
 
   linux:
+    needs: create_release
     runs-on: ubuntu-latest
 
     steps:
@@ -79,6 +119,16 @@ jobs:
         github_ref: ${{ github.ref }}
       run: |
         echo "REF=${github_ref/refs\/tags\//}" >> $GITHUB_ENV
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }} 
+        asset_path: extractor/target/release/moonwave-extractor
+        asset_name: moonwave-extractor-${{ env.REF }}-linux
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
