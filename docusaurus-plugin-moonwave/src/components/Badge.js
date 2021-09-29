@@ -87,6 +87,23 @@ const BADGES = {
       </svg>
     ),
   },
+  "Read Only": {
+    color: "#e74c3c",
+    title: "This item is read only and cannot be modified.",
+    image: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="300px"
+        width="300px"
+        fill="#e74c3c"
+        x="0px"
+        y="0px"
+        viewBox="0 0 96 96"
+      >
+        <path d="M70.354,15.662h-7.496H25.566c-3.282,0-5.19-0.776-5.728-1.169v-1.456c0.538-0.393,2.445-1.168,5.728-1.168h46.479V8H25.566  c-4.776,0-9.594,1.468-9.594,4.747v61.458C15.972,86.645,20.328,88,37.495,88h42.535V15.662H70.354z" />
+      </svg>
+    ),
+  },
 }
 
 export default function Badge({ label }) {
