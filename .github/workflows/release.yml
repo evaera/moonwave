@@ -17,10 +17,16 @@ jobs:
       working-directory: ./extractor
       run: cargo build --verbose --locked --release
 
+    - name: Get Tag Version
+      env:
+        github_ref: ${{ github.ref }}
+      run: |
+        echo "ref=${github_ref//refs/tags//}" >> $GITHUB_ENV
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: moonwave-extractor-win64
+        name: moonwave-extractor-$ref-win64
         path: extractor/target/release/moonwave-extractor.exe
 
   macos:
