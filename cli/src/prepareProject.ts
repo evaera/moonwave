@@ -31,6 +31,7 @@ export type Config = Partial<{
   gitSourceBranch: string
   title: string
   changelog: boolean
+  classOrder: string[]
 
   // Docusaurus
   docusaurus: Partial<{
@@ -341,6 +342,7 @@ export function prepareProject(
     codePaths: options.codePaths,
     changelogExists,
     projectDir,
+    classOrder: config.classOrder ?? []
   })
 
   // TODO: Hash package.json / lockfile and additionally reinstall when changed

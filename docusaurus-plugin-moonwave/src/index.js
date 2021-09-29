@@ -50,30 +50,26 @@ module.exports = (context, options) => ({
       }
     })
 
-    const classOrderSortArray = options.classOrder
+    const nameSet = new Set()
+    content.forEach((luaClass) => nameSet.add(luaClass.name))
+
+    const classOrder = options.classOrder
+    classOrder.forEach((name) => {
+      if (!nameSet.has(name)) {
+        throw new Error(
+          `Moonwave plugin: "${name}" listed in classOrder option does not exist`
+        )
+      }
+    })
+
+    const unlistedNames = content
+      .map((luaClass) => luaClass.name)
+      .filter((name) => !classOrder.includes(name))
+      .sort((a, b) => a.localeCompare(b))
 
     const allLuaClassNames = await createData(
       "sidebar.json",
-      JSON.stringify(
-        content
-          .map((luaClass) => luaClass.name)
-          .sort((a, b) => {
-            if (
-              !classOrderSortArray.includes(a) &&
-              !classOrderSortArray.includes(b)
-            ) {
-              return a.localeCompare(b)
-            } else if (!classOrderSortArray.includes(a)) {
-              return 1
-            } else if (!classOrderSortArray.includes(b)) {
-              return -1
-            }
-
-            return (
-              classOrderSortArray.indexOf(a) - classOrderSortArray.indexOf(b)
-            )
-          })
-      )
+      JSON.stringify([...classOrder, ...unlistedNames])
     )
 
     const baseUrl = context.baseUrl
@@ -82,7 +78,7 @@ module.exports = (context, options) => ({
       JSON.stringify({
         sourceUrl: options.sourceUrl,
         baseUrl: baseUrl,
-        classOrder: classOrderSortArray,
+        classOrder: classOrder,
       })
     )
 

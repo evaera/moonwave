@@ -9,6 +9,7 @@ export interface GenerateConfigParams {
   customCssExists: boolean
   changelogExists: boolean
   projectDir: string
+  classOrder: string[]
 }
 
 export default function getDocusaurusConfig({
@@ -18,18 +19,13 @@ export default function getDocusaurusConfig({
   customCssExists,
   changelogExists,
   projectDir,
+  classOrder
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
   const validCodePaths = codePaths
     .map((codePath) => path.join(process.cwd(), codePath))
     .filter((codePath) => fs.existsSync(codePath))
-
-  const classOrderInput = [
-    "TestClass",
-    "zzz",
-    "AB"
-  ]
 
   return {
     onBrokenLinks: "throw",
@@ -95,7 +91,7 @@ export default function getDocusaurusConfig({
           code: validCodePaths,
           sourceUrl: gitRepoUrl + `/blob/${config.gitSourceBranch ?? "master"}`,
           projectDir,
-          classOrder: classOrderInput
+          classOrder
         },
       ],
       "docusaurus-lunr-search",
