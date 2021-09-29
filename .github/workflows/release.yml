@@ -34,6 +34,9 @@ jobs:
     - name: Build release binary
       working-directory: ./extractor
       run: cargo build --verbose --locked --release
+    
+    - name: Zip up binary
+      run: zip release.zip extractor/target/release/moonwave-extractor.exe
 
     - name: Get Tag Version
       env:
@@ -48,7 +51,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
-        asset_path: extractor/target/release/moonwave-extractor.exe
+        asset_path: release.zip
         asset_name: moonwave-extractor-${{ env.REF }}-win64
         asset_content_type: application/octet-stream
 
@@ -78,6 +81,9 @@ jobs:
       env:
         OPENSSL_STATIC: 1
 
+    - name: Zip up binary
+      run: zip release.zip extractor/target/release/moonwave-extractor.exe
+
     - name: Get Tag Version
       env:
         github_ref: ${{ github.ref }}
@@ -91,7 +97,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} 
-        asset_path: extractor/target/release/moonwave-extractor
+        asset_path: release.zip
         asset_name: moonwave-extractor-${{ env.REF }}-macos
         asset_content_type: application/octet-stream
 
@@ -116,6 +122,9 @@ jobs:
       env:
         OPENSSL_STATIC: 1
 
+    - name: Zip up binary
+      run: zip release.zip extractor/target/release/moonwave-extractor.exe
+
     - name: Get Tag Version
       env:
         github_ref: ${{ github.ref }}
@@ -129,7 +138,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} 
-        asset_path: extractor/target/release/moonwave-extractor
+        asset_path: release.zip
         asset_name: moonwave-extractor-${{ env.REF }}-linux
         asset_content_type: application/octet-stream
 
