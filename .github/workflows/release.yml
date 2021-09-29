@@ -72,10 +72,10 @@ jobs:
       env:
         github_ref: ${{ github.ref }}
       run: |
-        echo "REF=${github_ref//refs/tags//}" >> $GITHUB_ENV
+        echo "REF=${github_ref/\"/refs/tags/\"/}" >> $GITHUB_ENV
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: moonwave-extractor-$REF-linux
+        name: moonwave-extractor-${{ env.REF }}-linux
         path: extractor/target/release/moonwave-extractor
