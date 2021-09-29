@@ -52,7 +52,7 @@ jobs:
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: release.zip
-        asset_name: moonwave-extractor-${{ env.REF }}-win64
+        asset_name: moonwave-extractor-${{ env.REF }}-win64.zip
         asset_content_type: application/octet-stream
 
     - name: Upload artifacts
@@ -82,7 +82,7 @@ jobs:
         OPENSSL_STATIC: 1
 
     - name: Zip up binary
-      run: zip release.zip extractor/target/release/moonwave-extractor.exe
+      run: zip release.zip extractor/target/release/moonwave-extractor
 
     - name: Get Tag Version
       env:
@@ -98,7 +98,7 @@ jobs:
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} 
         asset_path: release.zip
-        asset_name: moonwave-extractor-${{ env.REF }}-macos
+        asset_name: moonwave-extractor-${{ env.REF }}-macos.zip
         asset_content_type: application/octet-stream
 
     - name: Upload artifacts
@@ -123,7 +123,7 @@ jobs:
         OPENSSL_STATIC: 1
 
     - name: Zip up binary
-      run: zip release.zip extractor/target/release/moonwave-extractor.exe
+      run: zip release.zip extractor/target/release/moonwave-extractor
 
     - name: Get Tag Version
       env:
@@ -139,7 +139,7 @@ jobs:
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} 
         asset_path: release.zip
-        asset_name: moonwave-extractor-${{ env.REF }}-linux
+        asset_name: moonwave-extractor-${{ env.REF }}-linux.zip
         asset_content_type: application/octet-stream
 
     - name: Upload artifacts
