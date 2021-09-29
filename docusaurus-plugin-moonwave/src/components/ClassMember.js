@@ -19,7 +19,7 @@ export default function ClassMember({
   deprecated,
   private: isPrivate,
   yields,
-  readonly,
+  readonly: readOnly,
   source,
   sourceUrl,
 }) {
@@ -41,7 +41,7 @@ export default function ClassMember({
       ))}
       {isPrivate && <Badge label="Private" />}
       {yields && <Badge label="Yields" />}
-      {readonly && <Badge label="Read Only" />}
+      {readOnly && <Badge label="Read Only" />}
       {tags.map((tag) => (
         <Tag key={tag} label={tag} />
       ))}
