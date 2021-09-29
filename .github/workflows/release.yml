@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+
+    - name: Build release binary
+      working-directory: ./extractor
+      run: cargo build --verbose --locked --release
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: rojo-win64
+        path: extractor/target/release/moonwave-extractor.exe
+
+  macos:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+
+    - name: Install Rust
+      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+    - name: Build release binary
+      working-directory: ./extractor
+      run: |
+        source $HOME/.cargo/env
+        cargo build --verbose --locked --release
+      env:
+        OPENSSL_STATIC: 1
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: rojo-macos
+        path: extractor/target/release/moonwave-extractor
+
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+
+    - name: Build
+      working-directory: ./extractor
+      run: cargo build --locked --verbose --release
+      env:
+        OPENSSL_STATIC: 1
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: rojo-linux
+        path: extractor/target/release/moonwave-extractor
