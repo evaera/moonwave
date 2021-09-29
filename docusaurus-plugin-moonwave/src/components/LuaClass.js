@@ -150,7 +150,18 @@ export default function LuaClass({
         } else if (memberA.deprecated && !memberB.deprecated) {
           return 1
         } else {
-          return 0
+          if (
+            memberA.function_type === "static" &&
+            memberB.function_type === "method"
+          ) {
+            return -1
+          } else if (
+            memberA.function_type === "method" &&
+            memberB.function_type === "static"
+          ) {
+            return 1
+          }
+          return memberA.name.localeCompare(memberB.name)
         }
       })
   })
@@ -243,9 +254,14 @@ export default function LuaClass({
                   toc={SECTIONS.map((section) => ({
                     value: capitalize(section.name),
                     id: section.name,
-                    children: luaClass[section.name].map((members) => ({
-                      value: members.name,
-                      id: members.name,
+                    children: luaClass[section.name].map((member) => ({
+                      value:
+                        (member.function_type === "static"
+                          ? "."
+                          : member.function_type === "method"
+                          ? ":"
+                          : "") + member.name,
+                      id: member.name,
                       children: [],
                     })),
                   }))}
