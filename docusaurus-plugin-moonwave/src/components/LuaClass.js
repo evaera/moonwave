@@ -243,9 +243,14 @@ export default function LuaClass({
                   toc={SECTIONS.map((section) => ({
                     value: capitalize(section.name),
                     id: section.name,
-                    children: luaClass[section.name].map((members) => ({
-                      value: members.name,
-                      id: members.name,
+                    children: luaClass[section.name].map((member) => ({
+                      value:
+                        (member.function_type === "static"
+                          ? "."
+                          : member.function_type === "method"
+                          ? ":"
+                          : "") + member.name,
+                      id: member.name,
                       children: [],
                     })),
                   }))}
