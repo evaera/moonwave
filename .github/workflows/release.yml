@@ -50,6 +50,7 @@ jobs:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: extractor/target/release/moonwave-extractor.exe
         asset_name: moonwave-extractor-${{ env.REF }}-win64
+        asset_content_type: application/octet-stream
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
@@ -92,6 +93,7 @@ jobs:
         upload_url: ${{ needs.create_release.outputs.upload_url }} 
         asset_path: extractor/target/release/moonwave-extractor
         asset_name: moonwave-extractor-${{ env.REF }}-macos
+        asset_content_type: application/octet-stream
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
@@ -129,6 +131,7 @@ jobs:
         upload_url: ${{ needs.create_release.outputs.upload_url }} 
         asset_path: extractor/target/release/moonwave-extractor
         asset_name: moonwave-extractor-${{ env.REF }}-linux
+        asset_content_type: application/octet-stream
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
