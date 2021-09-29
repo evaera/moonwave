@@ -72,7 +72,7 @@ jobs:
       env:
         github_ref: ${{ github.ref }}
       run: |
-        echo "REF=${github_ref/\"/refs/tags/\"/}" >> $GITHUB_ENV
+        echo "REF=${github_ref/\"refs/tags/\"/}" >> $GITHUB_ENV
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
