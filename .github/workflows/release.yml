@@ -36,9 +36,9 @@ jobs:
       run: cargo build --verbose --locked --release
     
     - name: Zip up binary
-      shell: bash
+      shell: powershell
       working-directory: extractor/target/release/
-      run: tar.exe --force-local -a -c -f $GITHUB_WORKSPACE/release.zip moonwave-extractor.exe
+      run: Compress-Archive moonwave-extractor.exe $GITHUB_WORKSPACE/release.zip
 
     - name: Get Tag Version
       env:
