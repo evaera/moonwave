@@ -24,6 +24,7 @@
   "dependencies": {
     "chokidar": "^3.5.2",
     "fs-extra": "^10.0.0",
+    "gh-pages": "^3.0.0",
     "node-fetch": "^3.0.0",
     "parse-git-config": "^3.0.0",
     "toml": "^3.0.0",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.12",
+    "@types/gh-pages": "^3.2.0",
     "@types/node": "^16.9.1",
     "@types/parse-git-config": "^3.0.1",
     "@types/unzipper": "^0.10.4",

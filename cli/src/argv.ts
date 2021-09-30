@@ -11,6 +11,7 @@ export interface Args {
   fresh: boolean
   install: boolean
   code: string[]
+  publish: boolean
 }
 
 const argv = yargs(process.argv.slice(2))
@@ -26,7 +27,19 @@ const argv = yargs(process.argv.slice(2))
   .describe("help", "show help")
   .showHelpOnFail(true)
 
-  .command("build", "build the docs website", () => {}, buildCommand)
+  .command(
+    "build",
+    "build the docs website",
+    (yargs) => {
+      yargs
+        .boolean("publish")
+        .describe(
+          "publish",
+          "publish the built website to your gh-pages branch after building"
+        )
+    },
+    buildCommand
+  )
   .command(
     "dev",
     "run in development live-reload mode",
