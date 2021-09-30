@@ -229,6 +229,10 @@
   padding: 1.5rem;
 }
 
+:global code[class*="language-"][class*="language-"] {
+  white-space: pre-wrap;
+}
+
 /* Copied from plugin-docs */
 .docPage,
 .docMainContainer {
@@ -347,6 +351,7 @@
 @media (min-width: 997px) {
   .docMainContainer {
     flex-grow: 1;
+    max-width: calc(100% - var(--doc-sidebar-width));
   }
 
   .docMainContainerEnhanced {
@@ -367,6 +372,9 @@
     cursor: pointer;
   }
 
+  .docItemCol {
+    max-width: 75% !important;
+  }
   .collapsedDocSidebar {
     position: sticky;
     top: 0;
@@ -397,6 +405,11 @@
 
   .docItemWrapperEnhanced {
     max-width: calc(var(--ifm-container-width) + var(--doc-sidebar-width));
+  }
+
+  /* Prevent hydration FOUC, as the mobile TOC needs to be server-rendered */
+  .tocMobile {
+    display: none;
   }
 }
 

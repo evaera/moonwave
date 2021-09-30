@@ -1,8 +1,11 @@
+import { ThemeClassNames } from "@docusaurus/theme-common"
 import DocSidebar from "@theme/DocSidebar"
 import Heading from "@theme/Heading"
+import useWindowSize from "@theme/hooks/useWindowSize"
 import IconArrow from "@theme/IconArrow"
 import Layout from "@theme/Layout"
 import TOC from "@theme/TOC"
+import TOCCollapsible from "@theme/TOCCollapsible"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
 import Badge from "./Badge"
@@ -170,6 +173,28 @@ export default function LuaClass({
     (member) => member.private
   )
 
+  const tocData = SECTIONS.map((section) => ({
+    value: capitalize(section.name),
+    id: section.name,
+    children: luaClass[section.name].map((member) => ({
+      value:
+        (member.function_type === "static"
+          ? "."
+          : member.function_type === "method"
+          ? ":"
+          : "") + member.name,
+      id: member.name,
+      children: [],
+    })),
+  }))
+
+  const windowSize = useWindowSize()
+
+  const canRenderTOC = tocData && tocData.length > 0
+
+  const renderTocDesktop =
+    canRenderTOC && (windowSize === "desktop" || windowSize === "ssr")
+
   return (
     <Layout
       title={luaClass.name}
@@ -209,11 +234,23 @@ export default function LuaClass({
 
         <main className={clsx(styles.docMainContainer)}>
           <div className={clsx("container padding-vert--lg")}>
-            <div className="row">
-              <div className="col">
+            <div className="row" style={{ flexWrap: "nowrap" }}>
+              <div className={`col ${styles.docItemCol}`}>
                 <div className={styles.docItemContainer}>
                   <article>
                     <div className={styles.member + " markdown"}>
+                      {canRenderTOC && (
+                        <TOCCollapsible
+                          toc={tocData}
+                          // minHeadingLevel={tocMinHeadingLevel}
+                          // maxHeadingLevel={tocMaxHeadingLevel}
+                          className={clsx(
+                            ThemeClassNames.docs.docTocMobile,
+                            styles.tocMobile
+                          )}
+                        />
+                      )}
+
                       <header>
                         <h1 className={styles.docTitle}>{luaClass.name}</h1>
                         <div className={clsx(styles.luaClassTags)}>
@@ -249,24 +286,11 @@ export default function LuaClass({
                   </article>
                 </div>
               </div>
-              <div className="col col--3">
-                <TOC
-                  toc={SECTIONS.map((section) => ({
-                    value: capitalize(section.name),
-                    id: section.name,
-                    children: luaClass[section.name].map((member) => ({
-                      value:
-                        (member.function_type === "static"
-                          ? "."
-                          : member.function_type === "method"
-                          ? ":"
-                          : "") + member.name,
-                      id: member.name,
-                      children: [],
-                    })),
-                  }))}
-                />
-              </div>
+              {renderTocDesktop && (
+                <div className="col col--3">
+                  <TOC toc={tocData} />
+                </div>
+              )}
             </div>
             <details>
               <summary>Show raw api</summary>
