@@ -116,6 +116,13 @@ async function downloadBinary(binaryPath: string) {
 }
 
 export async function getBinaryPath() {
+  if (process.env.MOONWAVE_DEV) {
+    const extractorPath =
+      process.env.MOONWAVE_EXTRACTOR_PATH || "moonwave-extractor"
+    console.log(`Moonwave: Using development extractor path: ${extractorPath}`)
+    return extractorPath
+  }
+
   const binFolder = path.join(__dirname, "bin")
   const binaryPath = path.join(binFolder, getBinaryName())
 

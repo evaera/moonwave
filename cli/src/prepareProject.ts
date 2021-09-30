@@ -320,14 +320,19 @@ export function prepareProject(
 
     const moonwavePluginPath = process.env.MOONWAVE_PLUGIN_PATH
 
-    if (moonwavePluginPath) {
+    if (process.env.MOONWAVE_DEV || moonwavePluginPath) {
+      console.log(
+        `Moonwave: Using development Docusaurus plugin: ${
+          process.env.MOONWAVE_PLUGIN_PATH || "../../docusaurus-plugin-moonwave"
+        }`
+      )
       const packageJsonPath = path.join(tempDir, "package.json")
 
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
       packageJson.dependencies["docusaurus-plugin-moonwave"] =
-        moonwavePluginPath === "DEV"
-          ? path.resolve(__dirname, "../../docusaurus-plugin-moonwave")
-          : path.resolve(process.cwd(), moonwavePluginPath)
+        moonwavePluginPath
+          ? path.resolve(process.cwd(), moonwavePluginPath)
+          : path.resolve(__dirname, "../../docusaurus-plugin-moonwave")
 
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
     }
