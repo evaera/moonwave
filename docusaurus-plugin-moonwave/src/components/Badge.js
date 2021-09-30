@@ -116,7 +116,6 @@ export default function Badge({ label }) {
   return (
     <>
       <span
-        aria-title={title}
         className={clsx(styles.badge)}
         style={{
           color,
