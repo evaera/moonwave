@@ -287,6 +287,7 @@ export interface PreparedProject {
 
 export interface PrepareProjectOptions {
   codePaths: string[]
+  binaryPath: string
   skipRootCopy?: boolean
   fresh?: boolean
   install?: boolean
@@ -346,6 +347,7 @@ export function prepareProject(
     enablePlugins: foundFolders,
     customCssExists,
     codePaths: options.codePaths,
+    binaryPath: options.binaryPath,
     changelogExists,
     projectDir,
     classOrder: config.classOrder ?? [],

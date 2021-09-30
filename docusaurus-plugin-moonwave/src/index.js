@@ -17,10 +17,12 @@ module.exports = (context, options) => ({
   async loadContent() {
     const basePath = options.projectDir || path.resolve(process.cwd(), "..")
 
+    const binaryPath = options.binaryPath ?? "moonwave-extractor"
+
     const api = await Promise.all(
       options.code.map((root) =>
         exec(
-          `moonwave-extractor extract "${root.replace(
+          `"${binaryPath}" extract "${root.replace(
             /\\/g,
             "/"
           )}" --base ${basePath}`

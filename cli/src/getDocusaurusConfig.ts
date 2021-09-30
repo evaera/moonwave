@@ -9,6 +9,7 @@ export interface GenerateConfigParams {
   customCssExists: boolean
   changelogExists: boolean
   projectDir: string
+  binaryPath: string
   classOrder: string[]
 }
 
@@ -19,6 +20,7 @@ export default function getDocusaurusConfig({
   customCssExists,
   changelogExists,
   projectDir,
+  binaryPath,
   classOrder,
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
@@ -92,6 +94,7 @@ export default function getDocusaurusConfig({
           sourceUrl: gitRepoUrl + `/blob/${config.gitSourceBranch ?? "master"}`,
           projectDir,
           classOrder,
+          binaryPath,
         },
       ],
       "docusaurus-lunr-search",

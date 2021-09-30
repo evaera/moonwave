@@ -1,6 +1,7 @@
 import { spawn } from "child_process"
 import path from "path"
 import { Args } from "../argv.js"
+import { getBinaryPath } from "../binary.js"
 import { prepareProject } from "../prepareProject.js"
 
 export default async function buildCommand(args: Args) {
@@ -9,6 +10,7 @@ export default async function buildCommand(args: Args) {
       codePaths: args.code,
       fresh: true,
       install: args.install,
+      binaryPath: await getBinaryPath(),
     })
 
     const exitCode = await new Promise((resolve) => {

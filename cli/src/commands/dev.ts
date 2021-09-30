@@ -8,10 +8,13 @@ import { prepareProject } from "../prepareProject.js"
 
 export default async function devCommand(args: Args) {
   try {
+    const binaryPath = await getBinaryPath()
+
     const { tempDir, watchPaths, projectDir } = prepareProject(process.cwd(), {
       codePaths: args.code,
       fresh: args.fresh,
       install: args.install,
+      binaryPath,
     })
 
     console.error(
@@ -48,6 +51,7 @@ export default async function devCommand(args: Args) {
             codePaths: args.code,
             fresh: false,
             skipRootCopy: true,
+            binaryPath,
           })
         }
       })
