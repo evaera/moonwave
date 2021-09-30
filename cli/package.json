@@ -1,6 +1,6 @@
 {
   "name": "moonwave",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "moonwave cli",
   "main": "dist/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "dependencies": {
     "chokidar": "^3.5.2",
     "fs-extra": "^10.0.0",
-    "gh-pages": "^3.0.0",
+    "gh-pages": "3.0.0",
     "node-fetch": "^3.0.0",
     "parse-git-config": "^3.0.0",
     "toml": "^3.0.0",
