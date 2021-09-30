@@ -295,6 +295,39 @@
   vertical-align: middle;
 }
 
+.badge .badgeTooltip {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px 5px;
+  position: absolute;
+  z-index: 1;
+  margin-top: -33px;
+  margin-left: -4px;
+  opacity: 0;
+  /* opacity: 50%; */
+  transition: opacity 0.3s;
+}
+
+.badge .badgeTooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 5%;
+  margin-left: -5px;
+  border-width: 9px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.badge:hover .badgeTooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 .docTag {
   border-width: 1px;
   border-style: solid;

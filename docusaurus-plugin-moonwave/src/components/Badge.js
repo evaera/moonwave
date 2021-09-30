@@ -116,12 +116,13 @@ export default function Badge({ label }) {
   return (
     <>
       <span
-        title={title}
+        aria-title={title}
         className={clsx(styles.badge)}
         style={{
           color,
         }}
       >
+        <span className={clsx(styles.badgeTooltip)}>{title}</span>
         {image} {label}
       </span>
     </>
