@@ -1,6 +1,10 @@
+import { createRequire } from "module"
 import yargs from "yargs"
-import buildCommand from "./commands/build"
-import devCommand from "./commands/dev"
+import buildCommand from "./commands/build.js"
+import devCommand from "./commands/dev.js"
+
+const require = createRequire(import.meta.url)
+
 const version = require("../package.json").version as string
 
 export interface Args {
@@ -9,7 +13,7 @@ export interface Args {
   code: string[]
 }
 
-const argv = yargs
+const argv = yargs(process.argv.slice(2))
   .scriptName("moonwave")
   .usage("Usage: moonwave [options]")
 

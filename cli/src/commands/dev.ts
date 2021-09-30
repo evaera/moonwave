@@ -2,8 +2,9 @@ import { spawn } from "child_process"
 import chokidar from "chokidar"
 import fs from "fs-extra"
 import path from "path"
-import { Args } from "../argv"
-import { prepareProject } from "../prepareProject"
+import { Args } from "../argv.js"
+import { getBinaryPath } from "../binary.js"
+import { prepareProject } from "../prepareProject.js"
 
 export default async function devCommand(args: Args) {
   try {

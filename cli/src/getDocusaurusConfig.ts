@@ -1,6 +1,6 @@
 import fs from "fs-extra"
 import path from "path"
-import { Config, FoldersEnabled } from "./prepareProject"
+import { Config, FoldersEnabled } from "./prepareProject.js"
 
 export interface GenerateConfigParams {
   codePaths: string[]
@@ -19,7 +19,7 @@ export default function getDocusaurusConfig({
   customCssExists,
   changelogExists,
   projectDir,
-  classOrder
+  classOrder,
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
@@ -91,7 +91,7 @@ export default function getDocusaurusConfig({
           code: validCodePaths,
           sourceUrl: gitRepoUrl + `/blob/${config.gitSourceBranch ?? "master"}`,
           projectDir,
-          classOrder
+          classOrder,
         },
       ],
       "docusaurus-lunr-search",

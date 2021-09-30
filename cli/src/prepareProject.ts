@@ -2,11 +2,14 @@ import { execSync } from "child_process"
 import fs from "fs-extra"
 import os from "os"
 import parseGitConfig from "parse-git-config"
-import path from "path"
+import path, { dirname } from "path"
 import toml from "toml"
+import { fileURLToPath } from "url"
 import getDocusaurusConfig, {
-  GenerateConfigParams
-} from "./getDocusaurusConfig"
+  GenerateConfigParams,
+} from "./getDocusaurusConfig.js"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const TEMPLATE_PATH = path.join(__dirname, "../template")
 const ROOT_PATH = path.join(TEMPLATE_PATH, "root")
@@ -320,12 +323,15 @@ export function prepareProject(
       const packageJsonPath = path.join(tempDir, "package.json")
 
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
-      packageJson.dependencies["docusaurus-plugin-moonwave"] = moonwavePluginPath === "DEV" ? path.resolve(__dirname, "../../docusaurus-plugin-moonwave") : path.resolve(process.cwd(), moonwavePluginPath)
+      packageJson.dependencies["docusaurus-plugin-moonwave"] =
+        moonwavePluginPath === "DEV"
+          ? path.resolve(__dirname, "../../docusaurus-plugin-moonwave")
+          : path.resolve(process.cwd(), moonwavePluginPath)
 
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
     }
   }
-  
+
   // Create home page or copy readme
   makeHomePage(projectDir, tempDir, config)
   // Copy CHANGELOG.md if it exists
@@ -342,7 +348,7 @@ export function prepareProject(
     codePaths: options.codePaths,
     changelogExists,
     projectDir,
-    classOrder: config.classOrder ?? []
+    classOrder: config.classOrder ?? [],
   })
 
   // TODO: Hash package.json / lockfile and additionally reinstall when changed

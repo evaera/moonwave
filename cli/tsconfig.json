@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "esnext",
 		"target": "es2018",
 		"noImplicitAny": true,
 		"strict": true,
 		"noUnusedLocals": true,
+		"resolveJsonModule": true,
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"esModuleInterop": true,

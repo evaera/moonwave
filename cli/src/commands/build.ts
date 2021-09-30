@@ -1,7 +1,7 @@
 import { spawn } from "child_process"
 import path from "path"
-import { Args } from "../argv"
-import { prepareProject } from "../prepareProject"
+import { Args } from "../argv.js"
+import { prepareProject } from "../prepareProject.js"
 
 export default async function buildCommand(args: Args) {
   try {
