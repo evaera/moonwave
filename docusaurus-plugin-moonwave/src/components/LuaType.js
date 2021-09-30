@@ -2,8 +2,9 @@ import React from "react"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
 
+const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
-const isAtom = (char) => char !== ")" && !isWhitespace(char)
+const isAtom = (char) => char !== ")" && !isWhitespace(char) && !isPunc(char)
 
 function tokenize(code, isGroup) {
   let position = 0
@@ -53,6 +54,7 @@ function tokenize(code, isGroup) {
         tuple: tokenize(readBalanced(), true),
       })
       next()
+      continue
     }
 
     if (isGroup && peek() === ",") {
@@ -60,6 +62,29 @@ function tokenize(code, isGroup) {
       tokens.push({
         separator: true,
       })
+      continue
+    }
+
+    if (isPunc(peek())) {
+      const punc = next()
+
+      if (punc === "-" && peek() === ">") {
+        tokens.push({
+          arrow: true,
+        })
+        next()
+        continue
+      }
+
+      if (punc === "|") {
+        tokens.push({ union: true })
+        continue
+      }
+
+      tokens.push({
+        punc,
+      })
+      continue
     }
 
     const atom = read((char) =>
@@ -67,9 +92,7 @@ function tokenize(code, isGroup) {
     )
 
     if (atom) {
-      if (atom === "->") {
-        tokens.push({ arrow: true })
-      } else if (atom.endsWith(":")) {
+      if (atom.endsWith(":")) {
         tokens.push({ identifier: atom.slice(0, -1) })
       } else {
         tokens.push({
@@ -145,12 +168,15 @@ function Token({ token, depth }) {
     case "identifier":
       return (
         <>
-          <code>{token.identifier}</code>
-          <Op>:</Op>&nbsp;
+          <code>{token.identifier}:&nbsp;</code>
         </>
       )
     case "arrow":
       return <Op depth={depth + 1}>&nbsp;→&nbsp;</Op>
+    case "punc":
+      return <Op>{token.punc}</Op>
+    case "union":
+      return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
       return <code className={styles.blue}>{token.luaType}</code>
     default:
@@ -159,7 +185,7 @@ function Token({ token, depth }) {
 }
 
 export default function LuaType({ code }) {
-  if (code.includes("(")) {
+  if (true) {
     const tokens = tokenize(code)
 
     return <Token token={{ root: tokens }} />

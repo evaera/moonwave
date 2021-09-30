@@ -11,7 +11,7 @@ const DEPTH_CLASSES = [
 ]
 
 // Operator
-export const Op = ({ children, depth = 0 }) => (
+export const Op = ({ children, depth }) => (
   <code
     className={
       depth !== undefined

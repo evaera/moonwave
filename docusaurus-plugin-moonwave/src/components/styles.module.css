@@ -2,11 +2,11 @@
   --doc-sidebar-width: 300px;
   --doc-sidebar-hidden-width: 30px;
 
-  --op-color: rgb(141 148 158);
+  --op-color: rgb(240 182 182);
 }
 
 [data-theme="dark"] {
-  --op-color: rgb(103 107 111);
+  --op-color: rgb(189 123 123);
 }
 
 .docPageContainer {
