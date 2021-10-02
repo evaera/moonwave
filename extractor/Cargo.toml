@@ -1,7 +1,11 @@
 [package]
 name = "moonwave"
-version = "0.2.2"
+description = "Moonwave is a tool for generating documentation from comments in Lua source code."
+version = "0.2.4"
 authors = ["eryn L. K. <eryn@eryn.io>"]
+license = "MPL-2.0"
+homepage = "https://upliftgames.github.io/moonwave/"
+repository = "https://github.com/UpliftGames/moonwave"
 edition = "2018"
 
 [lib]
