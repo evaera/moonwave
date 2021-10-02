@@ -179,7 +179,7 @@ fn determine_kind(
 impl<'a> DocEntry<'a> {
     pub fn parse(
         doc_comment: &'a DocComment,
-        stmt: Option<&Stmt<'a>>,
+        stmt: Option<&Stmt>,
     ) -> Result<DocEntry<'a>, Diagnostics> {
         let span: Span<'a> = doc_comment.into();
 

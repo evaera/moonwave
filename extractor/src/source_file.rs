@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use crate::{diagnostic::Diagnostics, doc_comment::DocComment, doc_entry::DocEntry, error::Error};
 use full_moon::{
     self,
@@ -9,17 +7,17 @@ use full_moon::{
 };
 
 #[derive(Debug)]
-pub struct SourceFile<'a> {
-    doc_comments: Vec<(DocComment, Option<Stmt<'a>>)>,
+pub struct SourceFile {
+    doc_comments: Vec<(DocComment, Option<Stmt>)>,
     file_id: usize,
 }
 
-impl<'a> SourceFile<'a> {
+impl<'a> SourceFile {
     pub fn from_str(source: &'a str, file_id: usize, relative_path: String) -> Result<Self, Error> {
         let ast = full_moon::parse(source).map_err(|e| Error::FullMoonError(e.to_string()))?;
 
         struct Collector<'a, 'b> {
-            buffer: Vec<Token<'a>>,
+            buffer: Vec<&'a Token>,
             last_line: usize,
             file_id: usize,
             relative_path: &'b str,
@@ -35,20 +33,23 @@ impl<'a> SourceFile<'a> {
                 }
             }
 
-            fn scan(&mut self, token: Cow<Token<'a>>) -> Option<DocComment> {
+            fn scan(&mut self, token: &'a Token) -> Option<DocComment> {
                 match token.token_type() {
                     TokenType::MultiLineComment { blocks: 1, comment } => {
+                        self.last_line = token.end_position().line();
                         self.clear();
 
                         Some(DocComment::new(
                             comment.to_string(),
-                            token.start_position().unwrap().bytes() + "--[=[".len(),
-                            token.end_position().unwrap().line() + 1,
+                            token.start_position().bytes() + "--[=[".len(),
+                            token.end_position().line() + 1,
                             self.file_id,
                             self.relative_path.to_owned(),
                         ))
                     }
                     TokenType::SingleLineComment { comment } => {
+                        self.last_line = token.start_position().line();
+
                         if let Some(comment) = comment.strip_prefix('-') {
                             if comment.len() > 1 {
                                 if let Some(first_non_whitespace) =
@@ -64,7 +65,7 @@ impl<'a> SourceFile<'a> {
                                 }
                             }
 
-                            self.buffer.push(token.into_owned());
+                            self.buffer.push(token);
                         } else {
                             return self.flush();
                         }
@@ -72,13 +73,16 @@ impl<'a> SourceFile<'a> {
                         None
                     }
                     TokenType::Whitespace { .. } => {
-                        if token.start_position().unwrap().line() == self.last_line {
-                            return self.flush();
+                        let line = token.start_position().line();
+                        let is_consecutive_newline = line == self.last_line + 1;
+
+                        self.last_line = line;
+
+                        if is_consecutive_newline {
+                            self.flush()
+                        } else {
+                            None
                         }
-
-                        self.last_line = token.start_position().unwrap().line();
-
-                        None
                     }
                     _ => None,
                 }
@@ -123,7 +127,7 @@ impl<'a> SourceFile<'a> {
 
         let mut doc_comments: Vec<_> = ast
             .nodes()
-            .iter_stmts()
+            .stmts()
             .map(|stmt| {
                 let mut comments = stmt
                     .surrounding_trivia()

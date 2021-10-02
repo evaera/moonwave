@@ -18,7 +18,7 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = { git = "https://github.com/Kampfkarren/full-moon", rev = "592dcda974d00fad0bd4065b9376375bcf516393" }
+full_moon = "0.13.1"
 walkdir = "2"
 anyhow = "1.0.28"
 codespan-reporting = "0.9.5"
@@ -29,3 +29,7 @@ pathdiff = "0.2.0"
 
 [dev-dependencies]
 insta = "1.1.0"
+
+[features]
+default = ["roblox"]
+roblox = ["full_moon/roblox"]
