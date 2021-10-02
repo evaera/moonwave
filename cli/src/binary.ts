@@ -8,7 +8,7 @@ import { fileURLToPath } from "url"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const URL =
-  "https://latest-github-release.upliftgames.cloud/UpliftGames/moonwave"
+  "https://latest-github-release.upliftgames.cloud/UpliftGames/moonwave/v0.2"
 
 interface Asset {
   name: string
