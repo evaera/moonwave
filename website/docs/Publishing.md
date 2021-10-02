@@ -17,6 +17,13 @@ Otherwise, you can run `moonwave build`, and your built website will be in a fol
 Remember to add the `build` folder to your `.gitignore`!
 :::
 
+## If your master branch is not `master`
+Moonwave needs to know your master branch to make the "Edit this page" links work. We don't detect the correct master branch right now, so by default we assume it's `master`. If this is wrong, you should configure it in [`moonwave.toml`](Configuration):
+
+```toml
+gitSourceBranch = "main"
+```
+
 ## Using a custom domain / Not Using Github Pages
 
 In the [Configuration](Configuration), you'll note two options:
