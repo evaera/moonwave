@@ -36,6 +36,7 @@ impl<'a> SourceFile {
             fn scan(&mut self, token: &'a Token) -> Option<DocComment> {
                 match token.token_type() {
                     TokenType::MultiLineComment { blocks: 1, comment } => {
+                        self.last_line = token.end_position().line();
                         self.clear();
 
                         Some(DocComment::new(
@@ -47,6 +48,8 @@ impl<'a> SourceFile {
                         ))
                     }
                     TokenType::SingleLineComment { comment } => {
+                        self.last_line = token.start_position().line();
+
                         if let Some(comment) = comment.strip_prefix('-') {
                             if comment.len() > 1 {
                                 if let Some(first_non_whitespace) =
@@ -70,13 +73,16 @@ impl<'a> SourceFile {
                         None
                     }
                     TokenType::Whitespace { .. } => {
-                        if token.start_position().line() == self.last_line {
-                            return self.flush();
+                        let line = token.start_position().line();
+                        let is_consecutive_newline = line == self.last_line + 1;
+
+                        self.last_line = line;
+
+                        if is_consecutive_newline {
+                            self.flush()
+                        } else {
+                            None
                         }
-
-                        self.last_line = token.start_position().line();
-
-                        None
                     }
                     _ => None,
                 }
