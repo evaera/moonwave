@@ -103,5 +103,6 @@ Save your file, and you should see your function as part of your class documenta
 Now you know the basics of Moonwave. Keep reading the docs:
 
 - [List of all tags](TagList)
+- [How to write types](Types)
 - [Publishing your website](Publishing)
 - Check out an example of a project using Moonwave: [roblox-lua-promise](https://github.com/evaera/roblox-lua-promise/blob/master/lib/init.lua)
