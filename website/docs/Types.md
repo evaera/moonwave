@@ -24,7 +24,7 @@ Functions that return nothing should be denoted with a set of empty parentheses:
 
 - `(firstArg: number, secondArg: string) -> ()`
 
-So, a function that takes no arguments and return something would look like:
+So, a function that takes no arguments and returns nothing would look like:
 
 - `() -> ()`
 
