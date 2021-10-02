@@ -66,6 +66,19 @@ copyright = "Copyright © 2021 organizationName. Built with Moonwave and Docusau
 
 The options in the `[docusaurus]` section are directly passed to the Docusaurus options. For more information, please see the [Docusaurus docs](https://docusaurus.io/docs/docusaurus.config.js)
 
+## API Class Order
+
+You can customize the order that classes appear in the API section with the `classOrder` option. In `moonwave.toml`, specify:
+
+```toml
+classOrder = [
+	"MyClass",
+	"Sample"
+]
+```
+
+Any classes not listed here will be alphabetized and added to the end of the list. Listing a class that doesn't exist is an error.
+
 ## Custom home page
 
 By default your project's README is used as the homepage. To use a custom homepage, simply set `enabled` to `true` in the `[home]` section:

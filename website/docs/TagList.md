@@ -15,6 +15,8 @@ Some tags take arguments. These arguments are described with the following patte
 You should **not include these** brackets when using these tags in your code.
 :::
 
+Make sure you check out the [Writing Types](Types) guide for more information on how to write types.
+
 ## Doc Comments
 
 Doc comments in Moonwave are denoted in one of two ways: A multi-line comment with a single equals sign between the square brackets, or a set of single-line triple-dash comments. Either one is acceptable, and these docs will interchangeably use both styles.
