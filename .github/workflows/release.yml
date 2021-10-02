@@ -20,7 +20,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Moonwave ${{ github.ref }}
           draft: false
-          prerelease: false
+          prerelease: true
 
   windows:
     needs: create_release
