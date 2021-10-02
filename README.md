@@ -23,26 +23,9 @@ Check out the [roblox-lua-promise](https://eryn.io/roblox-lua-promise/api/Promis
 ## Name
 Lua is the moon. The moon is your code. The moon influences the waves in the ocean, just like your code influences its documentation. So.. moonwave!
 
-## Installation
+## Docs
 
-- [Install Node.js](https://nodejs.org/en/) -- at least version 14 is required
-- Open a terminal, like Command Prompt, Powershell, or [Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701) (recommended)
-- Find your Lua project directory
-- Run `npx moonwave dev`
-
-## Publishing
-
-If you are using git and github pages, you can publish your doc website with one command:
-
-`npx moonwave build --publish`
-
-Otherwise, you can run `npx moonwave build`, and your built website will be in a folder called `build` in your project directory.
-
-Remember to add the `build` folder to your `.gitignore`!
-
-## Writing doc comments
-
-(Temporary) See [this file](https://github.com/evaera/roblox-lua-promise/blob/master/lib/init.lua) for examples. Full documentation is coming soon.
+[Check out the Documentation website](https://upliftgames.github.io/moonwave/)
 
 ## Building in Development and Contributing
 
