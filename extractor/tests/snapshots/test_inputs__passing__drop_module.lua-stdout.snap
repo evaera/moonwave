@@ -1,0 +1,19 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [],
+    "properties": [],
+    "types": [],
+    "name": "hi",
+    "desc": "",
+    "source": {
+      "line": 3,
+      "path": ""
+    }
+  }
+]
+

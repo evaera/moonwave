@@ -47,6 +47,11 @@ fn class_with_index() -> anyhow::Result<()> {
 }
 
 #[test]
+fn drop_module() -> anyhow::Result<()> {
+    run_moonwave("passing/drop_module.lua", 0)
+}
+
+#[test]
 fn triple_dash_but_wrong() -> anyhow::Result<()> {
     run_moonwave("failing/triple_dash_but_wrong.lua", 1)
 }

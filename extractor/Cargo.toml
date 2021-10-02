@@ -1,6 +1,6 @@
 [package]
-name = "moonwave-extractor"
-version = "0.1.0"
+name = "moonwave"
+version = "0.2.2"
 authors = ["eryn L. K. <eryn@eryn.io>"]
 edition = "2018"
 
