@@ -388,7 +388,7 @@
   }
 
   .docMainContainerEnhanced {
-    max-width: none;
+    max-width: calc(100% - var(--doc-sidebar-hidden-width));
   }
 
   .docSidebarContainer {
