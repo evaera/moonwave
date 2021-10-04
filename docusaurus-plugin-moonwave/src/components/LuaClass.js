@@ -239,7 +239,7 @@ export default function LuaClass({
           )}
         >
           <div className={clsx("container padding-vert--lg")}>
-            <div className="row" style={{ flexWrap: "nowrap" }}>
+            <div className="row">
               <div className={`col ${styles.docItemCol}`}>
                 <div className={styles.docItemContainer}>
                   <article>

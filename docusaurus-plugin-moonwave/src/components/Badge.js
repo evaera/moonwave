@@ -122,7 +122,9 @@ export default function Badge({ label }) {
         }}
       >
         <span className={clsx(styles.badgeTooltip)}>{title}</span>
-        {image} {label}
+        <span className={clsx(styles.badgeToolTipTail)}>
+          {image} {label}
+        </span>
       </span>
     </>
   )
