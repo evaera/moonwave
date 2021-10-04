@@ -401,7 +401,9 @@
   }
 
   .docSidebarContainerHidden {
-    width: var(--doc-sidebar-hidden-width);
+    width: var(
+      --doc-sidebar-hidden-width
+    ) !important; /* When the project is built, the width from the previous class is prioritized in the bundler so we have to override it */
     cursor: pointer;
   }
 
