@@ -7,8 +7,10 @@ import { fileURLToPath } from "url"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const URL =
-  "https://latest-github-release.upliftgames.cloud/UpliftGames/moonwave/v0.2"
+const packageConfig = fs.readJSONSync(path.join(__dirname, "../package.json"))
+const version = packageConfig.version
+
+const URL = `https://latest-github-release.upliftgames.cloud/UpliftGames/moonwave/v${version}`
 
 interface Asset {
   name: string
@@ -124,7 +126,10 @@ export async function getBinaryPath() {
   }
 
   const binFolder = path.join(__dirname, "bin")
-  const binaryPath = path.join(binFolder, getBinaryName())
+  const binaryPath = path.join(
+    binFolder,
+    `moonwave-extractor-${version}${getBinaryExtension()}`
+  )
 
   if (fs.existsSync(binaryPath)) {
     return binaryPath
