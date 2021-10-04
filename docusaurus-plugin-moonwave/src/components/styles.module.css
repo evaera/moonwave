@@ -17,6 +17,10 @@
   flex-grow: 1;
 }
 
+:global .navbar-sidebar__backdrop {
+  width: 100vw;
+}
+
 .divider {
   border-top: 1px solid var(--ifm-color-emphasis-300);
   margin: 1rem 0;
@@ -226,10 +230,12 @@
 }
 
 :global pre[class*="language-"][class*="language-"] {
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 :global code[class*="language-"][class*="language-"] {
+  display: block;
+  width: 100%;
   white-space: pre-wrap;
 }
 
@@ -287,6 +293,7 @@
   font-size: 1.2rem;
   font-weight: 300;
   white-space: nowrap;
+  display: inline-block;
 }
 
 .badge svg {
@@ -297,6 +304,7 @@
 
 .badge .badgeTooltip {
   visibility: hidden;
+  opacity: 0;
   background-color: #555;
   color: #fff;
   font-size: 0.9rem;
@@ -305,25 +313,41 @@
   padding: 3px 5px;
   position: absolute;
   z-index: 1;
-  margin-top: -33px;
-  margin-left: -4px;
-  opacity: 0;
-  /* opacity: 50%; */
+
   transition: opacity 0.3s;
+  max-width: 90vw;
+  transform: translateY(-105%);
+  white-space: pre-wrap;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 
-.badge .badgeTooltip::after {
+.badge .badgeToolTipTail {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.badge .badgeToolTipTail::after {
+  visibility: hidden;
+  opacity: 0;
   content: "";
   position: absolute;
-  top: 100%;
-  left: 5%;
-  margin-left: -5px;
+  top: -27%;
+  left: 6%;
   border-width: 9px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
+  transition: opacity 0.35s;
 }
 
 .badge:hover .badgeTooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.badge:hover .badgeToolTipTail::after {
   visibility: visible;
   opacity: 1;
 }
@@ -443,6 +467,14 @@
   /* Prevent hydration FOUC, as the mobile TOC needs to be server-rendered */
   .tocMobile {
     display: none;
+  }
+
+  :global pre[class*="language-"][class*="language-"] {
+    padding: 1.5rem;
+  }
+
+  .badge .badgeTooltip {
+    width: 75%;
   }
 }
 
