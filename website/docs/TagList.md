@@ -22,7 +22,7 @@ Make sure you check out the [Writing Types](Types) guide for more information on
 Doc comments in Moonwave are denoted in one of two ways: A multi-line comment with a single equals sign between the square brackets, or a set of single-line triple-dash comments. Either one is acceptable, and these docs will interchangeably use both styles.
 
 :::tip
-Any line that doesn't begin with `@` or `.` within your doc comment is part of the description. You can use [Markdown](https://docusaurus.io/docs/markdown-features) in these description, including [code blocks](https://docusaurus.io/docs/markdown-features/code-blocks) and [admonitions](https://docusaurus.io/docs/markdown-features/admonitions) (this text is in an admonition right now!).
+Any line that doesn't begin with `@` or `.` within your doc comment is part of the description. You can use [Markdown](https://docusaurus.io/docs/markdown-features) in the description, including [code blocks](https://docusaurus.io/docs/markdown-features/code-blocks) and [admonitions](https://docusaurus.io/docs/markdown-features/admonitions) (this text is in an admonition right now!).
 :::
 
 Doc Comments are always one of four types: class, function, property, or type. Each of these has its own respective tag that turns the doc comment they appear in to that type of doc comment. You should only have one of these per doc comment.
@@ -189,7 +189,7 @@ end
 
 Describes a parameter for a function. This tag can appear multiple times in a doc comment, and each parameter should have its own.
 
-The `@param` tag begins with the parameter name, followed by a space and the type. Optionally, this can be followed by two dashes (`--`) and a description.
+The `@param` tag begins with the parameter name, followed by a space and the type. Optionally, this can be followed by two dashes (`--`) and a description. Markdown is parsed in the description.
 
 ```lua
 --[=[
@@ -207,7 +207,7 @@ end
 
 Describes a return value for a function. This tag can appear multiple times in a doc comment, and each return value should have its own.
 
-The `@return` tag is followed by the type of the return. Optionally, this can be followed by two dashes (`--`) and a description.
+The `@return` tag is followed by the type of the return. Optionally, this can be followed by two dashes (`--`) and a description. Markdown is parsed in the description.
 
 ```lua
 --[=[
@@ -226,7 +226,7 @@ end
 
 Describes a potential error that this function could raise. This tag can appear multiple times in a doc comment, and each error type should have its own.
 
-The `@type` tag is followed by the type of the type. Optionally, this can be followed by two dashes (`--`) and a description.
+The `@error` tag is followed by the type of the error. Optionally, this can be followed by two dashes (`--`) and a description. Markdown is parsed in the description.
 
 ```lua
 --- @error "Unknown" -- This error happens sometimes. We don't know why.
@@ -264,7 +264,7 @@ end
 `@deprecated <version> -- [description]`
 :::
 
-Marks this item as deprecated. Requires the version the item was deprecated, optionally followed by two dashes and a description of what to use instead.
+Marks this item as deprecated. Requires the version the item was deprecated, optionally followed by two dashes and a description of what to use instead. Markdown is parsed in the description.
 
 ```lua
 --- @deprecated v2 -- Use `goodFunction` instead.
