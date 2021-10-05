@@ -6,7 +6,7 @@ import path, { dirname } from "path"
 import toml from "toml"
 import { fileURLToPath } from "url"
 import getDocusaurusConfig, {
-  GenerateConfigParams,
+  GenerateConfigParams
 } from "./getDocusaurusConfig.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -187,8 +187,17 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
     } else {
       const indexPath = path.join(tempDir, "pages", "index.md")
       const readmePath = path.join(projectDir, "README.md")
+      
       if (fs.existsSync(readmePath)) {
-        fs.copyFileSync(readmePath, indexPath)
+        let readmeContent = fs.readFileSync(readmePath, { encoding: "utf-8" })
+
+        const snip = readmeContent.indexOf(SNIP)
+        if (snip > 0) {
+          readmeContent = readmeContent.slice(snip + SNIP.length)
+        }
+
+        fs.writeFileSync(indexPath, readmeContent)
+
       } else {
         const placeholderHomeText = config.title
           ? NO_README_TEXT(config.title)
