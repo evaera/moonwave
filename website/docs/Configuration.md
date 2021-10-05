@@ -47,12 +47,12 @@ includeReadme = false
 [[home.features]]
 title = "Feature 1"
 description = "This is a feature"
-image = "https://url
+image = "https://url"
 
 [[home.features]]
 title = "Feature 2"
 description = "This is a second feature"
-image = "https://url
+image = "https://url"
 
 [footer]
 style = "dark"
