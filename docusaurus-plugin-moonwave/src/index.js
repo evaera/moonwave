@@ -25,7 +25,7 @@ module.exports = (context, options) => ({
           `"${binaryPath}" extract "${root.replace(
             /\\/g,
             "/"
-          )}" --base ${basePath}`
+          )}" --base "${basePath}"`
         )
           .then(({ stdout, stderr }) => {
             if (stderr.length > 0) {
