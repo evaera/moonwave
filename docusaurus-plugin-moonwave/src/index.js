@@ -52,26 +52,106 @@ module.exports = (context, options) => ({
       }
     })
 
+    let allLuaClassNamesOrdered = []
+
     const nameSet = new Set()
     content.forEach((luaClass) => nameSet.add(luaClass.name))
 
     const classOrder = options.classOrder
-    classOrder.forEach((name) => {
-      if (!nameSet.has(name)) {
-        throw new Error(
-          `Moonwave plugin: "${name}" listed in classOrder option does not exist`
-        )
-      }
-    })
 
-    const unlistedNames = content
-      .map((luaClass) => luaClass.name)
-      .filter((name) => !classOrder.includes(name))
-      .sort((a, b) => a.localeCompare(b))
+    if (classOrder.length > 1) {
+      classOrder.forEach((section, i) => {
+        if (!section.section) {
+          throw new Error(
+            `Moonwave plugin: "No section named listed in classOrder option section ${i}"`
+          )
+        }
+
+        section.classes.forEach((name) => {
+          if (!nameSet.has(name)) {
+            throw new Error(
+              `Moonwave plugin: "${name}" listed in classOrder option does not exist`
+            )
+          }
+        })
+      })
+
+      const listedNames = classOrder.map((section) => section.classes).flat()
+
+      const unlistedNames = content
+        .map((luaClass) => luaClass.name)
+        .filter((name) => !listedNames.includes(name))
+        .sort((a, b) => a.localeCompare(b))
+
+      const classOrderSections = classOrder.map((section) => {
+        const items = section.classes.map((name) => ({
+          type: "link",
+          href: `/api/${name}`,
+          label: name,
+        }))
+
+        return {
+          type: "category",
+          label: section.section,
+          collapsible: true,
+          collapsed: true,
+          items: [...items],
+        }
+      })
+
+      const leftoverClasses = unlistedNames.map((name) => ({
+        type: "link",
+        href: `/api/${name}`,
+        label: name,
+      }))
+
+      allLuaClassNamesOrdered = [...classOrderSections, ...leftoverClasses]
+    } else if (classOrder.length === 1) {
+      classOrder[0].classes.forEach((name) => {
+        if (!nameSet.has(name)) {
+          throw new Error(
+            `Moonwave plugin: "${name}" listed in classOrder option does not exist`
+          )
+        }
+      })
+
+      const unlistedNames = content
+        .map((luaClass) => luaClass.name)
+        .filter((name) => !classOrder[0].classes.includes(name))
+        .sort((a, b) => a.localeCompare(b))
+
+      allLuaClassNamesOrdered = [
+        ...classOrder[0].classes,
+        ...unlistedNames,
+      ].map((name) => ({
+        type: "link",
+        href: `/api/${name}`,
+        label: name,
+      }))
+    } else {
+      allLuaClassNamesOrdered = [...nameSet].sort().map((name) => ({
+        type: "link",
+        href: `/api/${name}`,
+        label: name,
+      }))
+    }
+
+    // classOrder.forEach((name) => {
+    //   if (!nameSet.has(name)) {
+    //     throw new Error(
+    //       `Moonwave plugin: "${name}" listed in classOrder option does not exist`
+    //     )
+    //   }
+    // })
+
+    // const unlistedNames = content
+    //   .map((luaClass) => luaClass.name)
+    //   .filter((name) => !classOrder.includes(name))
+    //   .sort((a, b) => a.localeCompare(b))
 
     const allLuaClassNames = await createData(
       "sidebar.json",
-      JSON.stringify([...classOrder, ...unlistedNames])
+      JSON.stringify(allLuaClassNamesOrdered)
     )
 
     const baseUrl = context.baseUrl
