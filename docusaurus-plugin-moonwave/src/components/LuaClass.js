@@ -209,11 +209,7 @@ export default function LuaClass({
         >
           <DocSidebar
             path={`/api/${luaClass.name}`}
-            sidebar={allLuaClassNames.map((name) => ({
-              type: "link",
-              href: `/api/${name}`,
-              label: name,
-            }))}
+            sidebar={allLuaClassNames}
             isHidden={hiddenSidebar}
             onCollapse={toggleSidebar}
           />
