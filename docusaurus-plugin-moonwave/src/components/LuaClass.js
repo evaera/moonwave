@@ -8,6 +8,7 @@ import TOC from "@theme/TOC"
 import TOCCollapsible from "@theme/TOCCollapsible"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
+import Admonition from "./Admonition"
 import Badge from "./Badge"
 import ClassMember from "./ClassMember"
 import LuaFunction from "./LuaFunction"
@@ -257,7 +258,16 @@ export default function LuaClass({
                       )}
 
                       <header>
-                        <h1 className={styles.docTitle}>{luaClass.name}</h1>
+                        <h1
+                          className={styles.docTitle}
+                          style={{
+                            textDecoration: luaClass.deprecated
+                              ? "line-through"
+                              : "none",
+                          }}
+                        >
+                          {luaClass.name}
+                        </h1>
                         <div className={clsx(styles.luaClassTags)}>
                           {luaClass.realm?.map((realm) => (
                             <Badge key={realm} label={realm} />
@@ -273,6 +283,16 @@ export default function LuaClass({
                             showPrivate={showPrivate}
                             setShowPrivate={setShowPrivate}
                           />
+                        )}
+
+                        {luaClass.deprecated && (
+                          <Admonition
+                            variation="caution"
+                            title={`This was deprecated in ${luaClass.deprecated.version}`}
+                          >
+                            {luaClass.deprecated.desc ||
+                              "This item is deprecated. Do not use it for new work. "}
+                          </Admonition>
                         )}
 
                         <Markdown content={luaClass.desc} />
