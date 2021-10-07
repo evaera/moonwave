@@ -63,7 +63,7 @@ module.exports = (context, options) => ({
       classOrder.forEach((section, i) => {
         if (!section.section) {
           throw new Error(
-            `Moonwave plugin: "No section named listed in classOrder option section ${i}"`
+            `Moonwave plugin: "No section name listed in classOrder option section ${i}"`
           )
         }
 
@@ -135,19 +135,6 @@ module.exports = (context, options) => ({
         label: name,
       }))
     }
-
-    // classOrder.forEach((name) => {
-    //   if (!nameSet.has(name)) {
-    //     throw new Error(
-    //       `Moonwave plugin: "${name}" listed in classOrder option does not exist`
-    //     )
-    //   }
-    // })
-
-    // const unlistedNames = content
-    //   .map((luaClass) => luaClass.name)
-    //   .filter((name) => !classOrder.includes(name))
-    //   .sort((a, b) => a.localeCompare(b))
 
     const allLuaClassNames = await createData(
       "sidebar.json",
