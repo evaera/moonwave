@@ -3,6 +3,86 @@ const fs = require("fs")
 const { promisify } = require("util")
 const exec = promisify(require("child_process").exec)
 
+const mapLinks = (nameSet, items) =>
+  items.map((name) => {
+    if (!nameSet.has(name)) {
+      throw new Error(
+        `Moonwave plugin: "${name}" listed in classOrder option does not exist`
+      )
+    }
+
+    return {
+      type: "link",
+      href: `/api/${name}`,
+      label: name,
+    }
+  })
+
+function parseSimpleClassOrder(content, classOrder, nameSet) {
+  const listedLinks = mapLinks(nameSet, classOrder)
+
+  const unlistedLinks = content
+    .map((luaClass) => luaClass.name)
+    .filter((name) => !classOrder.includes(name))
+    .sort((a, b) => a.localeCompare(b))
+    .map((name) => ({
+      type: "link",
+      href: `/api/${name}`,
+      label: name,
+    }))
+
+  return [...listedLinks, ...unlistedLinks]
+}
+
+function parseSectionalClassOrder(content, classOrder, nameSet) {
+  const listedNames = classOrder.flatMap((section) => section.classes)
+
+  const listedSidebar = []
+  classOrder.forEach((element) => {
+    if (element.section) {
+      listedSidebar.push({
+        type: "category",
+        label: element.section,
+        collapsible: true,
+        collapsed: true,
+        items: mapLinks(nameSet, element.classes),
+      })
+    } else {
+      listedSidebar.push(...mapLinks(nameSet, element.classes))
+    }
+  })
+
+  const unlistedSidebar = content
+    .map((luaClass) => luaClass.name)
+    .filter((name) => !listedNames.includes(name))
+    .sort((a, b) => a.localeCompare(b))
+    .map((name) => ({
+      type: "link",
+      href: `/api/${name}`,
+      label: name,
+    }))
+
+  return [...listedSidebar, ...unlistedSidebar]
+}
+
+function parseClassOrder(content, classOrder, nameSet) {
+  if (classOrder.length === 0) {
+    return [...nameSet].sort().map((name) => ({
+      type: "link",
+      href: `/api/${name}`,
+      label: name,
+    }))
+  }
+
+  if (typeof classOrder[0] === "string") {
+    // Handles simple classOrder array assignment
+    return parseSimpleClassOrder(content, classOrder, nameSet)
+  } else {
+    // Handles cases where classOrder is assigned via TOML tables
+    return parseSectionalClassOrder(content, classOrder, nameSet)
+  }
+}
+
 module.exports = (context, options) => ({
   name: "docusaurus-plugin-moonwave",
 
@@ -52,109 +132,16 @@ module.exports = (context, options) => ({
       }
     })
 
-    let allLuaClassNamesOrdered = []
-
     const nameSet = new Set()
     content.forEach((luaClass) => nameSet.add(luaClass.name))
 
     const classOrder = options.classOrder
 
-    // Handles simple classOrder array assignment
-    if (typeof classOrder[0] === "string") {
-      classOrder.forEach((name) => {
-        if (!nameSet.has(name)) {
-          throw new Error(
-            `Moonwave plugin: "${name}" listed in classOrder option does not exist`
-          )
-        }
-      })
-
-      const sideBarFormatClassOrder = classOrder.map((name) => ({
-        type: "link",
-        href: `/api/${name}`,
-        label: name,
-      }))
-
-      const sideBarFormatClassOrderUnlistedNames = content
-        .map((luaClass) => luaClass.name)
-        .filter((name) => !classOrder.includes(name))
-        .sort((a, b) => a.localeCompare(b))
-        .map((name) => ({
-          type: "link",
-          href: `/api/${name}`,
-          label: name,
-        }))
-
-      allLuaClassNamesOrdered = [
-        ...sideBarFormatClassOrder,
-        ...sideBarFormatClassOrderUnlistedNames,
-      ]
-    }
-    // Handles cases where classOrder is assigned via TOML tables
-    else {
-      if (classOrder.length >= 1) {
-        const listedNames = classOrder.flatMap((section) => section.classes)
-
-        let sideBarFormatClassOrder = []
-        classOrder.forEach((element) => {
-          if (element.section) {
-            const items = element.classes.map((name) => {
-              if (!nameSet.has(name)) {
-                throw new Error(
-                  `Moonwave plugin: "${name}" listed in classOrder option does not exist`
-                )
-              }
-
-              return {
-                type: "link",
-                href: `/api/${name}`,
-                label: name,
-              }
-            })
-
-            sideBarFormatClassOrder.push({
-              type: "category",
-              label: element.section,
-              collapsible: true,
-              collapsed: true,
-              items: items,
-            })
-          } else {
-            element.classes.forEach((name) => {
-              if (!nameSet.has(name)) {
-                throw new Error(
-                  `Moonwave plugin: "${name}" listed in classOrder option does not exist`
-                )
-              }
-
-              sideBarFormatClassOrder.push({
-                type: "link",
-                href: `/api/${name}`,
-                label: name,
-              })
-            })
-          }
-        })
-
-        const unlistedNames = content
-          .map((luaClass) => luaClass.name)
-          .filter((name) => !listedNames.includes(name))
-          .sort((a, b) => a.localeCompare(b))
-          .map((name) => ({
-            type: "link",
-            href: `/api/${name}`,
-            label: name,
-          }))
-
-        allLuaClassNamesOrdered = [...sideBarFormatClassOrder, ...unlistedNames]
-      } else {
-        allLuaClassNamesOrdered = [...nameSet].sort().map((name) => ({
-          type: "link",
-          href: `/api/${name}`,
-          label: name,
-        }))
-      }
-    }
+    const allLuaClassNamesOrdered = parseClassOrder(
+      content,
+      classOrder,
+      nameSet
+    )
 
     const allLuaClassNames = await createData(
       "sidebar.json",
