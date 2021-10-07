@@ -290,6 +290,18 @@ export default function LuaClass({
                     </div>
                   </article>
                 </div>
+
+                <details>
+                  <summary>Show raw api</summary>
+                  <pre
+                    style={{
+                      maxWidth: "100%",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {JSON.stringify(rawLuaClass, null, 4)}
+                  </pre>
+                </details>
               </div>
               {renderTocDesktop && (
                 <div className="col col--3">
@@ -297,17 +309,6 @@ export default function LuaClass({
                 </div>
               )}
             </div>
-            <details>
-              <summary>Show raw api</summary>
-              <pre
-                style={{
-                  maxWidth: "100%",
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                {JSON.stringify(rawLuaClass, null, 4)}
-              </pre>
-            </details>
           </div>
         </main>
       </div>
