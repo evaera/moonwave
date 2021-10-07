@@ -119,7 +119,7 @@ module.exports = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ["lua"],
+        additionalLanguages: ["lua", "toml"],
       },
     }),
 }

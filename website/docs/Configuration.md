@@ -11,26 +11,51 @@ You can customize how Moonwave behaves by creating a `moonwave.toml` file in the
 Here's a sample `moonwave.toml` with default properties. Every property listed here is optional.
 
 :::tip
-Lines ending with the comment `# From Git` mean that property is automatically filled in from your Git repository.
+Options annotated with the comment `# From Git` mean that property is automatically filled in from your Git repository.
 :::
 
 ```toml
-title = "My Project Name"  # From Git
+title = "MyProjectName"  # From Git
 gitRepoUrl = "https://github.com/UpliftGames/moonwave" # From Git
+
 gitSourceBranch = "master"
 changelog = true
 classOrder = []
 
 [docusaurus]
-organizationName = "organizationName" # From Git
-projectName = "projectName" # From Git
-url = "https://organizationName.github.io" # From Git
-tagline = "Your project's tagline"
-baseUrl = "/projectName" # From Git
 onBrokenLinks = "throw"
 onBrokenMarkdownLinks = "warn"
 favicon = ""
 
+# From git:
+organizationName = "AuthorName"
+projectName = "MyProjectName"
+url = "https://AuthorName.github.io"
+baseUrl = "/MyProjectName"
+tagline = "Your project's tagline"
+
+[navbar]
+hideableSidebar = true
+
+[footer]
+style = "dark"
+
+[footer.links]
+title = ""
+copyright = "Copyright © 2021 AuthorName. Built with Moonwave and Docusaurus"
+```
+
+See [the publishing guide](/docs/Publishing) for details on the `url` and `baseUrl` options.
+
+## Docusaurus options
+
+The options in the `[docusaurus]` section are directly passed to the Docusaurus options. For more information, please see the [Docusaurus docs](https://docusaurus.io/docs/docusaurus.config.js)
+
+## Custom navbar options
+
+You can add custom navbar options like so:
+
+```toml
 [[navbar.items]]
 href = "https://discord.gg/abcdefghijk"
 label = "Discord"
@@ -39,32 +64,7 @@ position = "right"
 [[navbar.items]]
 href = "https://???"
 label = "Something Else"
-
-[home]
-enabled = false
-includeReadme = false
-
-[[home.features]]
-title = "Feature 1"
-description = "This is a feature"
-image = "https://url"
-
-[[home.features]]
-title = "Feature 2"
-description = "This is a second feature"
-image = "https://url"
-
-[footer]
-style = "dark"
-
-[footer.links]
-title = ""
-copyright = "Copyright © 2021 organizationName. Built with Moonwave and Docusaurus"
 ```
-
-## Docusaurus options
-
-The options in the `[docusaurus]` section are directly passed to the Docusaurus options. For more information, please see the [Docusaurus docs](https://docusaurus.io/docs/docusaurus.config.js)
 
 ## API Class Order
 
@@ -78,6 +78,24 @@ classOrder = [
 ```
 
 Any classes not listed here will be alphabetized and added to the end of the list. Listing a class that doesn't exist is an error.
+
+### Sections
+
+You can categorize your API pages with sections. Instead of the above style, you can do this:
+
+```toml
+[[classOrder]]
+section = "Section name"
+classes = ["Class1", "Class2"]
+
+[[classOrder]]
+section = "Another section name"
+classes = ["Class3", "Class4"]
+
+[[classOrder]]
+# No section name will link classes at the root level of the sidebar
+classes = ["Class5", "Class6"]
+```
 
 ## Custom home page
 
