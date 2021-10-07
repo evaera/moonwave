@@ -6,7 +6,7 @@ import path, { dirname } from "path"
 import toml from "toml"
 import { fileURLToPath } from "url"
 import getDocusaurusConfig, {
-  GenerateConfigParams
+  GenerateConfigParams,
 } from "./getDocusaurusConfig.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -28,10 +28,13 @@ Either set this project up as a Git repo, or configure the website title in moon
 
 export type FoldersEnabled = { [index in typeof COPY_FOLDERS[number]]: boolean }
 
-export type ClassOrder = {
-  section?: string,
-  classes: string[]
-}
+export type ClassOrder = (
+  | string
+  | {
+      section?: string
+      classes: string[]
+    }
+)[]
 
 export type Config = Partial<{
   // Moonwave
@@ -39,7 +42,7 @@ export type Config = Partial<{
   gitSourceBranch: string
   title: string
   changelog: boolean
-  classOrder: ClassOrder[]
+  classOrder: ClassOrder
 
   // Docusaurus
   docusaurus: Partial<{

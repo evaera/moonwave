@@ -10,7 +10,7 @@ export interface GenerateConfigParams {
   changelogExists: boolean
   projectDir: string
   binaryPath: string
-  classOrder: ClassOrder[]
+  classOrder: ClassOrder
 }
 
 export default function getDocusaurusConfig({
