@@ -28,13 +28,21 @@ Either set this project up as a Git repo, or configure the website title in moon
 
 export type FoldersEnabled = { [index in typeof COPY_FOLDERS[number]]: boolean }
 
+export type ClassOrder = (
+  | string
+  | {
+      section?: string
+      classes: string[]
+    }
+)[]
+
 export type Config = Partial<{
   // Moonwave
   gitRepoUrl: string
   gitSourceBranch: string
   title: string
   changelog: boolean
-  classOrder: string[]
+  classOrder: ClassOrder
 
   // Docusaurus
   docusaurus: Partial<{
