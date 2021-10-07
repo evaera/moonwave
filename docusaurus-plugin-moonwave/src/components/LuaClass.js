@@ -8,6 +8,7 @@ import TOC from "@theme/TOC"
 import TOCCollapsible from "@theme/TOCCollapsible"
 import clsx from "clsx"
 import React, { useCallback, useEffect, useState } from "react"
+import Admonition from "./Admonition"
 import Badge from "./Badge"
 import ClassMember from "./ClassMember"
 import LuaFunction from "./LuaFunction"
@@ -253,7 +254,16 @@ export default function LuaClass({
                       )}
 
                       <header>
-                        <h1 className={styles.docTitle}>{luaClass.name}</h1>
+                        <h1
+                          className={styles.docTitle}
+                          style={{
+                            textDecoration: luaClass.deprecated
+                              ? "line-through"
+                              : "none",
+                          }}
+                        >
+                          {luaClass.name}
+                        </h1>
                         <div className={clsx(styles.luaClassTags)}>
                           {luaClass.realm?.map((realm) => (
                             <Badge key={realm} label={realm} />
@@ -271,6 +281,16 @@ export default function LuaClass({
                           />
                         )}
 
+                        {luaClass.deprecated && (
+                          <Admonition
+                            variation="caution"
+                            title={`This was deprecated in ${luaClass.deprecated.version}`}
+                          >
+                            {luaClass.deprecated.desc ||
+                              "This item is deprecated. Do not use it for new work. "}
+                          </Admonition>
+                        )}
+
                         <Markdown content={luaClass.desc} />
                       </header>
 
@@ -286,6 +306,18 @@ export default function LuaClass({
                     </div>
                   </article>
                 </div>
+
+                <details>
+                  <summary>Show raw api</summary>
+                  <pre
+                    style={{
+                      maxWidth: "100%",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {JSON.stringify(rawLuaClass, null, 4)}
+                  </pre>
+                </details>
               </div>
               {renderTocDesktop && (
                 <div className="col col--3">
@@ -293,17 +325,6 @@ export default function LuaClass({
                 </div>
               )}
             </div>
-            <details>
-              <summary>Show raw api</summary>
-              <pre
-                style={{
-                  maxWidth: "100%",
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                {JSON.stringify(rawLuaClass, null, 4)}
-              </pre>
-            </details>
           </div>
         </main>
       </div>

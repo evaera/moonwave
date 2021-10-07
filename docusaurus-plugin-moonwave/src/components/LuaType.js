@@ -4,7 +4,7 @@ import { Op } from "./Syntax"
 
 const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
-const isAtom = (char) => char !== ")" && !isWhitespace(char) && !isPunc(char)
+const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
 function tokenize(code, isGroup) {
   let position = 0
@@ -99,7 +99,10 @@ function tokenize(code, isGroup) {
           luaType: atom,
         })
       }
+      continue
     }
+
+    throw new Error(`Reached bottom of tokenizer with no match: ${peek()}`)
   }
 
   return groupTuples(tokens)
