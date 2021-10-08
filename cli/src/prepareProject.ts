@@ -6,7 +6,7 @@ import path, { dirname } from "path"
 import toml from "toml"
 import { fileURLToPath } from "url"
 import getDocusaurusConfig, {
-  GenerateConfigParams,
+  GenerateConfigParams
 } from "./getDocusaurusConfig.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -240,20 +240,29 @@ function copyChangelog(
 function copyMoonwaveFolder(
   projectDir: string,
   tempDir: string
-): { customCssExists: boolean } {
+): { customCssExists: boolean, customSidebarsExists: boolean } {
   const staticDir = path.join(projectDir, ".moonwave", "static")
   if (fs.existsSync(staticDir)) {
     fs.copySync(staticDir, path.join(tempDir, "static"))
   }
 
+  let customCssExists = false, customSidebarsExists = false;
+
   const customCssPath = path.join(projectDir, ".moonwave", "custom.css")
   if (fs.existsSync(customCssPath)) {
     fs.copySync(customCssPath, path.join(tempDir, "src", "css", "custom.css"))
 
-    return { customCssExists: true }
+    customCssExists = true;
   }
 
-  return { customCssExists: false }
+  const customSidebarsPath = path.join(projectDir, ".moonwave", "sidebars.js")
+  if (fs.existsSync(customSidebarsPath)) {
+    fs.copySync(customSidebarsPath, path.join(tempDir, "src", "sidebars.js"))
+
+    customSidebarsExists = true;
+  }
+
+  return { customCssExists, customSidebarsExists }
 }
 
 function writeDocusaurusConfig(tempDir: string, params: GenerateConfigParams) {
@@ -361,12 +370,13 @@ export function prepareProject(
 
   const foundFolders = copyContentFolders(projectDir, tempDir)
 
-  const { customCssExists } = copyMoonwaveFolder(projectDir, tempDir)
+  const { customCssExists, customSidebarsExists } = copyMoonwaveFolder(projectDir, tempDir)
 
   const docusaurusConfigModified = writeDocusaurusConfig(tempDir, {
     config,
     enablePlugins: foundFolders,
     customCssExists,
+    customSidebarsExists,
     codePaths: options.codePaths,
     binaryPath: options.binaryPath,
     changelogExists,
