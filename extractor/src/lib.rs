@@ -1,8 +1,10 @@
 use std::{
     collections::{BTreeMap, HashMap},
-    fs, io,
+    io,
     path::{self, Path, PathBuf},
 };
+
+use fs_err as fs;
 
 use anyhow::bail;
 use codespan_reporting::{

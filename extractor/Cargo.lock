@@ -122,6 +122,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
 
 [[package]]
+name = "fs-err"
+version = "2.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5ebd3504ad6116843b8375ad70df74e7bfe83cac77a1f3fe73200c844d43bfe0"
+
+[[package]]
 name = "full_moon"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -228,6 +234,7 @@ version = "0.2.8"
 dependencies = [
  "anyhow",
  "codespan-reporting",
+ "fs-err",
  "full_moon",
  "insta",
  "pathdiff",
