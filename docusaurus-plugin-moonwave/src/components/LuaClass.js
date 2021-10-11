@@ -37,6 +37,12 @@ const SECTIONS = [
 
 const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
+const breakCapitalWords = (text) =>
+  text
+    .replace(/([A-Z])/g, " $1")
+    .trim()
+    .split(" ")
+
 const ClassSection = ({
   luaClass,
   section,
@@ -262,7 +268,13 @@ export default function LuaClass({
                               : "none",
                           }}
                         >
-                          {luaClass.name}
+                          {breakCapitalWords(luaClass.name).map(
+                            (capitalWord) => (
+                              <span style={{ display: "inline-block" }}>
+                                {capitalWord}
+                              </span>
+                            )
+                          )}
                         </h1>
                         <div className={clsx(styles.luaClassTags)}>
                           {luaClass.realm?.map((realm) => (

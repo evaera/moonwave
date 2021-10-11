@@ -21,6 +21,10 @@
   width: 100vw;
 }
 
+:global a.menu__link {
+  word-break: break-word;
+}
+
 .divider {
   border-top: 1px solid var(--ifm-color-emphasis-300);
   margin: 1rem 0;
@@ -66,8 +70,11 @@
   font-family: inherit;
 }
 
+.docPage .member code {
+  word-break: break-word;
+}
+
 .docPage .member h3 code {
-  word-break: "break-word";
   display: "inline";
 }
 
@@ -259,6 +266,7 @@
   font-size: 3rem;
   margin-bottom: calc(var(--ifm-leading-desktop) * var(--ifm-leading));
   display: inline-block;
+  word-break: break-word;
 }
 
 .docSidebarContainer {
