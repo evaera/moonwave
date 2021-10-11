@@ -3,6 +3,9 @@ const fs = require("fs")
 const { promisify } = require("util")
 const exec = promisify(require("child_process").exec)
 
+const breakCapitalWordsZeroWidth = (text) =>
+  text.replace(/([A-Z])/g, "\u200B$1") // Adds a zero-width space before each capital letter. This way, the css word-break: break-word; rule can apply correctly
+
 const mapLinks = (nameSet, items) =>
   items.map((name) => {
     if (!nameSet.has(name)) {
@@ -14,7 +17,7 @@ const mapLinks = (nameSet, items) =>
     return {
       type: "link",
       href: `/api/${name}`,
-      label: name,
+      label: breakCapitalWordsZeroWidth(name),
     }
   })
 
@@ -28,7 +31,7 @@ function parseSimpleClassOrder(content, classOrder, nameSet) {
     .map((name) => ({
       type: "link",
       href: `/api/${name}`,
-      label: name,
+      label: breakCapitalWordsZeroWidth(name),
     }))
 
   return [...listedLinks, ...unlistedLinks]
@@ -59,7 +62,7 @@ function parseSectionalClassOrder(content, classOrder, nameSet) {
     .map((name) => ({
       type: "link",
       href: `/api/${name}`,
-      label: name,
+      label: breakCapitalWordsZeroWidth(name),
     }))
 
   return [...listedSidebar, ...unlistedSidebar]
@@ -70,7 +73,7 @@ function parseClassOrder(content, classOrder, nameSet) {
     return [...nameSet].sort().map((name) => ({
       type: "link",
       href: `/api/${name}`,
-      label: name,
+      label: breakCapitalWordsZeroWidth(name),
     }))
   }
 
