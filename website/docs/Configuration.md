@@ -98,7 +98,7 @@ classes = ["Class5", "Class6"]
 
 [[classOrder]]
 section = "Yet another section name"
-collapsed = false; # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
+collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
 classes = ["Class7", "ClassAte", "Class9"]
 ```
 
