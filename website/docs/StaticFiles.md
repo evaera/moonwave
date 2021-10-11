@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Static Files and Custom Configurations
+# Static Files
 
 You can further customize Moonwave by creating a `.moonwave` folder in your root directory.
 
@@ -38,9 +38,9 @@ You can create a file at `.moonwave/custom.css`. Here's an example of what you c
 
 ## Custom Docs Sidebar
 
-You can create a custom `.moonwave/sidebars.js` file to set up a custom layout for your `docs` pages. This allows you to specifiy ordering, sections, and even if certain files are excluded.
+You can create a custom `.moonwave/sidebars.js` file to set up a custom ordering for your `docs` sidebar. This allows you to specify ordering, sections, and if certain files are excluded.
 
-Example `sidebar.js` file:
+Example `sidebars.js` file:
 
 ```js
 module.exports = {
@@ -65,4 +65,4 @@ module.exports = {
 };
 ```
 
-Additional information on customizing your `docs` sidebar can be found at (the Docusaurus Documentation)[https://docusaurus.io/docs/sidebar]
+Additional information on customizing your `docs` sidebar can be found at [the Docusaurus Documentation](https://docusaurus.io/docs/sidebar)
