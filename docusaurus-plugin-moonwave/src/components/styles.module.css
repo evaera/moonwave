@@ -70,8 +70,11 @@
   font-family: inherit;
 }
 
+.docPage .member code {
+  word-break: break-word;
+}
+
 .docPage .member h3 code {
-  word-break: "break-word";
   display: "inline";
 }
 
