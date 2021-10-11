@@ -65,4 +65,4 @@ module.exports = {
 };
 ```
 
-Additional information on customizing your `docs` sidebar can be found at [the Docusaurus Documentation](https://docusaurus.io/docs/sidebar)
+Additional information on customizing your `docs` sidebar can be found at [the Docusaurus Documentation](https://docusaurus.io/docs/sidebar).
