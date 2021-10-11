@@ -7,7 +7,7 @@ export interface GenerateConfigParams {
   enablePlugins: FoldersEnabled
   config: Config
   customCssExists: boolean
-  customSidebarsExists: boolean
+  customSidebarExists: boolean
   changelogExists: boolean
   projectDir: string
   binaryPath: string
@@ -19,7 +19,7 @@ export default function getDocusaurusConfig({
   enablePlugins,
   config,
   customCssExists,
-  customSidebarsExists,
+  customSidebarExists,
   changelogExists,
   projectDir,
   binaryPath,
