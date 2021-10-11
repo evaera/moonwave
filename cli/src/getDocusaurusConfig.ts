@@ -7,6 +7,7 @@ export interface GenerateConfigParams {
   enablePlugins: FoldersEnabled
   config: Config
   customCssExists: boolean
+  customSidebarExists: boolean
   changelogExists: boolean
   projectDir: string
   binaryPath: string
@@ -18,6 +19,7 @@ export default function getDocusaurusConfig({
   enablePlugins,
   config,
   customCssExists,
+  customSidebarExists,
   changelogExists,
   projectDir,
   binaryPath,
@@ -110,6 +112,9 @@ export default function getDocusaurusConfig({
                   ? `${gitRepoUrl}/edit/${config.gitSourceBranch ?? "master"}/`
                   : undefined, // Omitting this variable entirely will disable edit links
                 sidebarCollapsible: true,
+                sidebarPath: customSidebarsExists
+                  ? "./src/sidebars.js"
+                  : undefined,
               }
             : false,
           blog: enablePlugins.blog

@@ -240,20 +240,29 @@ function copyChangelog(
 function copyMoonwaveFolder(
   projectDir: string,
   tempDir: string
-): { customCssExists: boolean } {
+): { customCssExists: boolean; customSidebarExists: boolean } {
   const staticDir = path.join(projectDir, ".moonwave", "static")
   if (fs.existsSync(staticDir)) {
     fs.copySync(staticDir, path.join(tempDir, "static"))
   }
 
+  const status = { customCssExists: false, customSidebarExists: false }
+
   const customCssPath = path.join(projectDir, ".moonwave", "custom.css")
   if (fs.existsSync(customCssPath)) {
     fs.copySync(customCssPath, path.join(tempDir, "src", "css", "custom.css"))
 
-    return { customCssExists: true }
+    status.customCssExists = true
   }
 
-  return { customCssExists: false }
+  const customSidebarsPath = path.join(projectDir, ".moonwave", "sidebars.js")
+  if (fs.existsSync(customSidebarsPath)) {
+    fs.copySync(customSidebarsPath, path.join(tempDir, "src", "sidebars.js"))
+
+    status.customSidebarExists = true
+  }
+
+  return status
 }
 
 function writeDocusaurusConfig(tempDir: string, params: GenerateConfigParams) {
@@ -361,12 +370,16 @@ export function prepareProject(
 
   const foundFolders = copyContentFolders(projectDir, tempDir)
 
-  const { customCssExists } = copyMoonwaveFolder(projectDir, tempDir)
+  const { customCssExists, customSidebarExists } = copyMoonwaveFolder(
+    projectDir,
+    tempDir
+  )
 
   const docusaurusConfigModified = writeDocusaurusConfig(tempDir, {
     config,
     enablePlugins: foundFolders,
     customCssExists,
+    customSidebarExists,
     codePaths: options.codePaths,
     binaryPath: options.binaryPath,
     changelogExists,
