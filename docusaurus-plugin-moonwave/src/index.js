@@ -44,7 +44,7 @@ function parseSectionalClassOrder(content, classOrder, nameSet) {
         type: "category",
         label: element.section,
         collapsible: true,
-        collapsed: true,
+        collapsed: element.collapsed ?? true,
         items: mapLinks(nameSet, element.classes),
       })
     } else {
