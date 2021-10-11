@@ -112,7 +112,7 @@ export default function getDocusaurusConfig({
                   ? `${gitRepoUrl}/edit/${config.gitSourceBranch ?? "master"}/`
                   : undefined, // Omitting this variable entirely will disable edit links
                 sidebarCollapsible: true,
-                sidebarPath: customSidebarsExists
+                sidebarPath: customSidebarExists
                   ? "./src/sidebars.js"
                   : undefined,
               }
