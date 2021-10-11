@@ -22,8 +22,7 @@
 }
 
 :global a.menu__link {
-  word-break: break-all;
-  hyphens: auto;
+  word-break: break-word;
 }
 
 .divider {
@@ -264,8 +263,7 @@
   font-size: 3rem;
   margin-bottom: calc(var(--ifm-leading-desktop) * var(--ifm-leading));
   display: inline-block;
-  word-break: break-all;
-  hyphens: auto;
+  word-break: break-word;
 }
 
 .docSidebarContainer {
