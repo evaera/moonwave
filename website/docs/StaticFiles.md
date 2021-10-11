@@ -46,23 +46,25 @@ Example `sidebars.js` file:
 module.exports = {
   mySidebar: [
     {
-        type: "doc",
-        id: "getting-started"
-        label: "Getting Started"
+      type: "doc",
+      id: "getting-started",
+      label: "Getting Started",
     },
     {
-      type: 'category',
-      label: 'Moonwave',
-      items: ['moonwave-basics, moonwave-advances'],
+      type: "category",
+      label: "Moonwave",
+      items: ["moonwave-basics, moonwave-advances"],
     },
     {
-      type: 'category',
-      label: 'Other Resources',
-      items: ['nested-folder/extra-resources', 'another-folder/even-more-resources'],
+      type: "category",
+      label: "Other Resources",
+      items: [
+        "nested-folder/extra-resources",
+        "another-folder/even-more-resources",
+      ],
     },
-
   ],
-};
+}
 ```
 
 Additional information on customizing your `docs` sidebar can be found at [the Docusaurus Documentation](https://docusaurus.io/docs/sidebar).
