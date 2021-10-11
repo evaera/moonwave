@@ -95,6 +95,11 @@ classes = ["Class3", "Class4"]
 [[classOrder]]
 # No section name will link classes at the root level of the sidebar
 classes = ["Class5", "Class6"]
+
+[[classOrder]]
+section = "Yet another section name"
+collapsed = false # Determines with the section grouping is collapsed or expanded on page load. Defaults to true.
+classes = ["Class7", "ClassAte", "Class9"]
 ```
 
 ## Custom home page
