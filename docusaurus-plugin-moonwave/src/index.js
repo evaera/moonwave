@@ -92,6 +92,79 @@ function parseClassOrder(content, classOrder, nameSet) {
   }
 }
 
+function parseListedApiCategories(luaClass, apiCategories) {
+  const functionSet = new Set(luaClass.functions.flatMap((func) => func.name))
+
+  const flatApiCategories = apiCategories.flatMap((category) => {
+    if (category.class === luaClass.name) return category.members
+  })
+
+  flatApiCategories.forEach((member) => {
+    if (!functionSet.has(member)) {
+      throw new Error(
+        `Moonwave plugin: "${member}" listed in apiCategories "${luaClass.name}" option does not exist`
+      )
+    }
+  })
+
+  const mappedCategories = apiCategories.map((section) => {
+    if (section.class === luaClass.name) {
+      return {
+        category: section.category,
+        members: section.members,
+      }
+    }
+  })
+
+  console.log(luaClass)
+
+  const listedCategories = mappedCategories.map((section) => ({
+    value: capitalize(section.category),
+    id: section.category,
+    children: section.members.map((member) => ({
+      value: addFunctionTypeSymbol(
+        member,
+        luaClass["functions"].find((element) => element.name === member)
+          .function_type
+      ),
+      id: member,
+      children: [],
+    })),
+  }))
+
+  return listedCategories
+}
+
+function parseBaseApiCategories(luaClass) {
+  const SECTIONS = ["types", "properties", "functions"]
+  const baseCategories = SECTIONS.map((section) => ({
+    value: capitalize(section),
+    id: section,
+    children: luaClass[section].map((member) => ({
+      value: addFunctionTypeSymbol(member.name, member.function_type),
+      id: member.name,
+      children: [],
+    })),
+  }))
+
+  return baseCategories
+}
+
+function parseApiCategories(luaClass, apiCategories) {
+  const tocCategories = { listedCategories: [], baseCategories: [] }
+
+  if (apiCategories.some((category) => category.class === luaClass.name)) {
+    tocCategories.listedCategories = parseListedApiCategories(
+      luaClass,
+      apiCategories
+    )
+  }
+
+  tocCategories.baseCategories = parseBaseApiCategories(luaClass)
+
+  return [...tocCategories.listedCategories, ...tocCategories.baseCategories]
+}
+
 module.exports = (context, options) => ({
   name: "docusaurus-plugin-moonwave",
 
@@ -179,72 +252,20 @@ module.exports = (context, options) => ({
       },
     })
 
-    const SECTIONS = ["types", "properties", "functions"]
-
     for (const luaClass of content) {
       const apiDataPath = await createData(
         `${luaClass.name}.json`,
         JSON.stringify(luaClass)
       )
 
-      const flatApiCategories = apiCategories.flatMap((category) => {
-        if (category.class === luaClass.name) return category.members
-      })
-
-      console.log(`Adding path /api/${luaClass.name}`)
-
-      const tocCategories = { listedCategories: [], baseCategories: [] }
-
-      if (apiCategories.some((category) => category.class === luaClass.name)) {
-        const functionSet = new Set(
-          luaClass.functions.flatMap((func) => func.name)
-        )
-
-        flatApiCategories.forEach((member) => {
-          if (!functionSet.has(member)) {
-            throw new Error(
-              `Moonwave plugin: "${member}" listed in apiCategories "${luaClass.name}" option does not exist`
-            )
-          }
-        })
-
-        const mappedCategories = apiCategories.map((section) => {
-          if (section.class === luaClass.name) {
-            return {
-              category: section.category,
-              members: section.members,
-            }
-          }
-        })
-
-        tocCategories.listedCategories = mappedCategories.map((section) => ({
-          value: capitalize(section.category),
-          id: section.category,
-          children: section.members.map((member) => ({
-            value: member,
-            id: member,
-            children: [],
-          })),
-        }))
-      }
-
-      tocCategories.baseCategories = SECTIONS.map((section) => ({
-        value: capitalize(section),
-        id: section,
-        children: luaClass[section].map((member) => ({
-          value: addFunctionTypeSymbol(member.name, member.function_type),
-          id: member.name,
-          children: [],
-        })),
-      }))
+      const tocDataOrdered = parseApiCategories(luaClass, apiCategories)
 
       const tocData = await createData(
         `${luaClass.name}-toc.json`,
-        JSON.stringify([
-          ...tocCategories.listedCategories,
-          ...tocCategories.baseCategories,
-        ])
+        JSON.stringify(tocDataOrdered)
       )
+
+      console.log(`Adding path /api/${luaClass.name}`)
 
       addRoute({
         path: `${baseUrl}api/${luaClass.name}`,
