@@ -1,10 +1,16 @@
 const path = require("path")
 const fs = require("fs")
 const { promisify } = require("util")
+const { create } = require("domain")
 const exec = promisify(require("child_process").exec)
+
+const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
 const breakCapitalWordsZeroWidth = (text) =>
   text.replace(/([A-Z])/g, "\u200B$1") // Adds a zero-width space before each capital letter. This way, the css word-break: break-word; rule can apply correctly
+
+const addFunctionTypeSymbol = (text, type) =>
+  (type === "static" ? "." : type === "method" ? ":" : "") + text
 
 const mapLinks = (nameSet, items) =>
   items.map((name) => {
@@ -139,6 +145,7 @@ module.exports = (context, options) => ({
     content.forEach((luaClass) => nameSet.add(luaClass.name))
 
     const classOrder = options.classOrder
+    const apiCategories = options.apiCategories
 
     const allLuaClassNamesOrdered = parseClassOrder(
       content,
@@ -158,6 +165,7 @@ module.exports = (context, options) => ({
         sourceUrl: options.sourceUrl,
         baseUrl: baseUrl,
         classOrder: classOrder,
+        apiCategories: apiCategories,
       })
     )
 
@@ -171,13 +179,72 @@ module.exports = (context, options) => ({
       },
     })
 
+    const SECTIONS = ["types", "properties", "functions"]
+
     for (const luaClass of content) {
       const apiDataPath = await createData(
         `${luaClass.name}.json`,
         JSON.stringify(luaClass)
       )
 
+      const flatApiCategories = apiCategories.flatMap((category) => {
+        if (category.class === luaClass.name) return category.members
+      })
+
       console.log(`Adding path /api/${luaClass.name}`)
+
+      const tocCategories = { listedCategories: [], baseCategories: [] }
+
+      if (apiCategories.some((category) => category.class === luaClass.name)) {
+        const functionSet = new Set(
+          luaClass.functions.flatMap((func) => func.name)
+        )
+
+        flatApiCategories.forEach((member) => {
+          if (!functionSet.has(member)) {
+            throw new Error(
+              `Moonwave plugin: "${member}" listed in apiCategories "${luaClass.name}" option does not exist`
+            )
+          }
+        })
+
+        const mappedCategories = apiCategories.map((section) => {
+          if (section.class === luaClass.name) {
+            return {
+              category: section.category,
+              members: section.members,
+            }
+          }
+        })
+
+        tocCategories.listedCategories = mappedCategories.map((section) => ({
+          value: capitalize(section.category),
+          id: section.category,
+          children: section.members.map((member) => ({
+            value: member,
+            id: member,
+            children: [],
+          })),
+        }))
+      }
+
+      tocCategories.baseCategories = SECTIONS.map((section) => ({
+        value: capitalize(section),
+        id: section,
+        children: luaClass[section].map((member) => ({
+          value: addFunctionTypeSymbol(member.name, member.function_type),
+          id: member.name,
+          children: [],
+        })),
+      }))
+
+      const tocData = await createData(
+        `${luaClass.name}-toc.json`,
+        JSON.stringify([
+          ...tocCategories.listedCategories,
+          ...tocCategories.baseCategories,
+        ])
+      )
 
       addRoute({
         path: `${baseUrl}api/${luaClass.name}`,
@@ -185,6 +252,7 @@ module.exports = (context, options) => ({
         modules: {
           luaClass: apiDataPath,
           allLuaClassNames,
+          tocData,
           options: pluginOptions,
         },
         exact: true,
