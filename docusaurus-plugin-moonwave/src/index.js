@@ -94,7 +94,55 @@ function parseClassOrder(content, classOrder, nameSet) {
   }
 }
 
-function parseListedApiCategories(luaClass, apiCategories) {
+function parseSimpleApiCategories(luaClass, apiCategories) {
+  const tagSet = new Set(
+    luaClass.functions.filter((func) => func.tags).flatMap((func) => func.tags)
+  )
+
+  // This LuaClass has no special tags, so it can be skipped
+  // if (tagSet.length === 0 || !apiCategories.some((tag) => tagSet.has(tag))) {
+  //   return parseBaseApiCategories(luaClass)
+  // } else {
+  let listedCategories = []
+  apiCategories.forEach((category) => {
+    if (tagSet.has(category)) {
+      listedCategories.push({
+        value: capitalize(category),
+        id: category,
+        children: luaClass.functions
+          .filter((func) => func.tags && func.tags.includes(category))
+          .map((member) => {
+            return {
+              value: addFunctionTypeSymbol(member.name, member.function_type),
+              id: member.name,
+              children: [],
+            }
+          }),
+      })
+    }
+  })
+
+  const baseCategories = SECTIONS.map((section) => ({
+    value: capitalize(section),
+    id: section,
+    children: luaClass[section]
+      .filter(
+        (member) =>
+          !member.tags ||
+          member.tags.some((tag) => !apiCategories.includes(tag))
+      )
+      .map((member) => ({
+        value: addFunctionTypeSymbol(member.name, member.function_type),
+        id: member.name,
+        children: [],
+      })),
+  }))
+
+  return [...listedCategories, ...baseCategories]
+  // }
+}
+
+function parseSectionalApiCategories(luaClass, apiCategories) {
   const functionSet = new Set(luaClass.functions.flatMap((func) => func.name))
 
   const flatApiCategories = apiCategories.flatMap((category) => {
@@ -162,9 +210,16 @@ function parseBaseApiCategories(luaClass) {
 }
 
 function parseApiCategories(luaClass, apiCategories) {
-  if (apiCategories.some((category) => category.class === luaClass.name)) {
-    return parseListedApiCategories(luaClass, apiCategories)
+  if (typeof apiCategories[0] === "string") {
+    // Handles simple apiCategories array assignment
+    return parseSimpleApiCategories(luaClass, apiCategories)
+  } else if (
+    // Handles cases where classOrder is assigned via TOML tables
+    apiCategories.some((category) => category.class === luaClass.name)
+  ) {
+    return parseSectionalApiCategories(luaClass, apiCategories)
   } else {
+    // Handles where no apiCategory config is provided
     return parseBaseApiCategories(luaClass)
   }
 }
