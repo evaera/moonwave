@@ -4,6 +4,8 @@ const { promisify } = require("util")
 const { create } = require("domain")
 const exec = promisify(require("child_process").exec)
 
+const SECTIONS = ["types", "properties", "functions"]
+
 const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
 const breakCapitalWordsZeroWidth = (text) =>
@@ -116,8 +118,6 @@ function parseListedApiCategories(luaClass, apiCategories) {
     }
   })
 
-  console.log(luaClass)
-
   const listedCategories = mappedCategories.map((section) => ({
     value: capitalize(section.category),
     id: section.category,
@@ -132,11 +132,22 @@ function parseListedApiCategories(luaClass, apiCategories) {
     })),
   }))
 
-  return listedCategories
+  const baseCategories = SECTIONS.map((section) => ({
+    value: capitalize(section),
+    id: section,
+    children: luaClass[section]
+      .filter((member) => !flatApiCategories.includes(member.name))
+      .map((member) => ({
+        value: addFunctionTypeSymbol(member.name, member.function_type),
+        id: member.name,
+        children: [],
+      })),
+  }))
+
+  return [...listedCategories, ...baseCategories]
 }
 
 function parseBaseApiCategories(luaClass) {
-  const SECTIONS = ["types", "properties", "functions"]
   const baseCategories = SECTIONS.map((section) => ({
     value: capitalize(section),
     id: section,
@@ -151,18 +162,11 @@ function parseBaseApiCategories(luaClass) {
 }
 
 function parseApiCategories(luaClass, apiCategories) {
-  const tocCategories = { listedCategories: [], baseCategories: [] }
-
   if (apiCategories.some((category) => category.class === luaClass.name)) {
-    tocCategories.listedCategories = parseListedApiCategories(
-      luaClass,
-      apiCategories
-    )
+    return parseListedApiCategories(luaClass, apiCategories)
+  } else {
+    return parseBaseApiCategories(luaClass)
   }
-
-  tocCategories.baseCategories = parseBaseApiCategories(luaClass)
-
-  return [...tocCategories.listedCategories, ...tocCategories.baseCategories]
 }
 
 module.exports = (context, options) => ({
