@@ -120,7 +120,7 @@ function MyFirstClass:taggedFunction(a, b)
 end
 ```
 
-Then to break-out the new table of contents category, specify it under the `apiCategories` option in your `moonwave.toml` file.
+Then, specify those tags under the `apiCategories` option in your `moonwave.toml` file.
 
 ```toml
 apiCategories = [
