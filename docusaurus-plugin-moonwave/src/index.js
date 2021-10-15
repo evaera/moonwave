@@ -1,7 +1,6 @@
 const path = require("path")
 const fs = require("fs")
 const { promisify } = require("util")
-const { create } = require("domain")
 const exec = promisify(require("child_process").exec)
 
 const SECTIONS = ["types", "properties", "functions"]
