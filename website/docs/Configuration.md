@@ -113,7 +113,7 @@ You can also customize the categories in each LuaClass page's table of contents 
 	@param a number -- The first number you want to add
 	@param b number -- The second number you wanna add
 	@return number -- Returns the sum of `a` and `b`
-    @tag utility
+	@tag utility
 ]=]
 function MyFirstClass:taggedFunction(a, b)
 	return a + b
