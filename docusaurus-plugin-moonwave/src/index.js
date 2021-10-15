@@ -117,7 +117,8 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
               id: member.name,
               children: [],
             }
-          }),
+          })
+          .sort((childA, childB) => childA.id.localeCompare(childB.id)),
       })
     }
   })
@@ -135,7 +136,8 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
         value: addFunctionTypeSymbol(member.name, member.function_type),
         id: member.name,
         children: [],
-      })),
+      }))
+      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
   }))
 
   return [...listedCategories, ...baseCategories]
@@ -145,9 +147,9 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
 function parseSectionalApiCategories(luaClass, apiCategories) {
   const functionSet = new Set(luaClass.functions.flatMap((func) => func.name))
 
-  const flatApiCategories = apiCategories.flatMap((category) => {
-    if (category.class === luaClass.name) return category.members
-  })
+  const flatApiCategories = apiCategories
+    .filter((category) => category.class === luaClass.name)
+    .flatMap((category) => category.members)
 
   flatApiCategories.forEach((member) => {
     if (!functionSet.has(member)) {
@@ -157,27 +159,31 @@ function parseSectionalApiCategories(luaClass, apiCategories) {
     }
   })
 
-  const mappedCategories = apiCategories.map((section) => {
-    if (section.class === luaClass.name) {
-      return {
-        category: section.category,
-        members: section.members,
+  const mappedCategories = apiCategories
+    .filter((category) => category.class === luaClass.name)
+    .map((section) => {
+      if (section.class === luaClass.name) {
+        return {
+          category: section.category,
+          members: section.members,
+        }
       }
-    }
-  })
+    })
 
   const listedCategories = mappedCategories.map((section) => ({
     value: capitalize(section.category),
     id: section.category,
-    children: section.members.map((member) => ({
-      value: addFunctionTypeSymbol(
-        member,
-        luaClass["functions"].find((element) => element.name === member)
-          .function_type
-      ),
-      id: member,
-      children: [],
-    })),
+    children: section.members
+      .map((member) => ({
+        value: addFunctionTypeSymbol(
+          member,
+          luaClass["functions"].find((element) => element.name === member)
+            .function_type
+        ),
+        id: member,
+        children: [],
+      }))
+      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
   }))
 
   const baseCategories = SECTIONS.map((section) => ({
@@ -189,7 +195,8 @@ function parseSectionalApiCategories(luaClass, apiCategories) {
         value: addFunctionTypeSymbol(member.name, member.function_type),
         id: member.name,
         children: [],
-      })),
+      }))
+      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
   }))
 
   return [...listedCategories, ...baseCategories]
@@ -199,11 +206,13 @@ function parseBaseApiCategories(luaClass) {
   const baseCategories = SECTIONS.map((section) => ({
     value: capitalize(section),
     id: section,
-    children: luaClass[section].map((member) => ({
-      value: addFunctionTypeSymbol(member.name, member.function_type),
-      id: member.name,
-      children: [],
-    })),
+    children: luaClass[section]
+      .map((member) => ({
+        value: addFunctionTypeSymbol(member.name, member.function_type),
+        id: member.name,
+        children: [],
+      }))
+      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
   }))
 
   return baseCategories
