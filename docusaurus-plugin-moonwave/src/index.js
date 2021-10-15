@@ -93,7 +93,7 @@ function parseClassOrder(content, classOrder, nameSet) {
   }
 }
 
-function parseSimpleApiCategories(luaClass, apiCategories) {
+function parseApiCategories(luaClass, apiCategories) {
   const tagSet = new Set(
     luaClass.functions.filter((func) => func.tags).flatMap((func) => func.tags)
   )
@@ -136,32 +136,6 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
   }))
 
   return [...listedCategories, ...baseCategories]
-}
-
-function parseBaseApiCategories(luaClass) {
-  const baseCategories = SECTIONS.map((section) => ({
-    value: capitalize(section),
-    id: section,
-    children: luaClass[section]
-      .map((member) => ({
-        value: addFunctionTypeSymbol(member.name, member.function_type),
-        id: member.name,
-        children: [],
-      }))
-      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
-  }))
-
-  return baseCategories
-}
-
-function parseApiCategories(luaClass, apiCategories) {
-  if (typeof apiCategories[0] === "string") {
-    // Handles simple apiCategories array assignment
-    return parseSimpleApiCategories(luaClass, apiCategories)
-  } else {
-    // Handles where no apiCategory config is provided
-    return parseBaseApiCategories(luaClass)
-  }
 }
 
 module.exports = (context, options) => ({
