@@ -121,5 +121,10 @@ module.exports = {
         darkTheme: darkCodeTheme,
         additionalLanguages: ["lua", "toml"],
       },
+      algolia: {
+        apiKey: "ddd8b40d995fb5f4f96c2beb39b2997b",
+        indexName: "moonwave",
+        appId: "BH4D9OD16A",
+      },
     }),
 }
