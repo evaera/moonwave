@@ -129,7 +129,7 @@ function parseApiCategories(luaClass, apiCategories) {
           member.tags.some((tag) => !apiCategories.includes(tag))
       )
       .map((member) => ({
-        value: getFunctionCallOperator(member.function_type) + member.name,,
+        value: getFunctionCallOperator(member.function_type) + member.name,
         id: member.name,
         children: [],
       }))
