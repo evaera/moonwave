@@ -98,7 +98,7 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
     luaClass.functions.filter((func) => func.tags).flatMap((func) => func.tags)
   )
 
-  let listedCategories = []
+  const listedCategories = []
   apiCategories.forEach((category) => {
     if (tagSet.has(category)) {
       listedCategories.push({
