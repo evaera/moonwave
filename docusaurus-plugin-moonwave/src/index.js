@@ -99,10 +99,6 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
     luaClass.functions.filter((func) => func.tags).flatMap((func) => func.tags)
   )
 
-  // This LuaClass has no special tags, so it can be skipped
-  // if (tagSet.length === 0 || !apiCategories.some((tag) => tagSet.has(tag))) {
-  //   return parseBaseApiCategories(luaClass)
-  // } else {
   let listedCategories = []
   apiCategories.forEach((category) => {
     if (tagSet.has(category)) {
@@ -141,65 +137,6 @@ function parseSimpleApiCategories(luaClass, apiCategories) {
   }))
 
   return [...listedCategories, ...baseCategories]
-  // }
-}
-
-function parseSectionalApiCategories(luaClass, apiCategories) {
-  const functionSet = new Set(luaClass.functions.flatMap((func) => func.name))
-
-  const flatApiCategories = apiCategories
-    .filter((category) => category.class === luaClass.name)
-    .flatMap((category) => category.members)
-
-  flatApiCategories.forEach((member) => {
-    if (!functionSet.has(member)) {
-      throw new Error(
-        `Moonwave plugin: "${member}" listed in apiCategories "${luaClass.name}" option does not exist`
-      )
-    }
-  })
-
-  const mappedCategories = apiCategories
-    .filter((category) => category.class === luaClass.name)
-    .map((section) => {
-      if (section.class === luaClass.name) {
-        return {
-          category: section.category,
-          members: section.members,
-        }
-      }
-    })
-
-  const listedCategories = mappedCategories.map((section) => ({
-    value: capitalize(section.category),
-    id: section.category,
-    children: section.members
-      .map((member) => ({
-        value: addFunctionTypeSymbol(
-          member,
-          luaClass["functions"].find((element) => element.name === member)
-            .function_type
-        ),
-        id: member,
-        children: [],
-      }))
-      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
-  }))
-
-  const baseCategories = SECTIONS.map((section) => ({
-    value: capitalize(section),
-    id: section,
-    children: luaClass[section]
-      .filter((member) => !flatApiCategories.includes(member.name))
-      .map((member) => ({
-        value: addFunctionTypeSymbol(member.name, member.function_type),
-        id: member.name,
-        children: [],
-      }))
-      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
-  }))
-
-  return [...listedCategories, ...baseCategories]
 }
 
 function parseBaseApiCategories(luaClass) {
@@ -222,11 +159,6 @@ function parseApiCategories(luaClass, apiCategories) {
   if (typeof apiCategories[0] === "string") {
     // Handles simple apiCategories array assignment
     return parseSimpleApiCategories(luaClass, apiCategories)
-  } else if (
-    // Handles cases where classOrder is assigned via TOML tables
-    apiCategories.some((category) => category.class === luaClass.name)
-  ) {
-    return parseSectionalApiCategories(luaClass, apiCategories)
   } else {
     // Handles where no apiCategory config is provided
     return parseBaseApiCategories(luaClass)
