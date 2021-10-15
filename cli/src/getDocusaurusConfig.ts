@@ -1,11 +1,6 @@
 import fs from "fs-extra"
 import path from "path"
-import {
-  ApiCategories,
-  ClassOrder,
-  Config,
-  FoldersEnabled,
-} from "./prepareProject.js"
+import { ClassOrder, Config, FoldersEnabled } from "./prepareProject.js"
 
 export interface GenerateConfigParams {
   codePaths: string[]
@@ -17,7 +12,7 @@ export interface GenerateConfigParams {
   projectDir: string
   binaryPath: string
   classOrder: ClassOrder
-  apiCategories: ApiCategories
+  apiCategories: string[]
 }
 
 export default function getDocusaurusConfig({

@@ -36,15 +36,6 @@ export type ClassOrder = (
     }
 )[]
 
-export type ApiCategories = (
-  | string
-  | {
-      class?: string
-      category: string
-      members: string[]
-    }
-)[]
-
 export type Config = Partial<{
   // Moonwave
   gitRepoUrl: string
@@ -52,7 +43,7 @@ export type Config = Partial<{
   title: string
   changelog: boolean
   classOrder: ClassOrder
-  apiCategories: ApiCategories
+  apiCategories: string[]
 
   // Docusaurus
   docusaurus: Partial<{
