@@ -10,8 +10,8 @@ const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 const breakCapitalWordsZeroWidth = (text) =>
   text.replace(/([A-Z])/g, "\u200B$1") // Adds a zero-width space before each capital letter. This way, the css word-break: break-word; rule can apply correctly
 
-const addFunctionTypeSymbol = (text, type) =>
-  (type === "static" ? "." : type === "method" ? ":" : "") + text
+const getFunctionCallOperator = (type) =>
+  type === "static" ? "." : type === "method" ? ":" : ""
 
 const mapLinks = (nameSet, items) =>
   items.map((name) => {
@@ -108,7 +108,8 @@ function parseApiCategories(luaClass, apiCategories) {
           .filter((func) => func.tags && func.tags.includes(category))
           .map((member) => {
             return {
-              value: addFunctionTypeSymbol(member.name, member.function_type),
+              value:
+                getFunctionCallOperator(member.function_type) + member.name,
               id: member.name,
               children: [],
             }
@@ -128,7 +129,7 @@ function parseApiCategories(luaClass, apiCategories) {
           member.tags.some((tag) => !apiCategories.includes(tag))
       )
       .map((member) => ({
-        value: addFunctionTypeSymbol(member.name, member.function_type),
+        value: getFunctionCallOperator(member.function_type) + member.name,,
         id: member.name,
         children: [],
       }))
