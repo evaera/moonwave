@@ -104,7 +104,7 @@ classes = ["Class7", "ClassAte", "Class9"]
 
 ### Table of Contents (TOC)
 
-You can also customize the categories in each LuaClass page's table of contents (TOC). To add a category, first add it as a `tag` field within a doc comment for a class's function.
+You can customize categories in the Table of Contents of each API page. To create a category, first tag all items that should be included in the category with the `@tag` tag.
 
 ```lua
 --[=[
