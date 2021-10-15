@@ -173,7 +173,7 @@ export default function LuaClass({
           ) {
             return 1
           }
-          return memberA.name.localeCompare(memberB.name)
+          return 0
         }
       })
   })
