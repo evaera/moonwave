@@ -2,9 +2,48 @@ import React from "react"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
 
+const robloxTypes = [
+  "any",
+  "nil",
+  "boolean",
+  "number",
+  "string",
+  "function",
+  "userdata",
+  "thread",
+  "table",
+]
+
+const getDocsUrl = (dataType) => {
+  switch (dataType) {
+    case "any":
+      return "https://www.lua.org/manual/5.4/manual.html#2.1"
+    case "nil":
+      return "https://developer.roblox.com/en-us/articles/Nil"
+    case "boolean":
+      return "https://developer.roblox.com/en-us/articles/Boolean"
+    case "number":
+      return "https://www.lua.org/manual/5.4/manual.html#2.1"
+    case "string":
+      return "https://developer.roblox.com/en-us/api-reference/lua-docs/string"
+    case "function":
+      return "https://developer.roblox.com/en-us/articles/Function"
+    case "userdata":
+      return "https://developer.roblox.com/en-us/articles/Metatables"
+    case "thread":
+      return "https://www.lua.org/manual/5.4/manual.html#2.6"
+    case "table":
+      return "https://developer.roblox.com/en-us/api-reference/lua-docs/table"
+    default:
+      return "https://developer.roblox.com/en-us/api-reference"
+  }
+}
+
 const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
+
+const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
 function tokenize(code, isGroup) {
   let position = 0
@@ -181,18 +220,25 @@ function Token({ token, depth }) {
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
-      return <code className={styles.blue}>{token.luaType}</code>
+      if (robloxTypes.includes(token.luaType)) {
+        return (
+          <code className={styles.blue}>
+            <a
+              style={{ textDecoration: "underline", color: "inherit" }}
+              href={getDocsUrl(token.luaType)}
+            >
+              {token.luaType}
+            </a>
+          </code>
+        )
+      } else return <code className={styles.blue}>{token.luaType}</code>
     default:
       return <span>unknown token {Object.keys(token)[0]}</span>
   }
 }
 
 export default function LuaType({ code }) {
-  if (true) {
-    const tokens = tokenize(code)
+  const tokens = tokenize(code)
 
-    return <Token token={{ root: tokens }} />
-  }
-
-  return <code className={styles.blue}>{code}</code>
+  return <Token token={{ root: tokens }} />
 }
