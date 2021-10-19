@@ -238,6 +238,7 @@
 
 :global pre[class*="language-"][class*="language-"] {
   padding: 1rem;
+  margin: 0;
 }
 
 :global code[class*="language-"][class*="language-"] {
