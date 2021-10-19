@@ -3,8 +3,6 @@ const fs = require("fs")
 const { promisify } = require("util")
 const exec = promisify(require("child_process").exec)
 
-const SECTIONS = ["types", "properties", "functions"]
-
 const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
 const breakCapitalWordsZeroWidth = (text) =>
@@ -94,49 +92,64 @@ function parseClassOrder(content, classOrder, nameSet) {
 }
 
 function parseApiCategories(luaClass, apiCategories) {
-  const tagSet = new Set(
-    luaClass.functions.filter((func) => func.tags).flatMap((func) => func.tags)
-  )
+  const tocData = []
 
-  const listedCategories = []
-  apiCategories.forEach((category) => {
-    if (tagSet.has(category)) {
-      listedCategories.push({
-        value: capitalize(category),
-        id: category,
-        children: luaClass.functions
-          .filter((func) => func.tags && func.tags.includes(category))
-          .map((member) => {
-            return {
-              value:
-                getFunctionCallOperator(member.function_type) + member.name,
-              id: member.name,
-              children: [],
-            }
-          })
-          .sort((childA, childB) => childA.id.localeCompare(childB.id)),
-      })
-    }
-  })
+  // Loop through each member type of a LuaClass and check if it has any tagged children. If the tags match any tag provided by the user with the apiCategories config option, add it to it's own subheading in the table of contents
+  const SECTIONS = ["types", "properties", "functions"]
+  SECTIONS.forEach((section) => {
+    const tagSet = new Set(
+      luaClass[section].filter((func) => func.tags).flatMap((func) => func.tags)
+    )
 
-  const baseCategories = SECTIONS.map((section) => ({
-    value: capitalize(section),
-    id: section,
-    children: luaClass[section]
+    const sectionChildren = []
+
+    apiCategories.forEach((category) => {
+      if (tagSet.has(category)) {
+        const apiCategoryChild = []
+
+        apiCategoryChild.push({
+          value: capitalize(category),
+          id: category,
+          children: luaClass[section]
+            .filter((func) => func.tags && func.tags.includes(category))
+            .map((member) => {
+              return {
+                value:
+                  getFunctionCallOperator(member.function_type) + member.name,
+                id: member.name,
+                children: [],
+              }
+            })
+            .sort((childA, childB) => childA.id.localeCompare(childB.id)),
+        })
+
+        sectionChildren.push(...apiCategoryChild)
+      }
+    })
+
+    const baseCategories = luaClass[section]
       .filter(
         (member) =>
           !member.tags ||
-          member.tags.some((tag) => !apiCategories.includes(tag))
+          !member.tags.some((tag) => apiCategories.includes(tag))
       )
       .map((member) => ({
         value: getFunctionCallOperator(member.function_type) + member.name,
         id: member.name,
         children: [],
       }))
-      .sort((childA, childB) => childA.id.localeCompare(childB.id)),
-  }))
+      .sort((childA, childB) => childA.id.localeCompare(childB.id))
 
-  return [...listedCategories, ...baseCategories]
+    sectionChildren.push(...baseCategories)
+
+    tocData.push({
+      value: capitalize(section),
+      id: section,
+      children: sectionChildren,
+    })
+  })
+
+  return [...tocData]
 }
 
 module.exports = (context, options) => ({
