@@ -87,6 +87,10 @@ export default function getDocusaurusConfig({
         }. Built with Moonwave and Docusaurus.`,
         ...config.footer,
       },
+
+      colorMode: {
+        respectPrefersColorScheme: true,
+      },
     },
     plugins: [
       [
