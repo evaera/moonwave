@@ -119,7 +119,9 @@ function getConfig(projectDir: string): Config {
   // Default values for docusaurus.config.js belong in getDocusaurusConfig
   return {
     title: repoName,
-    gitRepoUrl,
+    gitRepoUrl: gitRepoUrl?.includes("git@")
+      ? `https://github.com/${repoAuthor}/${repoName}`
+      : gitRepoUrl,
     changelog: true,
     ...config,
 
