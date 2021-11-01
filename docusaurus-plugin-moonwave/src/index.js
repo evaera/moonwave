@@ -125,7 +125,9 @@ module.exports = (context, options) => ({
   },
 
   async contentLoaded({ content, actions: { addRoute, createData } }) {
-    content.sort((a, b) => {
+    const filteredContent = content.filter((luaClass) => !luaClass.ignore)
+
+    filteredContent.sort((a, b) => {
       if (a.name < b.name) {
         return -1
       } else if (a.name > b.name) {
@@ -136,12 +138,12 @@ module.exports = (context, options) => ({
     })
 
     const nameSet = new Set()
-    content.forEach((luaClass) => nameSet.add(luaClass.name))
+    filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
 
     const classOrder = options.classOrder
 
     const allLuaClassNamesOrdered = parseClassOrder(
-      content,
+      filteredContent,
       classOrder,
       nameSet
     )
@@ -171,7 +173,7 @@ module.exports = (context, options) => ({
       },
     })
 
-    for (const luaClass of content) {
+    for (const luaClass of filteredContent) {
       const apiDataPath = await createData(
         `${luaClass.name}.json`,
         JSON.stringify(luaClass)
