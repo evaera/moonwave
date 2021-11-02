@@ -18,7 +18,7 @@
     "@docusaurus/preset-classic": "^2.0.0-beta.8",
     "@mdx-js/react": "^1.6.21",
     "clsx": "^1.1.1",
-    "docusaurus-lunr-search": "github:RileyAbr/docusaurus-lunr-search#fix-react-version",
+    "docusaurus-lunr-search": "^2.1.15",
     "docusaurus-plugin-moonwave": "^0.2.10",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
