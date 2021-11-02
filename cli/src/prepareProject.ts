@@ -122,12 +122,6 @@ function getConfig(projectDir: string): Config {
   const [, repoAuthor, repoName] =
     gitRepoUrl?.match(/^https?:\/\/.+\/(.+)\/(.+)$/) || []
 
-  const testInfo = {
-    gitRepoUrl,
-    repoAuthor,
-    repoName,
-  }
-
   const config = readConfig(projectDir)
 
   // Note: Only copying values from other places in the config should go here.
