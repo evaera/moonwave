@@ -34,7 +34,7 @@ Requirements:
 - [Rust 1.54.0 and Cargo](https://rustup.rs/)
 
 1. Clone this repository
-2. in `cli`, run `npm i`, and `npm link`
+2. in `cli`, run `npm i`, `npm run tsc`, and `npm link`
 3. in `docusaurus-plugin-moonwave`, run `npm i`
 4. in `extractor`, run `cargo install --path . --locked`
 5. in `cli`, run `npm run dev`
