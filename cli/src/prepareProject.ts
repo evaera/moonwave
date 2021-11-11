@@ -43,6 +43,7 @@ export type Config = Partial<{
   title: string
   changelog: boolean
   classOrder: ClassOrder
+  apiCategories: string[]
 
   // Docusaurus
   docusaurus: Partial<{
@@ -385,6 +386,7 @@ export function prepareProject(
     changelogExists,
     projectDir,
     classOrder: config.classOrder ?? [],
+    apiCategories: config.apiCategories ?? [],
   })
 
   // TODO: Hash package.json / lockfile and additionally reinstall when changed

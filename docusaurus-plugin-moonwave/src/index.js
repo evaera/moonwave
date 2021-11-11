@@ -3,8 +3,13 @@ const fs = require("fs")
 const { promisify } = require("util")
 const exec = promisify(require("child_process").exec)
 
+const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
+
 const breakCapitalWordsZeroWidth = (text) =>
   text.replace(/([A-Z])/g, "\u200B$1") // Adds a zero-width space before each capital letter. This way, the css word-break: break-word; rule can apply correctly
+
+const getFunctionCallOperator = (type) =>
+  type === "static" ? "." : type === "method" ? ":" : ""
 
 const mapLinks = (nameSet, items) =>
   items.map((name) => {
@@ -86,6 +91,71 @@ function parseClassOrder(content, classOrder, nameSet) {
   }
 }
 
+function parseApiCategories(luaClass, apiCategories) {
+  const tocData = []
+
+  // Loop through each member type of a LuaClass and check if it has any tagged children. If the tags match any tag provided by the user with the apiCategories config option, add it to it's own subheading in the table of contents
+  const SECTIONS = ["types", "properties", "functions"]
+  SECTIONS.forEach((section) => {
+    const tagSet = new Set(
+      luaClass[section]
+        .filter((member) => member.tags)
+        .flatMap((member) => member.tags)
+    )
+
+    const sectionChildren = []
+
+    for (const category of apiCategories) {
+      if (!tagSet.has(category)) {
+        continue
+      }
+
+      const apiCategoryChild = []
+
+      apiCategoryChild.push({
+        value: capitalize(category),
+        id: category,
+        children: luaClass[section]
+          .filter((member) => member.tags && member.tags.includes(category))
+          .map((member) => {
+            return {
+              value:
+                getFunctionCallOperator(member.function_type) + member.name,
+              id: member.name,
+              children: [],
+            }
+          })
+          .sort((childA, childB) => childA.value.localeCompare(childB.value)),
+      })
+
+      sectionChildren.push(...apiCategoryChild)
+    }
+
+    const baseCategories = luaClass[section]
+      .filter(
+        (member) =>
+          !member.tags ||
+          !member.tags.some((tag) => apiCategories.includes(tag))
+      )
+      .map((member) => ({
+        value: getFunctionCallOperator(member.function_type) + member.name,
+        id: member.name,
+        children: [],
+      }))
+      .sort((childA, childB) => childA.value.localeCompare(childB.value))
+
+    sectionChildren.push(...baseCategories)
+
+    tocData.push({
+      value: capitalize(section),
+      id: section,
+      children: sectionChildren,
+    })
+  })
+
+  return [...tocData]
+}
+
 module.exports = (context, options) => ({
   name: "docusaurus-plugin-moonwave",
 
@@ -141,6 +211,7 @@ module.exports = (context, options) => ({
     filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
 
     const classOrder = options.classOrder
+    const apiCategories = options.apiCategories
 
     const allLuaClassNamesOrdered = parseClassOrder(
       filteredContent,
@@ -160,6 +231,7 @@ module.exports = (context, options) => ({
         sourceUrl: options.sourceUrl,
         baseUrl: baseUrl,
         classOrder: classOrder,
+        apiCategories: apiCategories,
       })
     )
 
@@ -179,6 +251,13 @@ module.exports = (context, options) => ({
         JSON.stringify(luaClass)
       )
 
+      const tocDataOrdered = parseApiCategories(luaClass, apiCategories)
+
+      const tocData = await createData(
+        `${luaClass.name}-toc.json`,
+        JSON.stringify(tocDataOrdered)
+      )
+
       console.log(`Adding path /api/${luaClass.name}`)
 
       addRoute({
@@ -187,6 +266,7 @@ module.exports = (context, options) => ({
         modules: {
           luaClass: apiDataPath,
           allLuaClassNames,
+          tocData,
           options: pluginOptions,
         },
         exact: true,

@@ -12,6 +12,7 @@ export interface GenerateConfigParams {
   projectDir: string
   binaryPath: string
   classOrder: ClassOrder
+  apiCategories: string[]
 }
 
 export default function getDocusaurusConfig({
@@ -24,6 +25,7 @@ export default function getDocusaurusConfig({
   projectDir,
   binaryPath,
   classOrder,
+  apiCategories,
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
@@ -100,6 +102,7 @@ export default function getDocusaurusConfig({
           sourceUrl: gitRepoUrl + `/blob/${config.gitSourceBranch ?? "master"}`,
           projectDir,
           classOrder,
+          apiCategories,
           binaryPath,
         },
       ],
