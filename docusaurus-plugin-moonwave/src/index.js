@@ -138,7 +138,7 @@ function parseApiCategories(luaClass, apiCategories) {
         id: member.name,
         children: [],
       }))
-      .sort((childA, childB) => childA.id.localeCompare(childB.id))
+      .sort((childA, childB) => childA.value.localeCompare(childB.value))
 
     sectionChildren.push(...baseCategories)
 
