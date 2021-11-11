@@ -90,7 +90,16 @@ function getGitRepoUrl(): string | undefined {
   const gitConfig = parseGitConfig.sync()
 
   if (gitConfig) {
-    return gitConfig['remote "origin"']?.url?.replace(/\.git$/, "")
+    if (gitConfig['remote "origin"']?.url?.includes("git@")) {
+      const [, repoHostSite, repoAuthor, repoName] = gitConfig[
+        'remote "origin"'
+      ]?.url
+        .replace(/\.git$/, "")
+        .match(/^git@+(.+):(.+)\/(.+)$/)
+      return `https://${repoHostSite}/${repoAuthor}/${repoName}`
+    } else {
+      return gitConfig['remote "origin"']?.url?.replace(/\.git$/, "")
+    }
   }
 }
 
@@ -120,7 +129,7 @@ function getConfig(projectDir: string): Config {
   // Default values for docusaurus.config.js belong in getDocusaurusConfig
   return {
     title: repoName,
-    gitRepoUrl,
+    gitRepoUrl: gitRepoUrl,
     changelog: true,
     ...config,
 
