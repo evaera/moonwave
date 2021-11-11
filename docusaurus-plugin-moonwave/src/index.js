@@ -98,34 +98,38 @@ function parseApiCategories(luaClass, apiCategories) {
   const SECTIONS = ["types", "properties", "functions"]
   SECTIONS.forEach((section) => {
     const tagSet = new Set(
-      luaClass[section].filter((func) => func.tags).flatMap((func) => func.tags)
+      luaClass[section]
+        .filter((member) => member.tags)
+        .flatMap((member) => member.tags)
     )
 
     const sectionChildren = []
 
-    apiCategories.forEach((category) => {
-      if (tagSet.has(category)) {
-        const apiCategoryChild = []
-
-        apiCategoryChild.push({
-          value: capitalize(category),
-          id: category,
-          children: luaClass[section]
-            .filter((func) => func.tags && func.tags.includes(category))
-            .map((member) => {
-              return {
-                value:
-                  getFunctionCallOperator(member.function_type) + member.name,
-                id: member.name,
-                children: [],
-              }
-            })
-            .sort((childA, childB) => childA.id.localeCompare(childB.id)),
-        })
-
-        sectionChildren.push(...apiCategoryChild)
+    for (const category of apiCategories) {
+      if (!tagSet.has(category)) {
+        continue
       }
-    })
+
+      const apiCategoryChild = []
+
+      apiCategoryChild.push({
+        value: capitalize(category),
+        id: category,
+        children: luaClass[section]
+          .filter((member) => member.tags && member.tags.includes(category))
+          .map((member) => {
+            return {
+              value:
+                getFunctionCallOperator(member.function_type) + member.name,
+              id: member.name,
+              children: [],
+            }
+          })
+          .sort((childA, childB) => childA.value.localeCompare(childB.value)),
+      })
+
+      sectionChildren.push(...apiCategoryChild)
+    }
 
     const baseCategories = luaClass[section]
       .filter(
