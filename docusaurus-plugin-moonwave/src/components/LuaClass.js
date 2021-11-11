@@ -105,7 +105,7 @@ const PrivateToggle = ({ showPrivate, setShowPrivate }) => (
 
 export default function LuaClass({
   luaClass: rawLuaClass,
-  allLuaClassNames,
+  sidebarClassNames,
   options,
 }) {
   const [showPrivate, setShowPrivate] = useState(false)
@@ -216,7 +216,7 @@ export default function LuaClass({
         >
           <DocSidebar
             path={`/api/${luaClass.name}`}
-            sidebar={allLuaClassNames}
+            sidebar={sidebarClassNames}
             isHidden={hiddenSidebar}
             onCollapse={toggleSidebar}
           />

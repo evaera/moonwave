@@ -148,7 +148,7 @@ module.exports = (context, options) => ({
       nameSet
     )
 
-    const allLuaClassNames = await createData(
+    const sidebarClassNames = await createData(
       "sidebar.json",
       JSON.stringify(allLuaClassNamesOrdered)
     )
@@ -168,7 +168,7 @@ module.exports = (context, options) => ({
       exact: true,
       component: path.resolve(__dirname, "components/Redirect.js"),
       modules: {
-        allLuaClassNames,
+        sidebarClassNames,
         pluginOptions,
       },
     })
@@ -186,7 +186,8 @@ module.exports = (context, options) => ({
         component: path.resolve(__dirname, "components/LuaClass.js"),
         modules: {
           luaClass: apiDataPath,
-          allLuaClassNames,
+          sidebarClassNames,
+          luaClassNames: nameSet,
           options: pluginOptions,
         },
         exact: true,
