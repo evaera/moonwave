@@ -311,6 +311,48 @@ function copyContentFolders(
   ) as FoldersEnabled
 }
 
+function needsCompleteRebuild(tempDir: string): boolean {
+  if (process.env.MOONWAVE_DEV) {
+    // We do fancy things to package.json in dev mode, which causes this code to always think a rebuild is needed
+    return false
+  }
+
+  if (
+    !fs.existsSync(tempDir) ||
+    !fs.existsSync(path.join(tempDir, "package.json")) ||
+    !fs.existsSync(path.join(tempDir, "package-lock.json"))
+  ) {
+    console.log(
+      "Moonwave: package.json or package-lock.json does not exist, rebuilding..."
+    )
+    return true
+  }
+
+  if (
+    !fs
+      .readFileSync(path.join(ROOT_PATH, "package.json"))
+      .equals(fs.readFileSync(path.join(tempDir, "package.json")))
+  ) {
+    console.log(
+      "Moonwave: package.json differs from cached files, rebuilding..."
+    )
+    return true
+  }
+
+  if (
+    !fs
+      .readFileSync(path.join(ROOT_PATH, "package-lock.json"))
+      .equals(fs.readFileSync(path.join(tempDir, "package-lock.json")))
+  ) {
+    console.log(
+      "Moonwave: package-lock.json differs from cached files, rebuilding..."
+    )
+    return true
+  }
+
+  return false
+}
+
 export interface PreparedProject {
   tempDir: string
   projectDir: string
@@ -337,7 +379,10 @@ export function prepareProject(
   const folderName = projectDir.split(path.sep).slice(-1)[0] ?? "unknown"
   const tempDir = path.join(os.tmpdir(), "moonwave", folderName)
 
-  if (options.install && fs.existsSync(tempDir)) {
+  if (
+    (options.install && fs.existsSync(tempDir)) ||
+    needsCompleteRebuild(tempDir)
+  ) {
     console.log(
       `Deleting ${tempDir} for complete re-install, this may take a while...`
     )
@@ -398,7 +443,6 @@ export function prepareProject(
     apiCategories: config.apiCategories ?? [],
   })
 
-  // TODO: Hash package.json / lockfile and additionally reinstall when changed
   if (!fs.existsSync(path.join(tempDir, "./node_modules"))) {
     console.log("Installing dependencies (this might take awhile)...")
 
