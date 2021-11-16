@@ -148,6 +148,11 @@ module.exports = (context, options) => ({
       nameSet
     )
 
+    const luaClassNames = await createData(
+      "allLuaClasses.json",
+      JSON.stringify([...nameSet])
+    )
+
     const sidebarClassNames = await createData(
       "sidebar.json",
       JSON.stringify(allLuaClassNamesOrdered)
@@ -187,7 +192,7 @@ module.exports = (context, options) => ({
         modules: {
           luaClass: apiDataPath,
           sidebarClassNames,
-          luaClassNames: nameSet,
+          luaClassNames,
           options: pluginOptions,
         },
         exact: true,
