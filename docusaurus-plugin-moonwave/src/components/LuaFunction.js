@@ -9,21 +9,23 @@ import { PrOp } from "./Syntax"
 
 const H3 = Heading("h3")
 
-const Param = ({ name, lua_type }) => (
+const Param = ({ name, lua_type, baseUrl, luaClassNames }) => (
   <>
     <code>{name}:&nbsp;</code>
-    <LuaType code={lua_type} />
+    <LuaType code={lua_type} baseUrl={baseUrl} luaClassNames={luaClassNames} />
   </>
 )
 
 export default function LuaFunction({
   luaClassName,
+  luaClassNames,
   name,
   params,
   returns,
   desc,
   function_type: functionType,
   errors,
+  baseUrl,
 }) {
   return (
     <>
@@ -35,13 +37,23 @@ export default function LuaFunction({
         <code className={styles.green}>{name}</code>
         <PrOp>(</PrOp>
         {params.length < 2 && (!params[0] || !params[0].desc) ? (
-          params[0] && <Param {...params[0]} />
+          params[0] && (
+            <Param
+              {...params[0]}
+              baseUrl={baseUrl}
+              luaClassNames={luaClassNames}
+            />
+          )
         ) : (
           <>
             <div className={styles.inset}>
               {params.map((param, index) => (
                 <div key={index}>
-                  <Param {...param} />
+                  <Param
+                    {...param}
+                    baseUrl={baseUrl}
+                    luaClassNames={luaClassNames}
+                  />
                   {index !== params.length - 1 && <code>,</code>}
                   {param.desc && <InlineDescription content={param.desc} />}
                 </div>
@@ -53,7 +65,11 @@ export default function LuaFunction({
         {returns.length !== 1 && <PrOp>(</PrOp>}
         {returns.length === 1 ? (
           <>
-            <LuaType code={returns[0].lua_type} />
+            <LuaType
+              code={returns[0].lua_type}
+              baseUrl={baseUrl}
+              luaClassNames={luaClassNames}
+            />
             {returns[0].desc && <InlineDescription content={returns[0].desc} />}
           </>
         ) : (
@@ -61,7 +77,11 @@ export default function LuaFunction({
             <div className={styles.inset}>
               {returns.map((ret, index) => (
                 <div key={index}>
-                  <LuaType code={ret.lua_type} />
+                  <LuaType
+                    code={ret.lua_type}
+                    baseUrl={baseUrl}
+                    luaClassNames={luaClassNames}
+                  />
                   {index !== returns.length - 1 && <code>,</code>}
                   {ret.desc && <InlineDescription content={ret.desc} />}
                 </div>
