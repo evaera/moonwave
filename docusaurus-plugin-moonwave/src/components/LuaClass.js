@@ -45,10 +45,12 @@ const breakCapitalWords = (text) =>
 
 const ClassSection = ({
   luaClass,
+  luaClassNames,
   section,
   filter,
   component: Component,
   sourceUrl,
+  baseUrl,
 }) => {
   const members = luaClass[section].filter(filter || (() => true))
 
@@ -61,7 +63,12 @@ const ClassSection = ({
       <Title id={section}>{capitalize(section)}</Title>
       {members.map((member, key) => (
         <ClassMember key={key} {...member} sourceUrl={sourceUrl}>
-          <Component luaClassName={luaClass.name} {...member} />
+          <Component
+            luaClassName={luaClass.name}
+            luaClassNames={luaClassNames}
+            {...member}
+            baseUrl={baseUrl}
+          />
         </ClassMember>
       ))}
     </>
@@ -106,6 +113,7 @@ const PrivateToggle = ({ showPrivate, setShowPrivate }) => (
 export default function LuaClass({
   luaClass: rawLuaClass,
   sidebarClassNames,
+  luaClassNames,
   options,
 }) {
   const [showPrivate, setShowPrivate] = useState(false)
@@ -310,9 +318,11 @@ export default function LuaClass({
                         <ClassSection
                           key={section.name}
                           luaClass={luaClass}
+                          luaClassNames={luaClassNames}
                           section={section.name}
                           component={section.component}
                           sourceUrl={options.sourceUrl}
+                          baseUrl={options.baseUrl}
                         />
                       ))}
                     </div>
