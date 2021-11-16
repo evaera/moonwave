@@ -1,3 +1,4 @@
+import Link from "@docusaurus/Link"
 import React from "react"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
@@ -172,14 +173,19 @@ function groupTuples(tokens) {
   })
 }
 
-function Tuple({ tuple, depth }) {
+function Tuple({ tuple, depth, baseUrl, luaClassNames }) {
   if (tuple.length > 1) {
     return (
       <>
         <Op depth={depth}>(</Op>
         {tuple.map((tokens, i) => (
           <div className={styles.inset} key={i}>
-            <Tokens tokens={tokens} depth={depth} />
+            <Tokens
+              tokens={tokens}
+              depth={depth}
+              baseUrl={baseUrl}
+              luaClassNames={luaClassNames}
+            />
             {i !== tuple.length - 1 && <Op depth={depth}>,</Op>}
           </div>
         ))}
@@ -191,22 +197,49 @@ function Tuple({ tuple, depth }) {
   return (
     <>
       <Op depth={depth}>(</Op>
-      <Tokens tokens={tuple[0]} depth={depth} />
+      <Tokens
+        tokens={tuple[0]}
+        depth={depth}
+        baseUrl={baseUrl}
+        luaClassNames={luaClassNames}
+      />
       <Op depth={depth}>)</Op>
     </>
   )
 }
 
-function Tokens({ tokens, depth }) {
-  return tokens.map((token, i) => <Token key={i} token={token} depth={depth} />)
+function Tokens({ tokens, depth, baseUrl, luaClassNames }) {
+  return tokens.map((token, i) => (
+    <Token
+      key={i}
+      token={token}
+      depth={depth}
+      baseUrl={baseUrl}
+      luaClassNames={luaClassNames}
+    />
+  ))
 }
 
-function Token({ token, depth }) {
+function Token({ token, depth, baseUrl, luaClassNames }) {
   switch (Object.keys(token)[0]) {
     case "root":
-      return <Tokens tokens={token.root} depth={0} />
+      return (
+        <Tokens
+          tokens={token.root}
+          depth={0}
+          baseUrl={baseUrl}
+          luaClassNames={luaClassNames}
+        />
+      )
     case "tuple":
-      return <Tuple tuple={token.tuple} depth={depth + 1} />
+      return (
+        <Tuple
+          tuple={token.tuple}
+          depth={depth + 1}
+          baseUrl={baseUrl}
+          luaClassNames={luaClassNames}
+        />
+      )
     case "identifier":
       return (
         <>
@@ -220,7 +253,22 @@ function Token({ token, depth }) {
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
-      if (robloxTypes.includes(token.luaType)) {
+      // Checks if the type is in the list of LuaClasses for the package
+      if (luaClassNames.includes(token.luaType.replaceAll("...", ""))) {
+        return (
+          <code className={styles.blue}>
+            <Link
+              style={{ textDecoration: "underline", color: "inherit" }}
+              to={`${baseUrl}api/${token.luaType}`}
+            >
+              {token.luaType}
+            </Link>
+          </code>
+        )
+      }
+
+      // Checks if the type is one of Roblox's native types
+      if (robloxTypes.includes(token.luaType.replaceAll("...", ""))) {
         return (
           <code className={styles.blue}>
             <a
@@ -237,8 +285,14 @@ function Token({ token, depth }) {
   }
 }
 
-export default function LuaType({ code }) {
+export default function LuaType({ code, baseUrl, luaClassNames }) {
   const tokens = tokenize(code)
 
-  return <Token token={{ root: tokens }} />
+  return (
+    <Token
+      token={{ root: tokens }}
+      baseUrl={baseUrl}
+      luaClassNames={luaClassNames}
+    />
+  )
 }
