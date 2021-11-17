@@ -2,6 +2,7 @@ const path = require("path")
 const fs = require("fs")
 const { promisify } = require("util")
 const exec = promisify(require("child_process").exec)
+const { generateRobloxTypes } = require("./generateRobloxTypes")
 
 const breakCapitalWordsZeroWidth = (text) =>
   text.replace(/([A-Z])/g, "\u200B$1") // Adds a zero-width space before each capital letter. This way, the css word-break: break-word; rule can apply correctly
@@ -153,6 +154,12 @@ module.exports = (context, options) => ({
       JSON.stringify([...nameSet])
     )
 
+    const robloxTypesData = await generateRobloxTypes()
+    const robloxTypes = await createData(
+      "robloxTypes.json",
+      JSON.stringify(robloxTypesData)
+    )
+
     const sidebarClassNames = await createData(
       "sidebar.json",
       JSON.stringify(allLuaClassNamesOrdered)
@@ -193,6 +200,7 @@ module.exports = (context, options) => ({
           luaClass: apiDataPath,
           sidebarClassNames,
           luaClassNames,
+          robloxTypes,
           options: pluginOptions,
         },
         exact: true,
