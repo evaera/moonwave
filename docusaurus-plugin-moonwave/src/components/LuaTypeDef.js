@@ -4,21 +4,31 @@ import LuaType from "./LuaType"
 import Markdown from "./Markdown"
 import styles from "./styles.module.css"
 
-const TypeAlias = ({ name, luaType, baseUrl, luaClassNames }) => (
+const TypeAlias = ({ name, luaType, baseUrl, luaClassNames, robloxTypes }) => (
   <>
     <code className={styles.purple}>type</code> <code>{name} = </code>{" "}
-    <LuaType code={luaType} baseUrl={baseUrl} luaClassNames={luaClassNames} />
+    <LuaType
+      code={luaType}
+      baseUrl={baseUrl}
+      luaClassNames={luaClassNames}
+      robloxTypes={robloxTypes}
+    />
   </>
 )
 
-const Param = ({ name, luaType, baseUrl, luaClassNames }) => (
+const Param = ({ name, luaType, baseUrl, luaClassNames, robloxTypes }) => (
   <>
     <code>{name}:&nbsp;</code>
-    <LuaType code={luaType} baseUrl={baseUrl} luaClassNames={luaClassNames} />
+    <LuaType
+      code={luaType}
+      baseUrl={baseUrl}
+      luaClassNames={luaClassNames}
+      robloxTypes={robloxTypes}
+    />
   </>
 )
 
-const Interface = ({ name, fields, baseUrl, luaClassNames }) => (
+const Interface = ({ name, fields, baseUrl, luaClassNames, robloxTypes }) => (
   <>
     <code className={styles.purple}>interface</code>{" "}
     <code>
@@ -32,6 +42,7 @@ const Interface = ({ name, fields, baseUrl, luaClassNames }) => (
             luaType={luaType}
             baseUrl={baseUrl}
             luaClassNames={luaClassNames}
+            robloxTypes={robloxTypes}
           />
           {desc && <InlineDescription content={desc} />}
         </div>
@@ -44,6 +55,7 @@ const Interface = ({ name, fields, baseUrl, luaClassNames }) => (
 export default function LuaTypeDef({
   luaClassName,
   luaClassNames,
+  robloxTypes,
   name,
   desc,
   lua_type: luaType,
@@ -59,6 +71,7 @@ export default function LuaTypeDef({
             luaType={luaType}
             baseUrl={baseUrl}
             luaClassNames={luaClassNames}
+            robloxTypes={robloxTypes}
           />
         ) : (
           <Interface
@@ -66,6 +79,7 @@ export default function LuaTypeDef({
             fields={fields}
             baseUrl={baseUrl}
             luaClassNames={luaClassNames}
+            robloxTypes={robloxTypes}
           />
         )}
       </div>

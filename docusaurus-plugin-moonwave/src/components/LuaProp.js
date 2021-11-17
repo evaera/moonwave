@@ -6,6 +6,7 @@ import styles from "./styles.module.css"
 export default function LuaProp({
   luaClassName,
   luaClassNames,
+  robloxTypes,
   name,
   desc,
   lua_type: luaType,
@@ -21,6 +22,7 @@ export default function LuaProp({
           code={luaType}
           baseUrl={baseUrl}
           luaClassNames={luaClassNames}
+          robloxTypes={robloxTypes}
         />
       </div>
       <Markdown content={desc} />

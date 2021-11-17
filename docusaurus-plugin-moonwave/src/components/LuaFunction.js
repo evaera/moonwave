@@ -9,16 +9,22 @@ import { PrOp } from "./Syntax"
 
 const H3 = Heading("h3")
 
-const Param = ({ name, lua_type, baseUrl, luaClassNames }) => (
+const Param = ({ name, lua_type, baseUrl, luaClassNames, robloxTypes }) => (
   <>
     <code>{name}:&nbsp;</code>
-    <LuaType code={lua_type} baseUrl={baseUrl} luaClassNames={luaClassNames} />
+    <LuaType
+      code={lua_type}
+      baseUrl={baseUrl}
+      luaClassNames={luaClassNames}
+      robloxTypes={robloxTypes}
+    />
   </>
 )
 
 export default function LuaFunction({
   luaClassName,
   luaClassNames,
+  robloxTypes,
   name,
   params,
   returns,
@@ -42,6 +48,7 @@ export default function LuaFunction({
               {...params[0]}
               baseUrl={baseUrl}
               luaClassNames={luaClassNames}
+              robloxTypes={robloxTypes}
             />
           )
         ) : (
@@ -53,6 +60,7 @@ export default function LuaFunction({
                     {...param}
                     baseUrl={baseUrl}
                     luaClassNames={luaClassNames}
+                    robloxTypes={robloxTypes}
                   />
                   {index !== params.length - 1 && <code>,</code>}
                   {param.desc && <InlineDescription content={param.desc} />}
@@ -69,6 +77,7 @@ export default function LuaFunction({
               code={returns[0].lua_type}
               baseUrl={baseUrl}
               luaClassNames={luaClassNames}
+              robloxTypes={robloxTypes}
             />
             {returns[0].desc && <InlineDescription content={returns[0].desc} />}
           </>
@@ -81,6 +90,7 @@ export default function LuaFunction({
                     code={ret.lua_type}
                     baseUrl={baseUrl}
                     luaClassNames={luaClassNames}
+                    robloxTypes={robloxTypes}
                   />
                   {index !== returns.length - 1 && <code>,</code>}
                   {ret.desc && <InlineDescription content={ret.desc} />}
