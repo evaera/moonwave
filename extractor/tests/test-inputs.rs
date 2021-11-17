@@ -52,6 +52,11 @@ fn drop_module() -> anyhow::Result<()> {
 }
 
 #[test]
+fn if_then_expression() -> anyhow::Result<()> {
+    run_moonwave("passing/if_then_expression.lua", 0)
+}
+
+#[test]
 fn triple_dash_but_wrong() -> anyhow::Result<()> {
     run_moonwave("failing/triple_dash_but_wrong.lua", 1)
 }

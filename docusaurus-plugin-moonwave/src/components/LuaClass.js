@@ -161,6 +161,7 @@ export default function LuaClass({
 
   const luaClass = { ...rawLuaClass }
 
+  // Sort LuaClass body members
   SECTIONS.forEach((section) => {
     luaClass[section.name] = rawLuaClass[section.name]
       .filter((member) => !member.ignore)
@@ -182,7 +183,7 @@ export default function LuaClass({
           ) {
             return 1
           }
-          return memberA.name.localeCompare(memberB.name)
+          return 0
         }
       })
   })
@@ -190,21 +191,6 @@ export default function LuaClass({
   const anyPrivateFunctions = rawLuaClass["functions"].some(
     (member) => member.private
   )
-
-  const tocData = SECTIONS.map((section) => ({
-    value: capitalize(section.name),
-    id: section.name,
-    children: luaClass[section.name].map((member) => ({
-      value:
-        (member.function_type === "static"
-          ? "."
-          : member.function_type === "method"
-          ? ":"
-          : "") + member.name,
-      id: member.name,
-      children: [],
-    })),
-  }))
 
   const windowSize = useWindowSize()
 

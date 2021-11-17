@@ -102,6 +102,34 @@ collapsed = false # Determines with the section grouping is collapsed or expande
 classes = ["Class7", "ClassAte", "Class9"]
 ```
 
+### Table of Contents (TOC)
+
+You can customize categories in the Table of Contents of each API page. To create a category, first tag all items that should be included in the category with the `@tag` tag.
+
+```lua
+--[=[
+	This is a very fancy function that adds a couple numbers.
+
+	@param a number -- The first number you want to add
+	@param b number -- The second number you wanna add
+	@return number -- Returns the sum of `a` and `b`
+	@tag utility
+]=]
+function MyFirstClass:taggedFunction(a, b)
+	return a + b
+end
+```
+
+Then, specify those tags under the `apiCategories` option in your `moonwave.toml` file.
+
+```toml
+apiCategories = [
+    "constructor",
+    "utility",
+    "random"
+]
+```
+
 ## Custom home page
 
 By default your project's README is used as the homepage. To use a custom homepage, simply set `enabled` to `true` in the `[home]` section:

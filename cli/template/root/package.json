@@ -14,12 +14,12 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-beta.8",
-    "@docusaurus/preset-classic": "^2.0.0-beta.8",
+    "@docusaurus/core": "^2.0.0-beta.6",
+    "@docusaurus/preset-classic": "^2.0.0-beta.6",
     "@mdx-js/react": "^1.6.21",
     "clsx": "^1.1.1",
     "docusaurus-lunr-search": "^2.1.15",
-    "docusaurus-plugin-moonwave": "^0.2.10",
+    "docusaurus-plugin-moonwave": "^0.2.12",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
