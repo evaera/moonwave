@@ -3,43 +3,6 @@ import React from "react"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
 
-const robloxTypes = [
-  "any",
-  "nil",
-  "boolean",
-  "number",
-  "string",
-  "function",
-  "userdata",
-  "thread",
-  "table",
-]
-
-const getDocsUrl = (dataType) => {
-  switch (dataType) {
-    case "any":
-      return "https://www.lua.org/manual/5.4/manual.html#2.1"
-    case "nil":
-      return "https://developer.roblox.com/en-us/articles/Nil"
-    case "boolean":
-      return "https://developer.roblox.com/en-us/articles/Boolean"
-    case "number":
-      return "https://www.lua.org/manual/5.4/manual.html#2.1"
-    case "string":
-      return "https://developer.roblox.com/en-us/api-reference/lua-docs/string"
-    case "function":
-      return "https://developer.roblox.com/en-us/articles/Function"
-    case "userdata":
-      return "https://developer.roblox.com/en-us/articles/Metatables"
-    case "thread":
-      return "https://www.lua.org/manual/5.4/manual.html#2.6"
-    case "table":
-      return "https://developer.roblox.com/en-us/api-reference/lua-docs/table"
-    default:
-      return "https://developer.roblox.com/en-us/api-reference"
-  }
-}
-
 const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
@@ -173,7 +136,7 @@ function groupTuples(tokens) {
   })
 }
 
-function Tuple({ tuple, depth, baseUrl, luaClassNames }) {
+function Tuple({ tuple, depth, baseUrl, luaClassNames, robloxTypes }) {
   if (tuple.length > 1) {
     return (
       <>
@@ -185,6 +148,7 @@ function Tuple({ tuple, depth, baseUrl, luaClassNames }) {
               depth={depth}
               baseUrl={baseUrl}
               luaClassNames={luaClassNames}
+              robloxTypes={robloxTypes}
             />
             {i !== tuple.length - 1 && <Op depth={depth}>,</Op>}
           </div>
@@ -202,13 +166,14 @@ function Tuple({ tuple, depth, baseUrl, luaClassNames }) {
         depth={depth}
         baseUrl={baseUrl}
         luaClassNames={luaClassNames}
+        robloxTypes={robloxTypes}
       />
       <Op depth={depth}>)</Op>
     </>
   )
 }
 
-function Tokens({ tokens, depth, baseUrl, luaClassNames }) {
+function Tokens({ tokens, depth, baseUrl, luaClassNames, robloxTypes }) {
   return tokens.map((token, i) => (
     <Token
       key={i}
@@ -216,11 +181,12 @@ function Tokens({ tokens, depth, baseUrl, luaClassNames }) {
       depth={depth}
       baseUrl={baseUrl}
       luaClassNames={luaClassNames}
+      robloxTypes={robloxTypes}
     />
   ))
 }
 
-function Token({ token, depth, baseUrl, luaClassNames }) {
+function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
   switch (Object.keys(token)[0]) {
     case "root":
       return (
@@ -229,6 +195,7 @@ function Token({ token, depth, baseUrl, luaClassNames }) {
           depth={0}
           baseUrl={baseUrl}
           luaClassNames={luaClassNames}
+          robloxTypes={robloxTypes}
         />
       )
     case "tuple":
@@ -238,6 +205,7 @@ function Token({ token, depth, baseUrl, luaClassNames }) {
           depth={depth + 1}
           baseUrl={baseUrl}
           luaClassNames={luaClassNames}
+          robloxTypes={robloxTypes}
         />
       )
     case "identifier":
@@ -259,7 +227,7 @@ function Token({ token, depth, baseUrl, luaClassNames }) {
           <code className={styles.blue}>
             <Link
               style={{ textDecoration: "underline", color: "inherit" }}
-              to={`${baseUrl}api/${token.luaType}`}
+              to={`${baseUrl}api/${token.luaType.replaceAll("...", "")}`}
             >
               {token.luaType}
             </Link>
@@ -268,24 +236,25 @@ function Token({ token, depth, baseUrl, luaClassNames }) {
       }
 
       // Checks if the type is one of Roblox's native types
-      if (robloxTypes.includes(token.luaType.replaceAll("...", ""))) {
+      if (robloxTypes.hasOwnProperty(token.luaType.replaceAll("...", ""))) {
         return (
           <code className={styles.blue}>
             <a
               style={{ textDecoration: "underline", color: "inherit" }}
-              href={getDocsUrl(token.luaType)}
+              href={robloxTypes[token.luaType.replaceAll("...", "")].link}
             >
               {token.luaType}
             </a>
           </code>
         )
-      } else return <code className={styles.blue}>{token.luaType}</code>
+      }
+      return <code className={styles.blue}>{token.luaType}</code>
     default:
       return <span>unknown token {Object.keys(token)[0]}</span>
   }
 }
 
-export default function LuaType({ code, baseUrl, luaClassNames }) {
+export default function LuaType({ code, baseUrl, luaClassNames, robloxTypes }) {
   const tokens = tokenize(code)
 
   return (
@@ -293,6 +262,7 @@ export default function LuaType({ code, baseUrl, luaClassNames }) {
       token={{ root: tokens }}
       baseUrl={baseUrl}
       luaClassNames={luaClassNames}
+      robloxTypes={robloxTypes}
     />
   )
 }
