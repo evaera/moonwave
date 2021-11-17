@@ -46,6 +46,7 @@ const breakCapitalWords = (text) =>
 const ClassSection = ({
   luaClass,
   luaClassNames,
+  robloxTypes,
   section,
   filter,
   component: Component,
@@ -66,6 +67,7 @@ const ClassSection = ({
           <Component
             luaClassName={luaClass.name}
             luaClassNames={luaClassNames}
+            robloxTypes={robloxTypes}
             {...member}
             baseUrl={baseUrl}
           />
@@ -114,6 +116,7 @@ export default function LuaClass({
   luaClass: rawLuaClass,
   sidebarClassNames,
   luaClassNames,
+  robloxTypes,
   options,
 }) {
   const [showPrivate, setShowPrivate] = useState(false)
@@ -319,6 +322,7 @@ export default function LuaClass({
                           key={section.name}
                           luaClass={luaClass}
                           luaClassNames={luaClassNames}
+                          robloxTypes={robloxTypes}
                           section={section.name}
                           component={section.component}
                           sourceUrl={options.sourceUrl}
