@@ -19,6 +19,7 @@
   "dependencies": {
     "@mapbox/rehype-prism": "^0.8.0",
     "hast-util-sanitize": "^4.0.0",
+    "node-fetch": "^2.6.1",
     "prism-material-themes": "^1.0.4",
     "rehype-format": "^3.1.0",
     "rehype-sanitize": "^4.0.0",
