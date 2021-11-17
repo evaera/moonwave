@@ -117,6 +117,7 @@ export default function LuaClass({
   sidebarClassNames,
   luaClassNames,
   robloxTypes,
+  tocData,
   options,
 }) {
   const [showPrivate, setShowPrivate] = useState(false)
