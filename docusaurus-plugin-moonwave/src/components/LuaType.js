@@ -7,8 +7,6 @@ const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
-const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
-
 function tokenize(code, isGroup) {
   let position = 0
 
