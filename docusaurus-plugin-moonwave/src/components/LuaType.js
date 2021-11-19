@@ -219,13 +219,14 @@ function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
+      const sanitizedToken = token.luaType.replace(/\W/g, "")
       // Checks if the type is in the list of LuaClasses for the package
-      if (luaClassNames.includes(token.luaType.replaceAll("...", ""))) {
+      if (luaClassNames.includes(sanitizedToken)) {
         return (
           <code className={styles.blue}>
             <Link
               style={{ textDecoration: "underline", color: "inherit" }}
-              to={`${baseUrl}api/${token.luaType.replaceAll("...", "")}`}
+              to={`${baseUrl}api/${sanitizedToken}`}
             >
               {token.luaType}
             </Link>
@@ -234,12 +235,12 @@ function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
       }
 
       // Checks if the type is one of Roblox's native types
-      if (robloxTypes.hasOwnProperty(token.luaType.replaceAll("...", ""))) {
+      if (robloxTypes.hasOwnProperty(sanitizedToken)) {
         return (
           <code className={styles.blue}>
             <a
               style={{ textDecoration: "underline", color: "inherit" }}
-              href={robloxTypes[token.luaType.replaceAll("...", "")].link}
+              href={robloxTypes[sanitizedToken].link}
             >
               {token.luaType}
             </a>
