@@ -5,11 +5,9 @@ import styles from "./styles.module.css"
 
 export default function LuaProp({
   luaClassName,
-  typeLinks,
   name,
   desc,
   lua_type: luaType,
-  baseUrl,
 }) {
   return (
     <>
@@ -17,7 +15,7 @@ export default function LuaProp({
         <code>
           {luaClassName}.{name}:{" "}
         </code>{" "}
-        <LuaType code={luaType} baseUrl={baseUrl} typeLinks={typeLinks} />
+        <LuaType code={luaType} />
       </div>
       <Markdown content={desc} />
     </>

@@ -1,5 +1,6 @@
 import Link from "@docusaurus/Link"
-import React from "react"
+import React, { useContext } from "react"
+import { TypeLinksContext } from "./LuaClass"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
 
@@ -140,19 +141,14 @@ function groupTuples(tokens) {
   })
 }
 
-function Tuple({ tuple, depth, baseUrl, typeLinks }) {
+function Tuple({ tuple, depth, typeLinks }) {
   if (tuple.length > 1) {
     return (
       <>
         <Op depth={depth}>(</Op>
         {tuple.map((tokens, i) => (
           <div className={styles.inset} key={i}>
-            <Tokens
-              tokens={tokens}
-              depth={depth}
-              baseUrl={baseUrl}
-              typeLinks={typeLinks}
-            />
+            <Tokens tokens={tokens} depth={depth} typeLinks={typeLinks} />
             {i !== tuple.length - 1 && <Op depth={depth}>,</Op>}
           </div>
         ))}
@@ -164,48 +160,25 @@ function Tuple({ tuple, depth, baseUrl, typeLinks }) {
   return (
     <>
       <Op depth={depth}>(</Op>
-      <Tokens
-        tokens={tuple[0]}
-        depth={depth}
-        baseUrl={baseUrl}
-        typeLinks={typeLinks}
-      />
+      <Tokens tokens={tuple[0]} depth={depth} typeLinks={typeLinks} />
       <Op depth={depth}>)</Op>
     </>
   )
 }
 
-function Tokens({ tokens, depth, baseUrl, typeLinks }) {
+function Tokens({ tokens, depth, typeLinks }) {
   return tokens.map((token, i) => (
-    <Token
-      key={i}
-      token={token}
-      depth={depth}
-      baseUrl={baseUrl}
-      typeLinks={typeLinks}
-    />
+    <Token key={i} token={token} depth={depth} typeLinks={typeLinks} />
   ))
 }
 
-function Token({ token, depth, baseUrl, typeLinks }) {
+function Token({ token, depth, typeLinks }) {
   switch (Object.keys(token)[0]) {
     case "root":
-      return (
-        <Tokens
-          tokens={token.root}
-          depth={0}
-          baseUrl={baseUrl}
-          typeLinks={typeLinks}
-        />
-      )
+      return <Tokens tokens={token.root} depth={0} typeLinks={typeLinks} />
     case "tuple":
       return (
-        <Tuple
-          tuple={token.tuple}
-          depth={depth + 1}
-          baseUrl={baseUrl}
-          typeLinks={typeLinks}
-        />
+        <Tuple tuple={token.tuple} depth={depth + 1} typeLinks={typeLinks} />
       )
     case "identifier":
       return (
@@ -257,10 +230,9 @@ function Token({ token, depth, baseUrl, typeLinks }) {
   }
 }
 
-export default function LuaType({ code, baseUrl, typeLinks }) {
+export default function LuaType({ code }) {
   const tokens = tokenize(code)
+  const typeLinks = useContext(TypeLinksContext)
 
-  return (
-    <Token token={{ root: tokens }} baseUrl={baseUrl} typeLinks={typeLinks} />
-  )
+  return <Token token={{ root: tokens }} typeLinks={typeLinks} />
 }
