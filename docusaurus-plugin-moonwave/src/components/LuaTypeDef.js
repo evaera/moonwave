@@ -4,31 +4,21 @@ import LuaType from "./LuaType"
 import Markdown from "./Markdown"
 import styles from "./styles.module.css"
 
-const TypeAlias = ({ name, luaType, baseUrl, luaClassNames, robloxTypes }) => (
+const TypeAlias = ({ name, luaType, baseUrl, typeLinks }) => (
   <>
     <code className={styles.purple}>type</code> <code>{name} = </code>{" "}
-    <LuaType
-      code={luaType}
-      baseUrl={baseUrl}
-      luaClassNames={luaClassNames}
-      robloxTypes={robloxTypes}
-    />
+    <LuaType code={luaType} baseUrl={baseUrl} typeLinks={typeLinks} />
   </>
 )
 
-const Param = ({ name, luaType, baseUrl, luaClassNames, robloxTypes }) => (
+const Param = ({ name, luaType, baseUrl, typeLinks }) => (
   <>
     <code>{name}:&nbsp;</code>
-    <LuaType
-      code={luaType}
-      baseUrl={baseUrl}
-      luaClassNames={luaClassNames}
-      robloxTypes={robloxTypes}
-    />
+    <LuaType code={luaType} baseUrl={baseUrl} typeLinks={typeLinks} />
   </>
 )
 
-const Interface = ({ name, fields, baseUrl, luaClassNames, robloxTypes }) => (
+const Interface = ({ name, fields, baseUrl, typeLinks }) => (
   <>
     <code className={styles.purple}>interface</code>{" "}
     <code>
@@ -41,8 +31,7 @@ const Interface = ({ name, fields, baseUrl, luaClassNames, robloxTypes }) => (
             name={name}
             luaType={luaType}
             baseUrl={baseUrl}
-            luaClassNames={luaClassNames}
-            robloxTypes={robloxTypes}
+            typeLinks={typeLinks}
           />
           {desc && <InlineDescription content={desc} />}
         </div>
@@ -54,8 +43,7 @@ const Interface = ({ name, fields, baseUrl, luaClassNames, robloxTypes }) => (
 
 export default function LuaTypeDef({
   luaClassName,
-  luaClassNames,
-  robloxTypes,
+  typeLinks,
   name,
   desc,
   lua_type: luaType,
@@ -70,16 +58,14 @@ export default function LuaTypeDef({
             name={name}
             luaType={luaType}
             baseUrl={baseUrl}
-            luaClassNames={luaClassNames}
-            robloxTypes={robloxTypes}
+            typeLinks={typeLinks}
           />
         ) : (
           <Interface
             name={name}
             fields={fields}
             baseUrl={baseUrl}
-            luaClassNames={luaClassNames}
-            robloxTypes={robloxTypes}
+            typeLinks={typeLinks}
           />
         )}
       </div>

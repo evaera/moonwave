@@ -157,6 +157,31 @@ function parseApiCategories(luaClass, apiCategories) {
   return [...tocData]
 }
 
+async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
+  const classNames = new Map(
+    [...nameSet].map((name) => [name, `${baseUrl}api/${name}`])
+  )
+
+  const classTypesNames = luaClasses
+    .filter((luaClass) => luaClass.types.length > 0)
+    .flatMap((luaClass) =>
+      luaClass.types.map((type) => [
+        type.name,
+        `${baseUrl}api/${luaClass.name}#${type.name}`,
+      ])
+    )
+
+  const robloxTypes = await generateRobloxTypes()
+
+  const typeLinksMap = new Map([
+    ...classNames,
+    ...classTypesNames,
+    ...robloxTypes,
+  ])
+
+  return typeLinksMap
+}
+
 module.exports = (context, options) => ({
   name: "docusaurus-plugin-moonwave",
 
@@ -220,17 +245,6 @@ module.exports = (context, options) => ({
       nameSet
     )
 
-    const luaClassNames = await createData(
-      "allLuaClasses.json",
-      JSON.stringify([...nameSet])
-    )
-
-    const robloxTypesData = await generateRobloxTypes()
-    const robloxTypes = await createData(
-      "robloxTypes.json",
-      JSON.stringify(robloxTypesData)
-    )
-
     const sidebarClassNames = await createData(
       "sidebar.json",
       JSON.stringify(allLuaClassNamesOrdered)
@@ -245,6 +259,16 @@ module.exports = (context, options) => ({
         classOrder: classOrder,
         apiCategories: apiCategories,
       })
+    )
+
+    const typeLinksData = await generateTypeLinks(
+      nameSet,
+      filteredContent,
+      baseUrl
+    )
+    const typeLinks = await createData(
+      "typeLinks.json",
+      JSON.stringify([...typeLinksData])
     )
 
     addRoute({
@@ -278,8 +302,8 @@ module.exports = (context, options) => ({
         modules: {
           luaClass: apiDataPath,
           sidebarClassNames,
-          luaClassNames,
-          robloxTypes,
+          typeLinks,
+          tocData,
           options: pluginOptions,
         },
         exact: true,

@@ -45,8 +45,7 @@ const breakCapitalWords = (text) =>
 
 const ClassSection = ({
   luaClass,
-  luaClassNames,
-  robloxTypes,
+  typeLinks,
   section,
   filter,
   component: Component,
@@ -66,8 +65,7 @@ const ClassSection = ({
         <ClassMember key={key} {...member} sourceUrl={sourceUrl}>
           <Component
             luaClassName={luaClass.name}
-            luaClassNames={luaClassNames}
-            robloxTypes={robloxTypes}
+            typeLinks={typeLinks}
             {...member}
             baseUrl={baseUrl}
           />
@@ -115,8 +113,7 @@ const PrivateToggle = ({ showPrivate, setShowPrivate }) => (
 export default function LuaClass({
   luaClass: rawLuaClass,
   sidebarClassNames,
-  luaClassNames,
-  robloxTypes,
+  typeLinks: preMapTypeLinks,
   tocData,
   options,
 }) {
@@ -161,6 +158,8 @@ export default function LuaClass({
   }, [hiddenSidebar])
 
   const luaClass = { ...rawLuaClass }
+
+  const typeLinks = new Map(preMapTypeLinks)
 
   // Sort LuaClass body members
   SECTIONS.forEach((section) => {
@@ -308,8 +307,7 @@ export default function LuaClass({
                         <ClassSection
                           key={section.name}
                           luaClass={luaClass}
-                          luaClassNames={luaClassNames}
-                          robloxTypes={robloxTypes}
+                          typeLinks={typeLinks}
                           section={section.name}
                           component={section.component}
                           sourceUrl={options.sourceUrl}

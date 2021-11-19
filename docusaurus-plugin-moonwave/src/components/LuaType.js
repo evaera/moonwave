@@ -7,6 +7,12 @@ const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
+function isValidUrl(urlString) {
+  const urlPattern =
+    /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm
+  return urlPattern.test(urlString)
+}
+
 function tokenize(code, isGroup) {
   let position = 0
 
@@ -134,7 +140,7 @@ function groupTuples(tokens) {
   })
 }
 
-function Tuple({ tuple, depth, baseUrl, luaClassNames, robloxTypes }) {
+function Tuple({ tuple, depth, baseUrl, typeLinks }) {
   if (tuple.length > 1) {
     return (
       <>
@@ -145,8 +151,7 @@ function Tuple({ tuple, depth, baseUrl, luaClassNames, robloxTypes }) {
               tokens={tokens}
               depth={depth}
               baseUrl={baseUrl}
-              luaClassNames={luaClassNames}
-              robloxTypes={robloxTypes}
+              typeLinks={typeLinks}
             />
             {i !== tuple.length - 1 && <Op depth={depth}>,</Op>}
           </div>
@@ -163,28 +168,26 @@ function Tuple({ tuple, depth, baseUrl, luaClassNames, robloxTypes }) {
         tokens={tuple[0]}
         depth={depth}
         baseUrl={baseUrl}
-        luaClassNames={luaClassNames}
-        robloxTypes={robloxTypes}
+        typeLinks={typeLinks}
       />
       <Op depth={depth}>)</Op>
     </>
   )
 }
 
-function Tokens({ tokens, depth, baseUrl, luaClassNames, robloxTypes }) {
+function Tokens({ tokens, depth, baseUrl, typeLinks }) {
   return tokens.map((token, i) => (
     <Token
       key={i}
       token={token}
       depth={depth}
       baseUrl={baseUrl}
-      luaClassNames={luaClassNames}
-      robloxTypes={robloxTypes}
+      typeLinks={typeLinks}
     />
   ))
 }
 
-function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
+function Token({ token, depth, baseUrl, typeLinks }) {
   switch (Object.keys(token)[0]) {
     case "root":
       return (
@@ -192,8 +195,7 @@ function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
           tokens={token.root}
           depth={0}
           baseUrl={baseUrl}
-          luaClassNames={luaClassNames}
-          robloxTypes={robloxTypes}
+          typeLinks={typeLinks}
         />
       )
     case "tuple":
@@ -202,8 +204,7 @@ function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
           tuple={token.tuple}
           depth={depth + 1}
           baseUrl={baseUrl}
-          luaClassNames={luaClassNames}
-          robloxTypes={robloxTypes}
+          typeLinks={typeLinks}
         />
       )
     case "identifier":
@@ -220,48 +221,46 @@ function Token({ token, depth, baseUrl, luaClassNames, robloxTypes }) {
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
       const sanitizedToken = token.luaType.replace(/\W/g, "")
-      // Checks if the type is in the list of LuaClasses for the package
-      if (luaClassNames.includes(sanitizedToken)) {
-        return (
-          <code className={styles.blue}>
-            <Link
-              style={{ textDecoration: "underline", color: "inherit" }}
-              to={`${baseUrl}api/${sanitizedToken}`}
-            >
-              {token.luaType}
-            </Link>
-          </code>
-        )
+      // Checks if the type is in the list of typeLinks for the package
+      if (typeLinks.has(sanitizedToken)) {
+        // If the type is to an external Roblox default, link to the external Roblox Devhub
+        if (isValidUrl(typeLinks.get(sanitizedToken))) {
+          return (
+            <code className={styles.blue}>
+              <a
+                style={{ textDecoration: "underline", color: "inherit" }}
+                href={typeLinks.get(sanitizedToken)}
+              >
+                {token.luaType}
+              </a>
+            </code>
+          )
+        }
+        // If the type is from another page in the Moonwave package
+        else {
+          return (
+            <code className={styles.blue}>
+              <Link
+                style={{ textDecoration: "underline", color: "inherit" }}
+                to={typeLinks.get(sanitizedToken)}
+              >
+                {token.luaType}
+              </Link>
+            </code>
+          )
+        }
       }
 
-      // Checks if the type is one of Roblox's native types
-      if (robloxTypes.hasOwnProperty(sanitizedToken)) {
-        return (
-          <code className={styles.blue}>
-            <a
-              style={{ textDecoration: "underline", color: "inherit" }}
-              href={robloxTypes[sanitizedToken].link}
-            >
-              {token.luaType}
-            </a>
-          </code>
-        )
-      }
       return <code className={styles.blue}>{token.luaType}</code>
     default:
       return <span>unknown token {Object.keys(token)[0]}</span>
   }
 }
 
-export default function LuaType({ code, baseUrl, luaClassNames, robloxTypes }) {
+export default function LuaType({ code, baseUrl, typeLinks }) {
   const tokens = tokenize(code)
 
   return (
-    <Token
-      token={{ root: tokens }}
-      baseUrl={baseUrl}
-      luaClassNames={luaClassNames}
-      robloxTypes={robloxTypes}
-    />
+    <Token token={{ root: tokens }} baseUrl={baseUrl} typeLinks={typeLinks} />
   )
 }
