@@ -141,14 +141,14 @@ function groupTuples(tokens) {
   })
 }
 
-function Tuple({ tuple, depth, typeLinks }) {
+function Tuple({ tuple, depth }) {
   if (tuple.length > 1) {
     return (
       <>
         <Op depth={depth}>(</Op>
         {tuple.map((tokens, i) => (
           <div className={styles.inset} key={i}>
-            <Tokens tokens={tokens} depth={depth} typeLinks={typeLinks} />
+            <Tokens tokens={tokens} depth={depth} />
             {i !== tuple.length - 1 && <Op depth={depth}>,</Op>}
           </div>
         ))}
@@ -160,19 +160,19 @@ function Tuple({ tuple, depth, typeLinks }) {
   return (
     <>
       <Op depth={depth}>(</Op>
-      <Tokens tokens={tuple[0]} depth={depth} typeLinks={typeLinks} />
+      <Tokens tokens={tuple[0]} depth={depth} />
       <Op depth={depth}>)</Op>
     </>
   )
 }
 
-function Tokens({ tokens, depth, typeLinks }) {
-  return tokens.map((token, i) => (
-    <Token key={i} token={token} depth={depth} typeLinks={typeLinks} />
-  ))
+function Tokens({ tokens, depth }) {
+  return tokens.map((token, i) => <Token key={i} token={token} depth={depth} />)
 }
 
-function Token({ token, depth, typeLinks }) {
+function Token({ token, depth }) {
+  const typeLinks = useContext(TypeLinksContext)
+
   switch (Object.keys(token)[0]) {
     case "root":
       return <Tokens tokens={token.root} depth={0} typeLinks={typeLinks} />
@@ -232,7 +232,6 @@ function Token({ token, depth, typeLinks }) {
 
 export default function LuaType({ code }) {
   const tokens = tokenize(code)
-  const typeLinks = useContext(TypeLinksContext)
 
-  return <Token token={{ root: tokens }} typeLinks={typeLinks} />
+  return <Token token={{ root: tokens }} />
 }
