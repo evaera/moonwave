@@ -9,8 +9,7 @@ const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
 function isValidUrl(urlString) {
-  const urlPattern =
-    /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm
+  const urlPattern = /https?:\/\//
   return urlPattern.test(urlString)
 }
 
