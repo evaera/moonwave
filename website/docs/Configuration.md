@@ -43,7 +43,7 @@ copyright = "Copyright © 2021 AuthorName. Built with Moonwave and Docusaurus"
 
 [[footer.links]]
 label = "link text"
-html = "https://google.com"
+href = "https://google.com"
 ```
 
 See [the publishing guide](/docs/Publishing) for details on the `url` and `baseUrl` options.
