@@ -1,5 +1,5 @@
-import Link from "@docusaurus/Link"
 import React, { useContext } from "react"
+import GenericLink from "./GenericLink"
 import { TypeLinksContext } from "./LuaClass"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
@@ -7,11 +7,6 @@ import { Op } from "./Syntax"
 const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
-
-function isValidUrl(urlString) {
-  const urlPattern = /https?:\/\//
-  return urlPattern.test(urlString)
-}
 
 function tokenize(code, isGroup) {
   let position = 0
@@ -193,34 +188,17 @@ function Token({ token, depth }) {
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
       const sanitizedToken = token.luaType.replace(/\W/g, "")
-      // Checks if the type is in the list of typeLinks for the package
       if (typeLinks.has(sanitizedToken)) {
-        // If the type is to an external Roblox default, link to the external Roblox Devhub
-        if (isValidUrl(typeLinks.get(sanitizedToken))) {
-          return (
-            <code className={styles.blue}>
-              <a
-                style={{ textDecoration: "underline", color: "inherit" }}
-                href={typeLinks.get(sanitizedToken)}
-              >
-                {token.luaType}
-              </a>
-            </code>
-          )
-        }
-        // If the type is from another page in the Moonwave package
-        else {
-          return (
-            <code className={styles.blue}>
-              <Link
-                style={{ textDecoration: "underline", color: "inherit" }}
-                to={typeLinks.get(sanitizedToken)}
-              >
-                {token.luaType}
-              </Link>
-            </code>
-          )
-        }
+        return (
+          <code className={styles.blue}>
+            <GenericLink
+              to={typeLinks.get(sanitizedToken)}
+              style={{ textDecoration: "underline", color: "inherit" }}
+            >
+              {token.luaType}
+            </GenericLink>
+          </code>
+        )
       }
 
       return <code className={styles.blue}>{token.luaType}</code>
