@@ -158,26 +158,28 @@ function parseApiCategories(luaClass, apiCategories) {
 }
 
 async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
-  const classNames = new Map(
-    [...nameSet].map((name) => [name, `${baseUrl}api/${name}`])
-  )
+  const classNames = {}
+
+  nameSet.forEach((name) => (classNames[name] = `${baseUrl}api/${name}`))
 
   const classTypesNames = luaClasses
     .filter((luaClass) => luaClass.types.length > 0)
-    .flatMap((luaClass) =>
-      luaClass.types.map((type) => [
-        type.name,
-        `${baseUrl}api/${luaClass.name}#${type.name}`,
-      ])
+    .forEach((luaClass) =>
+      luaClass.types.forEach(
+        (type) =>
+          (classNames[
+            type.name
+          ] = `${baseUrl}api/${luaClass.name}#${type.name}`)
+      )
     )
 
   const robloxTypes = await generateRobloxTypes()
 
-  const typeLinksMap = new Map([
+  const typeLinksMap = {
     ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
     ...classNames,
     ...classTypesNames,
-  ])
+  }
 
   return typeLinksMap
 }
@@ -268,7 +270,7 @@ module.exports = (context, options) => ({
     )
     const typeLinks = await createData(
       "typeLinks.json",
-      JSON.stringify([...typeLinksData])
+      JSON.stringify(typeLinksData)
     )
 
     addRoute({

@@ -49,22 +49,26 @@ module.exports.generateRobloxTypes = async function generateRobloxTypes() {
 
   const api = await req.json()
 
-  const types = api.Classes.map((c) => [
-    c.Name,
-    `https://developer.roblox.com/en-us/api-reference/class/${c.Name}`,
-  ])
+  const types = api.Classes.map((c) => ({
+    name: c.Name,
+    link: `https://developer.roblox.com/en-us/api-reference/class/${c.Name}`,
+  }))
     .concat(
-      api.Enums.map((e) => [
-        `Enum.${e.Name}`,
-        `https://developer.roblox.com/en-us/api-reference/enum/${e.Name}`,
-      ])
+      api.Enums.map((e) => ({
+        name: `Enum.${e.Name}`,
+        link: `https://developer.roblox.com/en-us/api-reference/enum/${e.Name}`,
+      }))
     )
     .concat(
-      dataTypes.map((t) => [
-        t,
-        `https://developer.roblox.com/en-us/api-reference/datatype/${t}`,
-      ])
+      dataTypes.map((t) => ({
+        link: `https://developer.roblox.com/en-us/api-reference/datatype/${t}`,
+        name: t,
+      }))
     )
+    .reduce((a, v) => {
+      a[v.name] = v.link
+      return a
+    }, {})
 
   return types
 }
