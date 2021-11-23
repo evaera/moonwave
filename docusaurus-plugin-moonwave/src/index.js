@@ -175,13 +175,13 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
 
   const robloxTypes = await generateRobloxTypes()
 
-  const typeLinksMap = {
+  const typeLinks = {
     ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
     ...classNames,
     ...classTypesNames,
   }
 
-  return typeLinksMap
+  return typeLinks
 }
 
 module.exports = (context, options) => ({

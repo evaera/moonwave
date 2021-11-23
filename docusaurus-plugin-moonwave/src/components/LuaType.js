@@ -188,11 +188,11 @@ function Token({ token, depth }) {
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
       const sanitizedToken = token.luaType.replace(/\W/g, "")
-      if (typeLinks.has(sanitizedToken)) {
+      if (sanitizedToken in typeLinks) {
         return (
           <code className={styles.blue}>
             <GenericLink
-              to={typeLinks.get(sanitizedToken)}
+              to={typeLinks[sanitizedToken]}
               style={{ textDecoration: "underline", color: "inherit" }}
             >
               {token.luaType}

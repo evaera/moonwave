@@ -108,7 +108,7 @@ export const TypeLinksContext = createContext()
 export default function LuaClass({
   luaClass: rawLuaClass,
   sidebarClassNames,
-  typeLinks: preMapTypeLinks,
+  typeLinks,
   tocData,
   options,
 }) {
@@ -153,8 +153,6 @@ export default function LuaClass({
   }, [hiddenSidebar])
 
   const luaClass = { ...rawLuaClass }
-
-  const typeLinks = new Map(preMapTypeLinks)
 
   // Sort LuaClass body members
   SECTIONS.forEach((section) => {
