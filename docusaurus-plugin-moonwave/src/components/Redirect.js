@@ -1,11 +1,11 @@
 import { Redirect as RouterRedirect } from "@docusaurus/router"
 import React from "react"
 
-export default function Redirect({ allLuaClassNames, pluginOptions }) {
+export default function Redirect({ sidebarClassNames, pluginOptions }) {
   const firstLuaClassName = (
-    allLuaClassNames[0].type === "link"
-      ? allLuaClassNames[0].label
-      : allLuaClassNames[0].items[0].label
+    sidebarClassNames[0].type === "link"
+      ? sidebarClassNames[0].label
+      : sidebarClassNames[0].items[0].label
   ).replace(/[\u200B]/g, "") // Strip out any extraneous 0-width spaces
 
   return (

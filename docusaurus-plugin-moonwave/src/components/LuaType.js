@@ -1,4 +1,6 @@
-import React from "react"
+import React, { useContext } from "react"
+import GenericLink from "./GenericLink"
+import { TypeLinksContext } from "./LuaClass"
 import styles from "./styles.module.css"
 import { Op } from "./Syntax"
 
@@ -163,11 +165,15 @@ function Tokens({ tokens, depth }) {
 }
 
 function Token({ token, depth }) {
+  const typeLinks = useContext(TypeLinksContext)
+
   switch (Object.keys(token)[0]) {
     case "root":
-      return <Tokens tokens={token.root} depth={0} />
+      return <Tokens tokens={token.root} depth={0} typeLinks={typeLinks} />
     case "tuple":
-      return <Tuple tuple={token.tuple} depth={depth + 1} />
+      return (
+        <Tuple tuple={token.tuple} depth={depth + 1} typeLinks={typeLinks} />
+      )
     case "identifier":
       return (
         <>
@@ -181,6 +187,20 @@ function Token({ token, depth }) {
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
     case "luaType":
+      const sanitizedToken = token.luaType.replace(/\W/g, "")
+      if (sanitizedToken in typeLinks) {
+        return (
+          <code className={styles.blue}>
+            <GenericLink
+              to={typeLinks[sanitizedToken]}
+              style={{ textDecoration: "underline", color: "inherit" }}
+            >
+              {token.luaType}
+            </GenericLink>
+          </code>
+        )
+      }
+
       return <code className={styles.blue}>{token.luaType}</code>
     default:
       return <span>unknown token {Object.keys(token)[0]}</span>
@@ -188,11 +208,7 @@ function Token({ token, depth }) {
 }
 
 export default function LuaType({ code }) {
-  if (true) {
-    const tokens = tokenize(code)
+  const tokens = tokenize(code)
 
-    return <Token token={{ root: tokens }} />
-  }
-
-  return <code className={styles.blue}>{code}</code>
+  return <Token token={{ root: tokens }} />
 }
