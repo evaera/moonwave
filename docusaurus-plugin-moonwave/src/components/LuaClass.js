@@ -7,7 +7,7 @@ import Layout from "@theme/Layout"
 import TOC from "@theme/TOC"
 import TOCCollapsible from "@theme/TOCCollapsible"
 import clsx from "clsx"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { createContext, useCallback, useEffect, useState } from "react"
 import Admonition from "./Admonition"
 import Badge from "./Badge"
 import ClassMember from "./ClassMember"
@@ -103,9 +103,12 @@ const PrivateToggle = ({ showPrivate, setShowPrivate }) => (
   </label>
 )
 
+export const TypeLinksContext = createContext()
+
 export default function LuaClass({
   luaClass: rawLuaClass,
-  allLuaClassNames,
+  sidebarClassNames,
+  typeLinks,
   tocData,
   options,
 }) {
@@ -203,7 +206,7 @@ export default function LuaClass({
         >
           <DocSidebar
             path={`/api/${luaClass.name}`}
-            sidebar={allLuaClassNames}
+            sidebar={sidebarClassNames}
             isHidden={hiddenSidebar}
             onCollapse={toggleSidebar}
           />
@@ -233,76 +236,82 @@ export default function LuaClass({
               <div className={`col ${styles.docItemCol}`}>
                 <div className={styles.docItemContainer}>
                   <article>
-                    <div className={styles.member + " markdown"}>
-                      {canRenderTOC && (
-                        <TOCCollapsible
-                          toc={tocData}
-                          // minHeadingLevel={tocMinHeadingLevel}
-                          // maxHeadingLevel={tocMaxHeadingLevel}
-                          className={clsx(
-                            ThemeClassNames.docs.docTocMobile,
-                            styles.tocMobile
-                          )}
-                        />
-                      )}
-
-                      <header>
-                        <h1
-                          className={styles.docTitle}
-                          style={{
-                            textDecoration: luaClass.deprecated
-                              ? "line-through"
-                              : "none",
-                          }}
-                        >
-                          {breakCapitalWords(luaClass.name).map(
-                            (capitalWord) => (
-                              <span style={{ display: "inline-block" }}>
-                                {capitalWord}
-                              </span>
-                            )
-                          )}
-                        </h1>
-                        <div className={clsx(styles.luaClassTags)}>
-                          {luaClass.realm?.map((realm) => (
-                            <Badge key={realm} label={realm} />
-                          ))}
-                          {luaClass.private && <Badge label="Private" />}
-                          {luaClass.tags?.map((tag) => (
-                            <Tag key={tag} label={tag} />
-                          ))}
-                        </div>
-
-                        {anyPrivateFunctions && (
-                          <PrivateToggle
-                            showPrivate={showPrivate}
-                            setShowPrivate={setShowPrivate}
+                    <TypeLinksContext.Provider value={typeLinks}>
+                      <div className={styles.member + " markdown"}>
+                        {canRenderTOC && (
+                          <TOCCollapsible
+                            toc={tocData}
+                            // minHeadingLevel={tocMinHeadingLevel}
+                            // maxHeadingLevel={tocMaxHeadingLevel}
+                            className={clsx(
+                              ThemeClassNames.docs.docTocMobile,
+                              styles.tocMobile
+                            )}
                           />
                         )}
 
-                        {luaClass.deprecated && (
-                          <Admonition
-                            variation="caution"
-                            title={`This was deprecated in ${luaClass.deprecated.version}`}
+                        <header>
+                          <h1
+                            className={styles.docTitle}
+                            style={{
+                              textDecoration: luaClass.deprecated
+                                ? "line-through"
+                                : "none",
+                            }}
                           >
-                            {luaClass.deprecated.desc ||
-                              "This item is deprecated. Do not use it for new work. "}
-                          </Admonition>
-                        )}
+                            {breakCapitalWords(luaClass.name).map(
+                              (capitalWord, i) => (
+                                <span
+                                  key={`${capitalWord}+${i}`}
+                                  style={{ display: "inline-block" }}
+                                >
+                                  {capitalWord}
+                                </span>
+                              )
+                            )}
+                          </h1>
+                          <div className={clsx(styles.luaClassTags)}>
+                            {luaClass.realm?.map((realm) => (
+                              <Badge key={realm} label={realm} />
+                            ))}
+                            {luaClass.private && <Badge label="Private" />}
+                            {luaClass.tags?.map((tag) => (
+                              <Tag key={tag} label={tag} />
+                            ))}
+                          </div>
 
-                        <Markdown content={luaClass.desc} />
-                      </header>
+                          {anyPrivateFunctions && (
+                            <PrivateToggle
+                              showPrivate={showPrivate}
+                              setShowPrivate={setShowPrivate}
+                            />
+                          )}
 
-                      {SECTIONS.map((section) => (
-                        <ClassSection
-                          key={section.name}
-                          luaClass={luaClass}
-                          section={section.name}
-                          component={section.component}
-                          sourceUrl={options.sourceUrl}
-                        />
-                      ))}
-                    </div>
+                          {luaClass.deprecated && (
+                            <Admonition
+                              variation="caution"
+                              title={`This was deprecated in ${luaClass.deprecated.version}`}
+                            >
+                              {luaClass.deprecated.desc ||
+                                "This item is deprecated. Do not use it for new work. "}
+                            </Admonition>
+                          )}
+
+                          <Markdown content={luaClass.desc} />
+                        </header>
+
+                        {SECTIONS.map((section) => (
+                          <ClassSection
+                            key={section.name}
+                            luaClass={luaClass}
+                            section={section.name}
+                            component={section.component}
+                            sourceUrl={options.sourceUrl}
+                            baseUrl={options.baseUrl}
+                          />
+                        ))}
+                      </div>
+                    </TypeLinksContext.Provider>
                   </article>
                 </div>
 

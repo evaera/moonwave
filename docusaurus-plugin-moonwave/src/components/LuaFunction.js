@@ -24,6 +24,7 @@ export default function LuaFunction({
   desc,
   function_type: functionType,
   errors,
+  baseUrl,
 }) {
   return (
     <>

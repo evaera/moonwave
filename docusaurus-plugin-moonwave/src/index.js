@@ -2,6 +2,7 @@ const path = require("path")
 const fs = require("fs")
 const { promisify } = require("util")
 const exec = promisify(require("child_process").exec)
+const { generateRobloxTypes } = require("./generateRobloxTypes")
 
 const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
@@ -156,6 +157,33 @@ function parseApiCategories(luaClass, apiCategories) {
   return [...tocData]
 }
 
+async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
+  const classNames = {}
+
+  nameSet.forEach((name) => (classNames[name] = `${baseUrl}api/${name}`))
+
+  const classTypesNames = luaClasses
+    .filter((luaClass) => luaClass.types.length > 0)
+    .forEach((luaClass) =>
+      luaClass.types.forEach(
+        (type) =>
+          (classNames[
+            type.name
+          ] = `${baseUrl}api/${luaClass.name}#${type.name}`)
+      )
+    )
+
+  const robloxTypes = await generateRobloxTypes()
+
+  const typeLinks = {
+    ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
+    ...classNames,
+    ...classTypesNames,
+  }
+
+  return typeLinks
+}
+
 module.exports = (context, options) => ({
   name: "docusaurus-plugin-moonwave",
 
@@ -219,7 +247,7 @@ module.exports = (context, options) => ({
       nameSet
     )
 
-    const allLuaClassNames = await createData(
+    const sidebarClassNames = await createData(
       "sidebar.json",
       JSON.stringify(allLuaClassNamesOrdered)
     )
@@ -235,12 +263,22 @@ module.exports = (context, options) => ({
       })
     )
 
+    const typeLinksData = await generateTypeLinks(
+      nameSet,
+      filteredContent,
+      baseUrl
+    )
+    const typeLinks = await createData(
+      "typeLinks.json",
+      JSON.stringify(typeLinksData)
+    )
+
     addRoute({
       path: baseUrl + "api/",
       exact: true,
       component: path.resolve(__dirname, "components/Redirect.js"),
       modules: {
-        allLuaClassNames,
+        sidebarClassNames,
         pluginOptions,
       },
     })
@@ -265,7 +303,8 @@ module.exports = (context, options) => ({
         component: path.resolve(__dirname, "components/LuaClass.js"),
         modules: {
           luaClass: apiDataPath,
-          allLuaClassNames,
+          sidebarClassNames,
+          typeLinks,
           tocData,
           options: pluginOptions,
         },
