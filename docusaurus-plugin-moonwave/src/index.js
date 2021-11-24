@@ -124,6 +124,7 @@ function parseApiCategories(luaClass, apiCategories) {
                 getFunctionCallOperator(member.function_type) + member.name,
               id: member.name,
               children: [],
+              level: 3,
             }
           })
           .sort((childA, childB) => childA.value.localeCompare(childB.value)),
@@ -142,6 +143,7 @@ function parseApiCategories(luaClass, apiCategories) {
         value: getFunctionCallOperator(member.function_type) + member.name,
         id: member.name,
         children: [],
+        level: 3,
       }))
       .sort((childA, childB) => childA.value.localeCompare(childB.value))
 
@@ -151,6 +153,7 @@ function parseApiCategories(luaClass, apiCategories) {
       value: capitalize(section),
       id: section,
       children: sectionChildren,
+      level: 2,
     })
   })
 

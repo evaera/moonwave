@@ -187,6 +187,8 @@ export default function LuaClass({
 
   const windowSize = useWindowSize()
 
+  const tocMinHeadingLevel = 2 // Must be between 2 and 6 and lower or equal to the max value.
+  const tocMaxHeadingLevel = 6 // Must be an integer between 2 and 6.
   const canRenderTOC = tocData && tocData.length > 0
 
   const renderTocDesktop =
@@ -241,8 +243,8 @@ export default function LuaClass({
                         {canRenderTOC && (
                           <TOCCollapsible
                             toc={tocData}
-                            // minHeadingLevel={tocMinHeadingLevel}
-                            // maxHeadingLevel={tocMaxHeadingLevel}
+                            minHeadingLevel={tocMinHeadingLevel}
+                            maxHeadingLevel={tocMaxHeadingLevel}
                             className={clsx(
                               ThemeClassNames.docs.docTocMobile,
                               styles.tocMobile
@@ -329,7 +331,11 @@ export default function LuaClass({
               </div>
               {renderTocDesktop && (
                 <div className="col col--3">
-                  <TOC toc={tocData} />
+                  <TOC
+                    toc={tocData}
+                    minHeadingLevel={tocMinHeadingLevel}
+                    maxHeadingLevel={tocMaxHeadingLevel}
+                  />
                 </div>
               )}
             </div>
