@@ -319,12 +319,12 @@
   font-size: 0.9rem;
   text-align: center;
   border-radius: 6px;
-  padding: 3px 5px;
+  padding: 4px 5px;
   position: absolute;
   z-index: 1;
 
   transition: opacity 0.3s;
-  max-width: 90vw;
+  width: 285px;
   transform: translateY(-105%);
   white-space: pre-wrap;
   left: 0;
@@ -485,7 +485,9 @@
   }
 
   .badge .badgeTooltip {
-    width: 75%;
+    left: auto;
+    right: auto;
+    margin: none;
   }
 }
 
