@@ -339,17 +339,6 @@ function needsCompleteRebuild(tempDir: string): boolean {
     return true
   }
 
-  if (
-    !fs
-      .readFileSync(path.join(ROOT_PATH, "package-lock.json"))
-      .equals(fs.readFileSync(path.join(tempDir, "package-lock.json")))
-  ) {
-    console.log(
-      "Moonwave: package-lock.json differs from cached files, rebuilding..."
-    )
-    return true
-  }
-
   return false
 }
 
