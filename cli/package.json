@@ -1,6 +1,6 @@
 {
   "name": "moonwave",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "moonwave cli",
   "main": "dist/index.js",
   "scripts": {
