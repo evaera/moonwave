@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import GenericLink from "./GenericLink"
 import { TypeLinksContext } from "./LuaClass"
 import styles from "./styles.module.css"
-import { Op } from "./Syntax"
+import { Op, PrOp } from "./Syntax"
 
 const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
 const isWhitespace = (char) => !!char.match(/\s/)
@@ -24,14 +24,14 @@ function tokenize(code, isGroup) {
     return buffer
   }
 
-  const readBalanced = () => {
+  const readBalanced = (left, right) => {
     let buffer = ""
 
     let depth = 0
     while (peek()) {
-      if (peek() === "(") {
+      if (peek() === left) {
         depth++
-      } else if (peek() === ")") {
+      } else if (peek() === right) {
         if (depth === 0) {
           break
         } else {
@@ -53,7 +53,16 @@ function tokenize(code, isGroup) {
     if (peek() === "(") {
       next()
       tokens.push({
-        tuple: tokenize(readBalanced(), true),
+        tuple: tokenize(readBalanced("(", ")"), true),
+      })
+      next()
+      continue
+    }
+
+    if (peek() === "[") {
+      next()
+      tokens.push({
+        indexer: tokenize(readBalanced("[", "]")),
       })
       next()
       continue
@@ -169,11 +178,9 @@ function Token({ token, depth }) {
 
   switch (Object.keys(token)[0]) {
     case "root":
-      return <Tokens tokens={token.root} depth={0} typeLinks={typeLinks} />
+      return <Tokens tokens={token.root} depth={0} />
     case "tuple":
-      return (
-        <Tuple tuple={token.tuple} depth={depth + 1} typeLinks={typeLinks} />
-      )
+      return <Tuple tuple={token.tuple} depth={depth + 1} />
     case "identifier":
       return (
         <>
@@ -186,6 +193,14 @@ function Token({ token, depth }) {
       return <Op>{token.punc}</Op>
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
+    case "indexer":
+      return (
+        <span>
+          <PrOp>[</PrOp>
+          <Tokens tokens={token.indexer} depth={depth + 1} />
+          <PrOp>]</PrOp>
+        </span>
+      )
     case "luaType":
       const sanitizedToken = token.luaType.replace(/\W/g, "")
       if (sanitizedToken in typeLinks) {
