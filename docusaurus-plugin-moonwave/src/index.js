@@ -116,6 +116,7 @@ function parseApiCategories(luaClass, apiCategories) {
       apiCategoryChild.push({
         value: capitalize(category),
         id: category,
+        level: 2,
         children: luaClass[section]
           .filter((member) => member.tags && member.tags.includes(category))
           .map((member) => {
