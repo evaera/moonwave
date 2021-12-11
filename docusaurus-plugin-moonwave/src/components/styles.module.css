@@ -263,6 +263,11 @@
   padding: 0 0.5rem;
 }
 
+.docItemContainer img {
+  display: block;
+  margin: 0 auto;
+}
+
 .docTitle {
   font-size: 3rem;
   margin-bottom: calc(var(--ifm-leading-desktop) * var(--ifm-leading));
