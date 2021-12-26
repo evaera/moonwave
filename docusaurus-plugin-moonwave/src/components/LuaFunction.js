@@ -3,6 +3,7 @@ import clsx from "clsx"
 import React from "react"
 import InlineDescription from "./InlineDescription"
 import LuaType from "./LuaType"
+import LuaTypeDef from "./LuaTypeDef"
 import Markdown from "./Markdown"
 import styles from "./styles.module.css"
 import { PrOp } from "./Syntax"
@@ -24,7 +25,7 @@ export default function LuaFunction({
   desc,
   function_type: functionType,
   errors,
-  baseUrl,
+  extraTypes,
 }) {
   return (
     <>
@@ -72,6 +73,20 @@ export default function LuaFunction({
         )}
         {returns.length !== 1 && <PrOp>)</PrOp>}
       </div>
+
+      {extraTypes && (
+        <>
+          <H3>Types</H3>
+
+          {extraTypes.map((type) => (
+            <>
+              <H3 id={type.name} />
+              <LuaTypeDef key={type.name} {...type} />
+            </>
+          ))}
+        </>
+      )}
+
       <Markdown content={desc} />
 
       {errors && (

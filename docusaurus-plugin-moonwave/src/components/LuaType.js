@@ -257,7 +257,5 @@ function Token({ token, depth }) {
 export default function LuaType({ code }) {
   const tokens = tokenize(code)
 
-  console.log(JSON.stringify(tokens, null, 2))
-
   return <Token token={{ type: "root", tokens }} />
 }

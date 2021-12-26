@@ -49,6 +49,7 @@ const ClassSection = ({
   filter,
   component: Component,
   sourceUrl,
+  extraTypes,
 }) => {
   const members = luaClass[section].filter(filter || (() => true))
 
@@ -61,7 +62,11 @@ const ClassSection = ({
       <Title id={section}>{capitalize(section)}</Title>
       {members.map((member, key) => (
         <ClassMember key={key} {...member} sourceUrl={sourceUrl}>
-          <Component luaClassName={luaClass.name} {...member} />
+          <Component
+            luaClassName={luaClass.name}
+            {...member}
+            extraTypes={extraTypes.get(member)}
+          />
         </ClassMember>
       ))}
     </>
@@ -180,6 +185,42 @@ export default function LuaClass({
         }
       })
   })
+
+  const extraTypes = new Map()
+  const skipMembers = new Set()
+  const typeOccurrences = new Map()
+
+  for (const type of luaClass.types) {
+    if (type.desc.length > 0) {
+      continue
+    }
+
+    for (const fn of luaClass.functions) {
+      if (
+        [...fn.params, ...fn.returns].some(({ lua_type }) =>
+          lua_type.includes(type.name)
+        )
+      ) {
+        if (typeOccurrences.has(type)) {
+          typeOccurrences.set(type, null)
+        } else {
+          typeOccurrences.set(type, fn)
+        }
+      }
+    }
+  }
+
+  for (const [type, fn] of typeOccurrences) {
+    if (!fn) {
+      continue
+    }
+
+    const types = extraTypes.get(fn) || []
+    extraTypes.set(fn, types)
+
+    types.push(type)
+    skipMembers.add(type)
+  }
 
   const anyPrivateFunctions = rawLuaClass["functions"].some(
     (member) => member.private
@@ -309,7 +350,8 @@ export default function LuaClass({
                             section={section.name}
                             component={section.component}
                             sourceUrl={options.sourceUrl}
-                            baseUrl={options.baseUrl}
+                            filter={(member) => !skipMembers.has(member)}
+                            extraTypes={extraTypes}
                           />
                         ))}
                       </div>
