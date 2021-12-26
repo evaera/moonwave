@@ -102,9 +102,14 @@ Fields of the interface are written in the description with lines beginning with
 ### @function
 :::note Usage
 `@function <name>`
+`@method <name>`
 :::
 
-The `@function` tag should only be used to document functions that do not actually appear in your file or are automatically generated. By default, when you place a doc comment above a function, Moonwave will automatically detect that it is a function doc comment so using `@function` is not required.
+The `@function` tag should only be used to document functions that do not actually appear in your file or are automatically generated.
+
+Alternatively, the `@method` tag may be used to indicate a method (invoked with `:` instead of `.`).
+
+By default, when you place a doc comment above a function, Moonwave will automatically detect that it is a function doc comment so using `@function` is not required.
 
 ```lua
 --[=[
@@ -119,13 +124,13 @@ function MyClass:add(a, b)
 end
 ```
 
-Or using the `@function` tag (note that the function definition is missing):
+Or using the `@method` tag (note that the function definition is missing):
 
 ```lua
 --[=[
 	This is a very fancy function that adds a couple numbers.
 
-	@function add
+	@method add
 	@within MyClass
 	@param a number -- The first number you want to add
 	@param b number -- The second number you wanna add
