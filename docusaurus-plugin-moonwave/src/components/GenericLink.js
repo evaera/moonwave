@@ -19,7 +19,7 @@ export default function GenericLink({ to, style, children }) {
           viewBox="0 0 100 100"
           width="15"
           height="15"
-          class="icon outbound"
+          className="icon outbound"
           style={{
             color: "gray",
             verticalAlign: "middle",
