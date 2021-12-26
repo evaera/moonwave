@@ -80,7 +80,7 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
             Tag::Function(function_tag) => {
                 return Ok(Some(DocEntryKind::Function {
                     name: function_tag.name.as_str().to_owned(),
-                    function_type: FunctionType::Static,
+                    function_type: function_tag.function_type.clone(),
                     within: get_within_tag(tags, tag)?,
                 }));
             }

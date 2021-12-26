@@ -12,7 +12,7 @@ use serde::Serialize;
 use super::DocEntryParseArguments;
 
 /// Used to separate functions (called with a dot) from methods (called with a colon)
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum FunctionType {
     Method,

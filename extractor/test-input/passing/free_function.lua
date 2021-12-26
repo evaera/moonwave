@@ -5,6 +5,12 @@
 
 	a function
 ]=]
-function example()
+function example() end
 
-end
+--[=[
+	@within free
+	@method aMethod
+
+	a method
+]=]
+function aMethod() end

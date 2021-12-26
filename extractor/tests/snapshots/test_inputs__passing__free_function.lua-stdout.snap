@@ -16,6 +16,17 @@ expression: stdout
           "line": 8,
           "path": ""
         }
+      },
+      {
+        "name": "aMethod",
+        "desc": "a method",
+        "params": [],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 16,
+          "path": ""
+        }
       }
     ],
     "properties": [],

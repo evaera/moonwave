@@ -1,4 +1,4 @@
-use crate::{diagnostic::Diagnostic, span::Span};
+use crate::{diagnostic::Diagnostic, doc_entry::FunctionType, span::Span};
 use serde::Serialize;
 use std::convert::TryFrom;
 
@@ -143,7 +143,8 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             "@field" => FieldTag::parse(tag_text()?).map(Tag::Field),
             "@prop" => PropertyTag::parse(tag_text()?).map(Tag::Property),
             "@class" => ClassTag::parse(tag_text()?).map(Tag::Class),
-            "@function" => FunctionTag::parse(tag_text()?).map(Tag::Function),
+            "@function" => FunctionTag::parse(tag_text()?, FunctionType::Static).map(Tag::Function),
+            "@method" => FunctionTag::parse(tag_text()?, FunctionType::Method).map(Tag::Function),
             "@deprecated" => DeprecatedTag::parse(tag_text()?).map(Tag::Deprecated),
             "@since" => SinceTag::parse(tag_text()?).map(Tag::Since),
             "@tag" => CustomTag::parse(tag_text()?).map(Tag::Custom),
