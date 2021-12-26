@@ -2,8 +2,8 @@ import React from "react"
 import styles from "./styles.module.css"
 
 const DEPTH_CLASSES = [
-  styles.green,
   styles.purple,
+  styles.green,
   styles.yellow,
   styles.cyan,
   styles.orange,

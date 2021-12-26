@@ -50,10 +50,15 @@ function tokenize(code, isGroup) {
   while (position < code.length) {
     read(isWhitespace)
 
+    if (position >= code.length) {
+      break
+    }
+
     if (peek() === "(") {
       next()
       tokens.push({
-        tuple: tokenize(readBalanced("(", ")"), true),
+        type: "tuple",
+        unseparatedTokens: tokenize(readBalanced("(", ")"), true),
       })
       next()
       continue
@@ -62,7 +67,18 @@ function tokenize(code, isGroup) {
     if (peek() === "[") {
       next()
       tokens.push({
-        indexer: tokenize(readBalanced("[", "]")),
+        type: "indexer",
+        tokens: tokenize(readBalanced("[", "]")),
+      })
+      next()
+      continue
+    }
+
+    if (peek() === "{") {
+      next()
+      tokens.push({
+        type: "table",
+        unseparatedTokens: tokenize(readBalanced("{", "}"), true),
       })
       next()
       continue
@@ -71,7 +87,7 @@ function tokenize(code, isGroup) {
     if (isGroup && peek() === ",") {
       next()
       tokens.push({
-        separator: true,
+        type: "separator",
       })
       continue
     }
@@ -81,18 +97,19 @@ function tokenize(code, isGroup) {
 
       if (punc === "-" && peek() === ">") {
         tokens.push({
-          arrow: true,
+          type: "arrow",
         })
         next()
         continue
       }
 
       if (punc === "|") {
-        tokens.push({ union: true })
+        tokens.push({ type: "union" })
         continue
       }
 
       tokens.push({
+        type: "punc",
         punc,
       })
       continue
@@ -104,9 +121,10 @@ function tokenize(code, isGroup) {
 
     if (atom) {
       if (atom.endsWith(":")) {
-        tokens.push({ identifier: atom.slice(0, -1) })
+        tokens.push({ type: "identifier", identifier: atom.slice(0, -1) })
       } else {
         tokens.push({
+          type: "luaType",
           luaType: atom,
         })
       }
@@ -116,55 +134,53 @@ function tokenize(code, isGroup) {
     throw new Error(`Reached bottom of tokenizer with no match: ${peek()}`)
   }
 
-  return groupTuples(tokens)
+  return tokens.map(separateGroups)
 }
 
-function groupTuples(tokens) {
-  return tokens.map((token) => {
-    if (!token.tuple) {
-      return token
-    }
+function separateGroups(token) {
+  if (!token.unseparatedTokens) {
+    return token
+  }
 
-    let subTokens = [[]]
+  const separatedTokens = [[]]
 
-    token.tuple.forEach((token) => {
-      if (token.separator) {
-        subTokens.push([])
-      } else {
-        if (token.tuple) {
-          token = { tuple: groupTuples(token.tuple) }
-        }
-        subTokens[subTokens.length - 1].push(token)
-      }
-    })
+  token.unseparatedTokens.forEach((token) => {
+    if (token.type === "separator") {
+      separatedTokens.push([])
+    } else {
+      token = separateGroups(token)
 
-    return {
-      tuple: subTokens,
+      separatedTokens[separatedTokens.length - 1].push(token)
     }
   })
+
+  return {
+    ...token,
+    separatedTokens,
+  }
 }
 
-function Tuple({ tuple, depth }) {
-  if (tuple.length > 1) {
+function Group({ tokenGroups, depth, left, right }) {
+  if (tokenGroups.length > 1) {
     return (
       <>
-        <Op depth={depth}>(</Op>
-        {tuple.map((tokens, i) => (
+        <Op depth={depth}>{left}</Op>
+        {tokenGroups.map((tokens, i) => (
           <div className={styles.inset} key={i}>
             <Tokens tokens={tokens} depth={depth} />
-            {i !== tuple.length - 1 && <Op depth={depth}>,</Op>}
+            {i !== tokenGroups.length - 1 && <Op depth={depth}>,</Op>}
           </div>
         ))}
-        <Op depth={depth}>)</Op>
+        <Op depth={depth}>{right}</Op>
       </>
     )
   }
 
   return (
     <>
-      <Op depth={depth}>(</Op>
-      <Tokens tokens={tuple[0]} depth={depth} />
-      <Op depth={depth}>)</Op>
+      <Op depth={depth}>{left}</Op>
+      <Tokens tokens={tokenGroups[0]} depth={depth} />
+      <Op depth={depth}>{right}</Op>
     </>
   )
 }
@@ -176,11 +192,27 @@ function Tokens({ tokens, depth }) {
 function Token({ token, depth }) {
   const typeLinks = useContext(TypeLinksContext)
 
-  switch (Object.keys(token)[0]) {
+  switch (token.type) {
     case "root":
-      return <Tokens tokens={token.root} depth={0} />
+      return <Tokens tokens={token.tokens} depth={0} />
     case "tuple":
-      return <Tuple tuple={token.tuple} depth={depth + 1} />
+      return (
+        <Group
+          tokenGroups={token.separatedTokens}
+          depth={depth + 1}
+          left="("
+          right=")"
+        />
+      )
+    case "table":
+      return (
+        <Group
+          tokenGroups={token.separatedTokens}
+          depth={depth + 1}
+          left="{"
+          right="}"
+        />
+      )
     case "identifier":
       return (
         <>
@@ -197,7 +229,7 @@ function Token({ token, depth }) {
       return (
         <span>
           <PrOp>[</PrOp>
-          <Tokens tokens={token.indexer} depth={depth + 1} />
+          <Tokens tokens={token.tokens} depth={depth + 1} />
           <PrOp>]</PrOp>
         </span>
       )
@@ -218,12 +250,14 @@ function Token({ token, depth }) {
 
       return <code className={styles.blue}>{token.luaType}</code>
     default:
-      return <span>unknown token {Object.keys(token)[0]}</span>
+      return <span>unknown token {token.type}</span>
   }
 }
 
 export default function LuaType({ code }) {
   const tokens = tokenize(code)
 
-  return <Token token={{ root: tokens }} />
+  console.log(JSON.stringify(tokens, null, 2))
+
+  return <Token token={{ type: "root", tokens }} />
 }
