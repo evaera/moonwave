@@ -55,6 +55,10 @@ fn drop_module() -> anyhow::Result<()> {
 fn if_then_expression() -> anyhow::Result<()> {
     run_moonwave("passing/if_then_expression.lua", 0)
 }
+#[test]
+fn docs_everywhere() -> anyhow::Result<()> {
+    run_moonwave("passing/docs_everywhere.lua", 0)
+}
 
 #[test]
 fn triple_dash_but_wrong() -> anyhow::Result<()> {

@@ -177,10 +177,9 @@ fn determine_kind(
 }
 
 impl<'a> DocEntry<'a> {
-    pub fn parse(
-        doc_comment: &'a DocComment,
-        stmt: Option<&Stmt>,
-    ) -> Result<DocEntry<'a>, Diagnostics> {
+    pub fn parse(doc_comment: &'a DocComment) -> Result<DocEntry<'a>, Diagnostics> {
+        let stmt = doc_comment.stmt.as_ref();
+
         let span: Span<'a> = doc_comment.into();
 
         let mut lines = span.lines();
@@ -217,10 +216,12 @@ impl<'a> DocEntry<'a> {
                 .unwrap_or("")
         });
 
-        if !span
-            .lines()
-            .all(|span| span.is_empty() || span.starts_with(indentation) || span.as_str() == "---")
-        {
+        if !span.lines().all(|span| {
+            span.is_empty()
+                || span.starts_with(indentation)
+                || span.as_str() == "---"
+                || span.chars().all(char::is_whitespace)
+        }) {
             return Err(Diagnostics::from(vec![span.diagnostic(
                 "This doc comment has mixed indentation. \
                 All lines within the doc comment must start with the same indentation. \

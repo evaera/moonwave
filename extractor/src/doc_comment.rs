@@ -1,3 +1,4 @@
+use full_moon::ast::Stmt;
 use serde::{Deserialize, Serialize};
 
 use crate::diagnostic::Diagnostic;
@@ -17,6 +18,7 @@ pub struct DocComment {
     pub file_id: usize,
     pub start: usize,
     pub output_source: OutputSource,
+    pub stmt: Option<Stmt>,
 }
 
 impl DocComment {
@@ -26,6 +28,7 @@ impl DocComment {
         target_line: usize,
         file_id: usize,
         relative_path: String,
+        stmt: Option<Stmt>,
     ) -> Self {
         Self {
             comment,
@@ -35,6 +38,7 @@ impl DocComment {
                 line: target_line,
                 relative_path,
             },
+            stmt,
         }
     }
 

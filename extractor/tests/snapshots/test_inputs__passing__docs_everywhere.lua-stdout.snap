@@ -1,0 +1,48 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [],
+    "properties": [],
+    "types": [],
+    "name": "BeforeReturn",
+    "desc": "A class before a return",
+    "source": {
+      "line": 18,
+      "path": ""
+    }
+  },
+  {
+    "functions": [
+      {
+        "name": "method",
+        "desc": "A function inside a do end block!\n\t",
+        "params": [
+          {
+            "name": "name",
+            "desc": "inner scope here",
+            "lua_type": "type"
+          }
+        ],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 10,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "InnerScope",
+    "desc": "",
+    "source": {
+      "line": 3,
+      "path": ""
+    }
+  }
+]
+
