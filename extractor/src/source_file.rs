@@ -55,6 +55,11 @@ impl<'a> SourceFile {
                         self.last_line = token.start_position().line();
 
                         if let Some(comment) = comment.strip_prefix('-') {
+                            if comment.trim().chars().all(|char| char == '-') {
+                                // Comment is all -------
+                                return;
+                            }
+
                             if comment.len() > 1 {
                                 if let Some(first_non_whitespace) =
                                     comment.find(|char: char| !char.is_whitespace())

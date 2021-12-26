@@ -1,8 +1,10 @@
-
+----------------------------------------------------
 
 ---	This description starts one line down,
 ---			some indented text
 ---	And has a line in the middle, followed by trailing lines.
+---
+---	Double blank here
 ---
 ---	```lua
 ---	function test()
@@ -18,7 +20,6 @@
 ---
 ---	@class triple
 
-
 --- not present in output
 --[=[
 	@class b8f83
@@ -29,6 +30,4 @@
 
 --- @within triple
 --- @param eher efe -- fhef
-function example()
-
-end
+function example() end
