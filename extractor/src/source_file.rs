@@ -170,14 +170,11 @@ impl<'a> SourceFile {
     }
 
     pub fn parse(&'a self) -> Result<Vec<DocEntry>, Error> {
-        let doc_entries: Vec<Result<DocEntry, Diagnostics>> = self
+        let (doc_entries, errors): (Vec<_>, Vec<_>) = self
             .doc_comments
             .iter()
             .map(|c| DocEntry::parse(&c.0, c.1.as_ref()))
-            .collect();
-
-        let (doc_entries, errors): (Vec<_>, Vec<_>) =
-            doc_entries.into_iter().partition(Result::is_ok);
+            .partition(Result::is_ok);
         let doc_entries: Vec<_> = doc_entries.into_iter().map(Result::unwrap).collect();
         let errors: Diagnostics = errors
             .into_iter()
