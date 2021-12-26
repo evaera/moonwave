@@ -1,6 +1,6 @@
 {
   "name": "docusaurus-plugin-moonwave",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "description": "Display your API docs generated from Moonwave in Docusaurus",
   "main": "src/index.js",
   "scripts": {
