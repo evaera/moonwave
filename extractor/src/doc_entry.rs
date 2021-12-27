@@ -19,6 +19,8 @@ pub use function::{FunctionDocEntry, FunctionType};
 pub use property::PropertyDocEntry;
 pub use type_definition::TypeDocEntry;
 
+use self::function::FunctionSource;
+
 /// Enum used when determining the type of the DocEntry during parsing
 #[derive(Debug, PartialEq)]
 enum DocEntryKind {
@@ -26,6 +28,7 @@ enum DocEntryKind {
         within: String,
         name: String,
         function_type: FunctionType,
+        function_source: Option<FunctionSource>,
     },
     Property {
         within: String,
@@ -82,6 +85,7 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                     name: function_tag.name.as_str().to_owned(),
                     function_type: function_tag.function_type.clone(),
                     within: get_within_tag(tags, tag)?,
+                    function_source: None,
                 }));
             }
             Tag::Property(property_tag) => {
@@ -144,6 +148,7 @@ fn determine_kind(
                     name: method_name.to_string(),
                     within,
                     function_type: FunctionType::Method,
+                    function_source: Some(function.body().clone().into()),
                 })
             }
             None => {
@@ -167,6 +172,7 @@ fn determine_kind(
                     name: function_name,
                     within,
                     function_type: FunctionType::Static,
+                    function_source: Some(function.body().clone().into()),
                 })
             }
         },
@@ -281,6 +287,7 @@ impl<'a> DocEntry<'a> {
                 within,
                 name,
                 function_type,
+                function_source,
             } => DocEntry::Function(FunctionDocEntry::parse(
                 DocEntryParseArguments {
                     within: Some(within),
@@ -290,6 +297,7 @@ impl<'a> DocEntry<'a> {
                     source: doc_comment,
                 },
                 function_type,
+                function_source,
             )?),
             DocEntryKind::Property { within, name } => {
                 DocEntry::Property(PropertyDocEntry::parse(DocEntryParseArguments {

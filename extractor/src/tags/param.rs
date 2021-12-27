@@ -30,7 +30,7 @@ impl<'a> ParamTag<'a> {
         let lua_type = pieces
             .next()
             .map(|name| name.trim())
-            .ok_or_else(|| span.diagnostic("Param type is required"))?;
+            .unwrap_or_else(|| Span::dummy(""));
 
         Ok(Self {
             name,
@@ -73,21 +73,6 @@ mod test {
     }
 
     #[test]
-    fn no_type() {
-        let source = Span::dummy("coffee -- Ever heard of FlowJS?");
-        let value = ParamTag::parse(source);
-        assert_yaml_snapshot!(value, @r###"
-        ---
-        Err:
-          text: Param type is required
-          start: 0
-          len: 31
-          file_id: 0
-          additional_diagnostics: []
-        "###);
-    }
-
-    #[test]
     fn no_description() {
         let source = Span::dummy("coffee tasty");
         let value = ParamTag::parse(source).unwrap();
@@ -97,49 +82,5 @@ mod test {
         desc: ""
         lua_type: tasty
         "###);
-    }
-
-    #[test]
-    fn no_description_nor_type() {
-        let source = Span::dummy("coffee");
-        let value = ParamTag::parse(source);
-        assert_yaml_snapshot!(value, @r###"
-        ---
-        Err:
-          text: Param type is required
-          start: 0
-          len: 6
-          file_id: 0
-          additional_diagnostics: []
-        "###);
-    }
-
-    #[test]
-    fn empty_type() {
-        let source = Span::dummy("a  -- HEY! This is a sweet description");
-
-        let value = ParamTag::parse(source);
-        assert_yaml_snapshot!(value, @r###"
-        ---
-        Err:
-          text: Param type is required
-          start: 0
-          len: 38
-          file_id: 0
-          additional_diagnostics: []
-        "###);
-    }
-
-    #[test]
-    fn snapshot() {
-        assert_yaml_snapshot!(ParamTag::parse(Span::dummy("coffee")), @r###"
-        ---
-        Err:
-          text: Param type is required
-          start: 0
-          len: 6
-          file_id: 0
-          additional_diagnostics: []
-        "###)
     }
 }

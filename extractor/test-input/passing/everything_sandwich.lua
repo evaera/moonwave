@@ -60,7 +60,7 @@
 	@error "Bad" -- This can error with the text Bad if there's a bad error.
 	@error Error<F> -- THis can error with an ERror object also. Maybe. We don't really know
 ]=]
-function Module.new()
+function Module.new(name)
 
 end
 

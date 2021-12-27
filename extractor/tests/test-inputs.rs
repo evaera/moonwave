@@ -61,6 +61,16 @@ fn docs_everywhere() -> anyhow::Result<()> {
 }
 
 #[test]
+fn dynamic_param_return() -> anyhow::Result<()> {
+    run_moonwave("passing/dynamic_param_return.lua", 0)
+}
+
+#[test]
+fn param_validation() -> anyhow::Result<()> {
+    run_moonwave("failing/param_validation.lua", 1)
+}
+
+#[test]
 fn failing_function() -> anyhow::Result<()> {
     run_moonwave("failing/function.lua", 1)
 }

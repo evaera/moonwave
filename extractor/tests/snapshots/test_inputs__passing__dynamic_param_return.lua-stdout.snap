@@ -1,0 +1,148 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [
+      {
+        "name": "autoType",
+        "desc": "auto type",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          },
+          {
+            "name": "y",
+            "desc": "",
+            "lua_type": "{ complicated: string, ty: { x: number, y: any } }"
+          }
+        ],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 8,
+          "path": ""
+        }
+      },
+      {
+        "name": "mixed",
+        "desc": "mixed",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          },
+          {
+            "name": "y",
+            "desc": "extra description for y",
+            "lua_type": "string"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "boolean "
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 15,
+          "path": ""
+        }
+      },
+      {
+        "name": "multipleReturns",
+        "desc": "multiple returns",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "number"
+          },
+          {
+            "desc": "",
+            "lua_type": "string"
+          },
+          {
+            "desc": "",
+            "lua_type": "boolean"
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 20,
+          "path": ""
+        }
+      },
+      {
+        "name": "variadic",
+        "desc": "variadic",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          },
+          {
+            "name": "...",
+            "desc": "",
+            "lua_type": "string"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "...boolean "
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 25,
+          "path": ""
+        }
+      },
+      {
+        "name": "questionMark",
+        "desc": "question mark",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          },
+          {
+            "name": "...?",
+            "desc": "example yo",
+            "lua_type": "string"
+          }
+        ],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 32,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "test",
+    "desc": "",
+    "source": {
+      "line": 2,
+      "path": ""
+    }
+  }
+]
+

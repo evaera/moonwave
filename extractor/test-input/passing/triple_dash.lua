@@ -30,4 +30,4 @@
 
 --- @within triple
 --- @param eher efe -- fhef
-function example() end
+function example(eher) end

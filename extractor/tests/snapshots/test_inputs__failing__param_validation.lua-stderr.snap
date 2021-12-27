@@ -1,0 +1,22 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+
+---
+error: Function parameter "parameter" has no type. Document with @param or insert Luau type annotation
+  ┌─ test-input/failing/param_validation.lua:3:6
+  │  
+3 │   --[=[
+  │ ╭─────^
+4 │ │     missing doc
+5 │ │ ]=]
+  │ ╰^ Function parameter "parameter" has no type. Document with @param or insert Luau type annotation
+
+error: Param "fake" does not actually exist in function
+   ┌─ test-input/failing/param_validation.lua:11:9
+   │
+11 │     @param fake number -- this is a fake param
+   │            ^^^^ Param "fake" does not actually exist in function
+
+error: aborting due to diagnostic error
+

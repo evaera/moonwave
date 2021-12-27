@@ -1,12 +1,13 @@
 use std::collections::BTreeSet;
 
 use crate::{
-    diagnostic::Diagnostics,
+    diagnostic::{Diagnostic, Diagnostics},
     doc_comment::{DocComment, OutputSource},
     realm::Realm,
     serde_util::is_false,
     tags::{CustomTag, DeprecatedTag, ErrorTag, ParamTag, ReturnTag, Tag},
 };
+use full_moon::ast::{types::TypeInfo::Tuple, FunctionBody};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -19,13 +20,99 @@ pub enum FunctionType {
     Static,
 }
 
+#[derive(Debug, PartialEq, Serialize, Clone)]
+pub struct FunctionSource {
+    params: Vec<FunctionParam>,
+    returns: Vec<FunctionReturn>,
+}
+
+impl From<FunctionBody> for FunctionSource {
+    fn from(func: FunctionBody) -> Self {
+        let mut params = Vec::new();
+
+        let params_and_types = func.parameters().into_iter().zip(func.type_specifiers());
+        for (parameter, type_specifier) in params_and_types {
+            let source_param = FunctionParam {
+                name: match parameter {
+                    full_moon::ast::Parameter::Ellipse(_) => "...".to_owned(),
+                    full_moon::ast::Parameter::Name(token) => token.to_string(),
+                    _ => {
+                        unreachable!()
+                    }
+                },
+                desc: "".to_string(),
+                lua_type: type_specifier
+                    .map(|type_specifier| type_specifier.type_info().to_string())
+                    .unwrap_or_else(String::new),
+            };
+
+            params.push(source_param);
+        }
+
+        let returns = match func.return_type() {
+            Some(return_type) => {
+                let info = return_type.type_info();
+
+                match info {
+                    Tuple { types, .. } => types
+                        .into_iter()
+                        .map(|ty| FunctionReturn {
+                            lua_type: ty.to_string(),
+                            desc: String::new(),
+                        })
+                        .collect::<Vec<_>>(),
+                    _ => vec![FunctionReturn {
+                        lua_type: info.to_string(),
+                        desc: String::new(),
+                    }],
+                }
+            }
+            None => Vec::new(),
+        };
+
+        FunctionSource { params, returns }
+    }
+}
+
+#[derive(Debug, PartialEq, Serialize, Clone)]
+pub struct FunctionParam {
+    name: String,
+    desc: String,
+    lua_type: String,
+}
+
+impl<'a> From<ParamTag<'a>> for FunctionParam {
+    fn from(tag: ParamTag) -> Self {
+        Self {
+            name: tag.name.to_string(),
+            desc: tag.desc.to_string(),
+            lua_type: tag.lua_type.to_string(),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Serialize, Clone)]
+pub struct FunctionReturn {
+    desc: String,
+    lua_type: String,
+}
+
+impl<'a> From<ReturnTag<'a>> for FunctionReturn {
+    fn from(tag: ReturnTag) -> Self {
+        Self {
+            desc: tag.desc.to_string(),
+            lua_type: tag.lua_type.to_string(),
+        }
+    }
+}
+
 /// A DocEntry for a function or method.
 #[derive(Debug, PartialEq, Serialize)]
 pub struct FunctionDocEntry<'a> {
     pub name: String,
     pub desc: String,
-    pub params: Vec<ParamTag<'a>>,
-    pub returns: Vec<ReturnTag<'a>>,
+    pub params: Vec<FunctionParam>,
+    pub returns: Vec<FunctionReturn>,
     pub function_type: FunctionType,
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -60,6 +147,7 @@ impl<'a> FunctionDocEntry<'a> {
     pub(super) fn parse(
         args: DocEntryParseArguments<'a>,
         function_type: FunctionType,
+        function_source: Option<FunctionSource>,
     ) -> Result<Self, Diagnostics> {
         let DocEntryParseArguments {
             name,
@@ -91,10 +179,60 @@ impl<'a> FunctionDocEntry<'a> {
 
         let mut unused_tags = Vec::new();
 
+        let source_exists = if let Some(function_source) = function_source {
+            for param in function_source.params {
+                doc_entry.params.push(param);
+            }
+
+            for ret in function_source.returns {
+                doc_entry.returns.push(ret)
+            }
+
+            true
+        } else {
+            false
+        };
+
+        let mut return_cleared = false;
         for tag in tags {
             match tag {
-                Tag::Param(param) => doc_entry.params.push(param),
-                Tag::Return(return_tag) => doc_entry.returns.push(return_tag),
+                Tag::Param(param) => {
+                    if source_exists {
+                        if let Some(found) = doc_entry.params.iter_mut().find(|existing_param| {
+                            param.name.as_str().replace('?', "") == existing_param.name
+                        }) {
+                            found.desc = param.desc.to_string();
+
+                            if !param.lua_type.is_empty() {
+                                found.lua_type = param.lua_type.to_string();
+                            }
+
+                            // Special case for params ending with ?
+                            // Luau doesn't actually allow this syntax but users use it
+                            if param.name.ends_with('?') && !found.name.ends_with('?') {
+                                found.name = format!("{}?", found.name);
+                            }
+                        } else {
+                            return Err(Diagnostics::from(vec![Diagnostic::from_span(
+                                format!(
+                                    "Param \"{}\" does not actually exist in function",
+                                    param.name
+                                ),
+                                param.name,
+                            )]));
+                        }
+                    } else {
+                        doc_entry.params.push(param.into());
+                    }
+                }
+                Tag::Return(return_tag) => {
+                    if source_exists && !return_cleared {
+                        doc_entry.returns.clear();
+                        return_cleared = true;
+                    }
+
+                    doc_entry.returns.push(return_tag.into());
+                }
                 Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
@@ -116,6 +254,20 @@ impl<'a> FunctionDocEntry<'a> {
                 }
                 _ => unused_tags.push(tag),
             }
+        }
+
+        let mut diagnostics = Vec::new();
+        for param in doc_entry.params.iter() {
+            if param.lua_type.is_empty() {
+                diagnostics.push(Diagnostic::from_doc_comment(
+                    format!("Function parameter \"{}\" has no type. Document with @param or insert Luau type annotation", param.name),
+                    source,
+                ))
+            }
+        }
+
+        if !diagnostics.is_empty() {
+            return Err(Diagnostics::from(diagnostics));
         }
 
         if !unused_tags.is_empty() {

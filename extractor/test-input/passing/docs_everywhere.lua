@@ -7,7 +7,7 @@ do
 
 		A function inside a do end block!
 	]=]
-	function InnerScope:method() end
+	function InnerScope:method(name) end
 end
 
 --[=[
