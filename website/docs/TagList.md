@@ -102,12 +102,21 @@ Fields of the interface are written in the description with lines beginning with
 ### @function
 :::note Usage
 `@function <name>`
+
 `@method <name>`
 :::
 
 The `@function` tag should only be used to document functions that do not actually appear in your file or are automatically generated.
 
 Alternatively, the `@method` tag may be used to indicate a method (invoked with `:` instead of `.`).
+
+:::tip
+**As of Moonwave v0.3.0**...
+
+- Free functions no longer require the use of `@function` - only `@within`.
+- Parameters and return types are automatically detected in functions, so documenting them manually is not required if
+they already have Luau types.
+:::
 
 By default, when you place a doc comment above a function, Moonwave will automatically detect that it is a function doc comment so using `@function` is not required.
 
@@ -189,10 +198,18 @@ end
 
 ### @param
 :::note Usage
-`@param <name> <type> -- [description]`
+`@param <name> [type] -- [description]`
 :::
 
 Describes a parameter for a function. This tag can appear multiple times in a doc comment, and each parameter should have its own.
+
+:::tip
+Parameter names and types are automatically detected when using Luau type annotations, so using the `@param` tag is only required if you want to specify a description.
+
+The `@param` `type` argument is optional if the parameter type is specified inline with Luau type annotations. You can still specify it to override.
+
+As of Moonwave v0.3.0, having an undocumented parameter, or an extra `@param` tag with no corresponding Lua parameter, is an error.
+:::
 
 The `@param` tag begins with the parameter name, followed by a space and the type. Optionally, this can be followed by two dashes (`--`) and a description. Markdown is parsed in the description.
 
@@ -203,6 +220,14 @@ The `@param` tag begins with the parameter name, followed by a space and the typ
 ]=]
 function MyClass:doSomething(a, b)
 end
+
+--[=[
+	Example of only specifying description, using the auto-detected Luau type annotation.
+
+	@param myParam -- Description of myParam
+]=]
+function MyClass:typeAnnotationExample(myParam: string)
+end
 ```
 
 ### @return
@@ -211,6 +236,13 @@ end
 :::
 
 Describes a return value for a function. This tag can appear multiple times in a doc comment, and each return value should have its own.
+
+:::tip
+Return types are automatically detected when using Luau type annotations, so using the `@return` tag is only
+required if you want to specify a description.
+
+If you choose to use the `@return` tag, you must specify all returns with `@return` doc tags. Any return types that were automatically detected are discarded if *any* `@return` tag is manually specified.
+:::
 
 The `@return` tag is followed by the type of the return. Optionally, this can be followed by two dashes (`--`) and a description. Markdown is parsed in the description.
 
