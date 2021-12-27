@@ -126,6 +126,7 @@ function parseApiCategories(luaClass, apiCategories) {
               id: member.name,
               children: [],
               level: 3,
+              private: member.private,
             }
           })
           .sort((childA, childB) => childA.value.localeCompare(childB.value)),
@@ -145,6 +146,7 @@ function parseApiCategories(luaClass, apiCategories) {
         id: member.name,
         children: [],
         level: 3,
+        private: member.private,
       }))
       .sort((childA, childB) => childA.value.localeCompare(childB.value))
 
