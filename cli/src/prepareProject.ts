@@ -432,7 +432,10 @@ export function prepareProject(
     apiCategories: config.apiCategories ?? [],
   })
 
-  if (!fs.existsSync(path.join(tempDir, "./node_modules"))) {
+  if (
+    !fs.existsSync(path.join(tempDir, "./node_modules")) ||
+    !fs.existsSync(path.join(tempDir, "./node_modules/.bin/docusaurus"))
+  ) {
     console.log("Installing dependencies (this might take awhile)...")
 
     execSync("npm i", {
