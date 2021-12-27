@@ -38,3 +38,13 @@ function test:questionMark(x: number, ...: string) end
 	@param takes -- this is what it takes, and you ain't got it
 ]=]
 local function free(rakes: number, takes: string): (number, boolean) end
+
+--[=[
+	weird formatting
+
+	@within test
+	@param secondLine -- A description
+]=]
+local function weirdFormatting(
+	secondLine: number
+) end

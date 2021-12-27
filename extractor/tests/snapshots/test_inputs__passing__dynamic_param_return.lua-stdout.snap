@@ -164,6 +164,23 @@ expression: stdout
           "line": 40,
           "path": ""
         }
+      },
+      {
+        "name": "weirdFormatting",
+        "desc": "weird formatting",
+        "params": [
+          {
+            "name": "secondLine",
+            "desc": "A description",
+            "lua_type": "number\n"
+          }
+        ],
+        "returns": [],
+        "function_type": "static",
+        "source": {
+          "line": 48,
+          "path": ""
+        }
       }
     ],
     "properties": [],

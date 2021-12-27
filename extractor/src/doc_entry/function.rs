@@ -35,7 +35,15 @@ impl From<FunctionBody> for FunctionSource {
             let source_param = FunctionParam {
                 name: match parameter {
                     full_moon::ast::Parameter::Ellipse(_) => "...".to_owned(),
-                    full_moon::ast::Parameter::Name(token) => token.to_string(),
+                    full_moon::ast::Parameter::Name(token) => {
+                        if let full_moon::tokenizer::TokenType::Identifier { identifier } =
+                            token.token_type()
+                        {
+                            identifier.to_string()
+                        } else {
+                            unreachable!()
+                        }
+                    }
                     _ => {
                         unreachable!()
                     }
