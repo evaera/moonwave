@@ -136,6 +136,22 @@ fn determine_kind(
         });
 
     match stmt {
+        Some(Stmt::LocalFunction(function)) => {
+            let name = function.name().to_string();
+
+            let within = if let Some(within) = within_tag {
+                within.name.as_str().to_owned()
+            } else {
+                return Err(doc_comment.diagnostic("Function requires @within tag"));
+            };
+
+            Ok(DocEntryKind::Function {
+                name,
+                within,
+                function_type: FunctionType::Static,
+                function_source: Some(function.body().clone().into()),
+            })
+        }
         Some(Stmt::FunctionDeclaration(function)) => match function.name().method_name() {
             Some(method_name) => {
                 let within = if let Some(within) = within_tag {
