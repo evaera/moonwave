@@ -13,6 +13,7 @@ export interface GenerateConfigParams {
   binaryPath: string
   classOrder: ClassOrder
   apiCategories: string[]
+  autoSectionPath?: string
 }
 
 export default function getDocusaurusConfig({
@@ -26,6 +27,7 @@ export default function getDocusaurusConfig({
   binaryPath,
   classOrder,
   apiCategories,
+  autoSectionPath,
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
@@ -104,6 +106,7 @@ export default function getDocusaurusConfig({
           classOrder,
           apiCategories,
           binaryPath,
+          autoSectionPath,
         },
       ],
       "docusaurus-lunr-search",

@@ -245,7 +245,54 @@ module.exports = (context, options) => ({
     filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
 
     const classOrder = options.classOrder
-    const apiCategories = options.apiCategories
+
+    if (options.autoSectionPath) {
+      if (
+        classOrder.length > 0 &&
+        !classOrder.every((item) => typeof item === "object")
+      ) {
+        throw new Error(
+          "When using autoSectionPath, classOrder cannot contain bare string keys." +
+            "Use sectional style instead: https://upliftgames.github.io/moonwave/docs/Configuration#sections"
+        )
+      }
+
+      const prefix = options.autoSectionPath
+
+      for (const luaClass of filteredContent) {
+        if (luaClass.source.path.startsWith(prefix)) {
+          const classPath = luaClass.source.path.slice(prefix.length + 1)
+
+          const nextDirMatch = classPath.match(/^(.+)\//)
+
+          if (nextDirMatch) {
+            const nextDir = nextDirMatch[1]
+
+            // convert kebab-case, camelCase, PascalCase to Title Case
+            const title = nextDir
+              .replace(/(?<!-)([A-Z])/g, " $1")
+              .replace("-", " ")
+              .split(/\s+/)
+              .filter((str) => str.length > 0)
+              .map(capitalize)
+              .join(" ")
+
+            const existingSection = classOrder.find(
+              (section) => section.section === title
+            )
+
+            if (existingSection) {
+              existingSection.classes.push(luaClass.name)
+            } else {
+              classOrder.push({
+                section: title,
+                classes: [luaClass.name],
+              })
+            }
+          }
+        }
+      }
+    }
 
     const allLuaClassNamesOrdered = parseClassOrder(
       filteredContent,
@@ -258,6 +305,7 @@ module.exports = (context, options) => ({
       JSON.stringify(allLuaClassNamesOrdered)
     )
 
+    const apiCategories = options.apiCategories
     const baseUrl = context.baseUrl
     const pluginOptions = await createData(
       "options.json",

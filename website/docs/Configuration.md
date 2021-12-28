@@ -107,6 +107,18 @@ collapsed = false # Determines with the section grouping is collapsed or expande
 classes = ["Class7", "ClassAte", "Class9"]
 ```
 
+#### Automatic Sections from Folders
+
+You can use the `autoSectionPath` option to automatically categorize classes into sections based on the folder they are inside in your project.
+
+```toml
+autoSectionPath = "packages"
+```
+
+With this option set, folders inside `YOUR_REPO/packages` will be automatically used as section names. Folders may be `kebab-case`, `PascalCase`, `camelCase`, or `sentence case`: they are automatically converted to `Title Case` in the section name.
+
+For example, a class defined in `YOUR_REPO/packages/thing-doer/init.lua` will automatically be placed in a section called `Thing Doer`.
+
 ### Table of Contents (TOC)
 
 You can customize categories in the Table of Contents of each API page. To create a category, first tag all items that should be included in the category with the `@tag` tag.

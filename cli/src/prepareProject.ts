@@ -44,6 +44,7 @@ export type Config = Partial<{
   changelog: boolean
   classOrder: ClassOrder
   apiCategories: string[]
+  autoSectionPath?: string
 
   // Docusaurus
   docusaurus: Partial<{
@@ -430,6 +431,7 @@ export function prepareProject(
     projectDir,
     classOrder: config.classOrder ?? [],
     apiCategories: config.apiCategories ?? [],
+    autoSectionPath: config.autoSectionPath,
   })
 
   if (
