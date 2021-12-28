@@ -55,7 +55,7 @@ module.exports.generateRobloxTypes = async function generateRobloxTypes() {
   }))
     .concat(
       api.Enums.map((e) => ({
-        name: `Enum.${e.Name}`,
+        name: `${e.Name}`,
         link: `https://developer.roblox.com/en-us/api-reference/enum/${e.Name}`,
       }))
     )
