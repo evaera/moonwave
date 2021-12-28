@@ -2,7 +2,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import rehypePrism from "@mapbox/rehype-prism"
 import { defaultSchema } from "hast-util-sanitize"
 import "prism-material-themes/themes/material-default.css"
-import React from "react"
+import React, { useContext } from "react"
 import format from "rehype-format"
 import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
@@ -10,6 +10,7 @@ import admonitions from "remark-admonitions"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import unified from "unified"
+import { TypeLinksContext } from "./LuaClass"
 
 const schema = {
   ...defaultSchema,
@@ -38,12 +39,38 @@ const linkTransformer = (baseUrl) => (node) => {
   }
 }
 
+const autoLinkReferences = (typeLinks) => (node) => {
+  const replaceLinkRefs = (node) => {
+    if (node.type === "linkReference") {
+      const label = node.label.replace(/(:|\.)/, "#")
+      const name = label.replace(/#.*$/, "")
+      const hashMatch = label.match(/#(.+)$/)
+
+      if (name in typeLinks) {
+        node.type = "link"
+        node.url = typeLinks[name] + (hashMatch ? `#${hashMatch[1]}` : "")
+        delete node.referenceType
+      }
+    }
+
+    if (node.children) {
+      node.children = node.children.map(replaceLinkRefs)
+    }
+
+    return node
+  }
+
+  node.children = node.children.map(replaceLinkRefs)
+}
+
 export default function Markdown({ content, inline }) {
   const { siteConfig } = useDocusaurusContext()
+  const typeLinks = useContext(TypeLinksContext)
 
   const markdownHtml = unified()
     .use(parse)
     .use(admonitions, {})
+    .use(() => autoLinkReferences(typeLinks))
     .use(remark2rehype)
     .use(() => linkTransformer(siteConfig.baseUrl))
     .use(rehypePrism)

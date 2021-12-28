@@ -25,6 +25,12 @@ Doc comments in Moonwave are denoted in one of two ways: A multi-line comment wi
 Any line that doesn't begin with `@` or `.` within your doc comment is part of the description. You can use [Markdown](https://docusaurus.io/docs/markdown-features) in the description, including [code blocks](https://docusaurus.io/docs/markdown-features/code-blocks) and [admonitions](https://docusaurus.io/docs/markdown-features/admonitions) (this text is in an admonition right now!).
 :::
 
+:::tip Short links
+- You can use the `[ClassName]` short link syntax to link to classes from within doc comments.
+- You can use `[ClassName:method]` or `[ClassName.member]` to link directly to a member of another class
+- You can also link to Roblox classes, like `[CFrame]` or `[Part]`.
+:::
+
 Doc Comments are always one of four types: class, function, property, or type. Each of these has its own respective tag that turns the doc comment they appear in to that type of doc comment. You should only have one of these per doc comment.
 
 ### @class
