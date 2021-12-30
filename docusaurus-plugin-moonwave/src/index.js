@@ -263,7 +263,7 @@ module.exports = (context, options) => ({
         if (luaClass.source.path.startsWith(prefix)) {
           const classPath = luaClass.source.path.slice(prefix.length + 1)
 
-          const nextDirMatch = classPath.match(/^(.+)\//)
+          const nextDirMatch = classPath.match(/^(.+?)\//)
 
           if (nextDirMatch) {
             const nextDir = nextDirMatch[1]
