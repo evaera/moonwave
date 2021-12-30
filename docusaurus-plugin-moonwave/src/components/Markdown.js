@@ -39,7 +39,7 @@ const linkTransformer = (baseUrl) => (node) => {
   }
 }
 
-const autoLinkReferences = (typeLinks) => (node) => {
+const autoLinkReferences = (typeLinks, baseUrl) => (node) => {
   const replaceLinkRefs = (node) => {
     if (node.type === "linkReference") {
       const label = node.label.replace(/(:|\.)/, "#")
@@ -47,8 +47,14 @@ const autoLinkReferences = (typeLinks) => (node) => {
       const hashMatch = label.match(/#(.+)$/)
 
       if (name in typeLinks) {
+        let link = typeLinks[name]
+
+        if (link.startsWith(baseUrl)) {
+          link = link.slice(baseUrl.length - 1)
+        }
+
         node.type = "link"
-        node.url = typeLinks[name] + (hashMatch ? `#${hashMatch[1]}` : "")
+        node.url = link + (hashMatch ? `#${hashMatch[1]}` : "")
         delete node.referenceType
       }
     }
@@ -70,7 +76,7 @@ export default function Markdown({ content, inline }) {
   const markdownHtml = unified()
     .use(parse)
     .use(admonitions, {})
-    .use(() => autoLinkReferences(typeLinks))
+    .use(() => autoLinkReferences(typeLinks, siteConfig.baseUrl))
     .use(remark2rehype)
     .use(() => linkTransformer(siteConfig.baseUrl))
     .use(rehypePrism)
