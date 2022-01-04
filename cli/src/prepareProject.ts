@@ -99,7 +99,9 @@ function getGitRepoUrl(): string | undefined {
         .match(/^git@+(.+):(.+)\/(.+)$/)
       return `https://${repoHostSite}/${repoAuthor}/${repoName}`
     } else {
-      return gitConfig['remote "origin"']?.url?.replace(/\.git$/, "")
+      return gitConfig['remote "origin"']?.url
+        ?.replace(/\.git$/, "")
+        ?.replace(/\/\/.*@/, "//") // Strip out http basic auth if present
     }
   }
 }
