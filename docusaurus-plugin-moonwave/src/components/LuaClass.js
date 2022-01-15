@@ -61,7 +61,12 @@ const ClassSection = ({
     <>
       <Title id={section}>{capitalize(section)}</Title>
       {members.map((member, key) => (
-        <ClassMember key={key} {...member} sourceUrl={sourceUrl}>
+        <ClassMember
+          key={key}
+          luaClassName={luaClass.name}
+          {...member}
+          sourceUrl={sourceUrl}
+        >
           <Component
             luaClassName={luaClass.name}
             {...member}

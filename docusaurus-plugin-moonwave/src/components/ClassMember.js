@@ -22,6 +22,7 @@ export default function ClassMember({
   readonly: readOnly,
   source,
   sourceUrl,
+  luaClassName,
 }) {
   return (
     <>
@@ -32,7 +33,7 @@ export default function ClassMember({
             textDecoration: deprecated ? "line-through" : "none",
           }}
         >
-          {name}
+          {name === "__call" ? <>{luaClassName}()</> : name}
         </code>
       </H3>
 

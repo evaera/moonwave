@@ -30,11 +30,11 @@ export default function LuaFunction({
   return (
     <>
       <div className={styles.memberString}>
-        <code>
+        <code className={name === "__call" && styles.green}>
           {luaClassName}
-          {functionType === "static" ? "." : ":"}
+          {name !== "__call" ? (functionType === "static" ? "." : ":") : ""}
         </code>
-        <code className={styles.green}>{name}</code>
+        {name !== "__call" && <code className={styles.green}>{name}</code>}
         <PrOp>(</PrOp>
         {params.length < 2 && (!params[0] || !params[0].desc) ? (
           params[0] && <Param {...params[0]} />

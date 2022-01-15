@@ -122,7 +122,9 @@ function parseApiCategories(luaClass, apiCategories) {
           .map((member) => {
             return {
               value:
-                getFunctionCallOperator(member.function_type) + member.name,
+                member.name === "__call"
+                  ? luaClass.name + "()"
+                  : getFunctionCallOperator(member.function_type) + member.name,
               id: member.name,
               children: [],
               level: 3,
@@ -142,7 +144,10 @@ function parseApiCategories(luaClass, apiCategories) {
           !member.tags.some((tag) => apiCategories.includes(tag))
       )
       .map((member) => ({
-        value: getFunctionCallOperator(member.function_type) + member.name,
+        value:
+          member.name === "__call"
+            ? luaClass.name + "()"
+            : getFunctionCallOperator(member.function_type) + member.name,
         id: member.name,
         children: [],
         level: 3,
