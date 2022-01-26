@@ -11,7 +11,7 @@ Simply create a folder called `docs` in the root of your project and throw some 
 
 Your first markdown file should always be called `intro.md` - this is the file we will link to in the nav bar.
 
-For an example of this, check out the [default Docusaurus structure](https://github.com/facebook/docusaurus/tree/main/packages/docusaurus-init/templates/shared/docs).
+For an example of this, check out the [default Docusaurus structure](https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs).
 
 ### Sidebar order
 
@@ -44,7 +44,7 @@ Optionally, you can also include the booleans `collapsible` to choose if the sec
 
 Just like before, create a new folder called `blog`. Now you can create Markdown files with the name: `YEAR-MM-DD-title-goes-here.md`.
 
-For an example of this, check out the [default Docusaurus structure](https://github.com/facebook/docusaurus/tree/main/packages/docusaurus-init/templates/shared/blog).
+For an example of this, check out the [default Docusaurus structure](https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/blog).
 
 ## Custom Pages
 
