@@ -4,7 +4,7 @@ sidebar_position: 2.5
 
 # Writing Types
 
-Writing types is an important part of using Moonwave. Types are used everywhere that you document something: a paramter type, a return type, a type alias, etc. 
+Writing types is an important part of using Moonwave. Types are used everywhere that you document something: a parameter type, a return type, a type alias, etc. 
 
 In general, you should refer to the [Luau Typechecking Guide](https://luau-lang.org/typecheck). Anything that's valid in a type position there should work in Moonwave.
 
