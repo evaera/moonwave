@@ -46,6 +46,8 @@ Just like before, create a new folder called `blog`. Now you can create Markdown
 
 For an example of this, check out the [default Docusaurus structure](https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/blog).
 
+Also check out [Docusaurus's official blog documentation](https://docusaurus.io/docs/blog) for more information on creating a blog.
+
 ## Custom Pages
 
 Create a folder called `pages`. Any markdown, `mdx`, `js`, or `html` pages you place in this folder will be hosted on their respective paths on your website. You can add them to the navbar by editing your `moonwave.toml` navbar items section.
