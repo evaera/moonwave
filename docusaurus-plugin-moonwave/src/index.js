@@ -100,6 +100,7 @@ function parseApiCategories(luaClass, apiCategories) {
   SECTIONS.forEach((section) => {
     const tagSet = new Set(
       luaClass[section]
+        .filter((member) => !member.ignore)
         .filter((member) => member.tags)
         .flatMap((member) => member.tags)
     )
@@ -118,6 +119,7 @@ function parseApiCategories(luaClass, apiCategories) {
         id: category,
         level: 2,
         children: luaClass[section]
+          .filter((member) => !member.ignore)
           .filter((member) => member.tags && member.tags.includes(category))
           .map((member) => {
             return {
@@ -138,6 +140,7 @@ function parseApiCategories(luaClass, apiCategories) {
     }
 
     const baseCategories = luaClass[section]
+      .filter((member) => !member.ignore)
       .filter(
         (member) =>
           !member.tags ||
