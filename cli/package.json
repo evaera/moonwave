@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UpliftGames/moonwave.git"
+    "url": "git+https://github.com/evaera/moonwave.git"
   },
   "author": "eryn L. K. <e@eryn.io>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/UpliftGames/moonwave/issues"
+    "url": "https://github.com/evaera/moonwave/issues"
   },
-  "homepage": "https://github.com/UpliftGames/moonwave#readme",
+  "homepage": "https://github.com/evaera/moonwave#readme",
   "type": "module",
   "dependencies": {
     "chokidar": "^3.5.2",

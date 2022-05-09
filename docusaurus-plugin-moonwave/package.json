@@ -10,12 +10,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UpliftGames/moonwave.git"
+    "url": "git+https://github.com/evaera/moonwave.git"
   },
   "bugs": {
-    "url": "https://github.com/UpliftGames/moonwave/issues"
+    "url": "https://github.com/evaera/moonwave/issues"
   },
-  "homepage": "https://github.com/UpliftGames/moonwave/tree/master/docusaurus-plugin-moonwave",
+  "homepage": "https://github.com/evaera/moonwave/tree/master/docusaurus-plugin-moonwave",
   "dependencies": {
     "@mapbox/rehype-prism": "^0.8.0",
     "hast-util-sanitize": "^4.0.0",

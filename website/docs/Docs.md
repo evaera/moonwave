@@ -53,4 +53,4 @@ Also check out [Docusaurus's official blog documentation](https://docusaurus.io/
 Create a folder called `pages`. Any markdown, `mdx`, `js`, or `html` pages you place in this folder will be hosted on their respective paths on your website. You can add them to the navbar by editing your `moonwave.toml` navbar items section.
 
 ### Overriding the homepage
-You can override the homepage by creating an `index.js` file in `pages` and writing your own React code. [Check out the default home page](https://github.com/UpliftGames/moonwave/tree/master/cli/template/home) for a starting point.
+You can override the homepage by creating an `index.js` file in `pages` and writing your own React code. [Check out the default home page](https://github.com/evaera/moonwave/tree/master/cli/template/home) for a starting point.

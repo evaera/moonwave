@@ -6,12 +6,12 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 module.exports = {
   title: "Moonwave",
   tagline: "Documentation Generator for Lua Projects",
-  url: "https://upliftgames.github.io",
+  url: "https://eryn.io",
   baseUrl: "/moonwave/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "UpliftGames", // Usually your GitHub org/user name.
+  organizationName: "evaera", // Usually your GitHub org/user name.
   projectName: "moonwave", // Usually your repo name.
 
   presets: [
@@ -21,16 +21,14 @@ module.exports = {
       ({
         docs: {
           // Please change this to your repo.
-          editUrl:
-            "https://github.com/UpliftGames/moonwave/edit/master/website/",
+          editUrl: "https://github.com/evaera/moonwave/edit/master/website/",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           sidebarCollapsible: true,
         },
         blog: {
           showReadingTime: true,
-          editUrl:
-            "https://github.com/UpliftGames/moonwave/edit/master/website/",
+          editUrl: "https://github.com/evaera/moonwave/edit/master/website/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -65,7 +63,7 @@ module.exports = {
             position: "right",
           },
           {
-            href: "https://github.com/UpliftGames/moonwave",
+            href: "https://github.com/evaera/moonwave",
             label: "GitHub",
             position: "right",
           },
@@ -105,16 +103,12 @@ module.exports = {
               // },
               {
                 label: "GitHub",
-                href: "https://github.com/UpliftGames/moonwave",
-              },
-              {
-                label: "Uplift Games",
-                href: "https://uplift.games",
+                href: "https://github.com/evaera/moonwave",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Uplift Games.`,
+        copyright: `Copyright © ${new Date().getFullYear()} eryn L. K.`,
       },
       prism: {
         theme: lightCodeTheme,

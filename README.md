@@ -25,7 +25,7 @@ Lua is the moon. The moon is your code. The moon influences the waves in the oce
 
 ## Docs
 
-[Check out the Documentation website](https://upliftgames.github.io/moonwave/)
+[Check out the Documentation website](https://eryn.io/moonwave/)
 
 ## Building in Development and Contributing
 

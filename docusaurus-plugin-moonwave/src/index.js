@@ -261,7 +261,7 @@ module.exports = (context, options) => ({
       ) {
         throw new Error(
           "When using autoSectionPath, classOrder cannot contain bare string keys." +
-            "Use sectional style instead: https://upliftgames.github.io/moonwave/docs/Configuration#sections"
+            "Use sectional style instead: https://eryn.io/moonwave/docs/Configuration#sections"
         )
       }
 

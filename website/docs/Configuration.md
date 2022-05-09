@@ -16,7 +16,7 @@ Options annotated with the comment `# From Git` mean that property is automatica
 
 ```toml
 title = "MyProjectName"  # From Git
-gitRepoUrl = "https://github.com/UpliftGames/moonwave" # From Git
+gitRepoUrl = "https://github.com/evaera/moonwave" # From Git
 
 gitSourceBranch = "master"
 changelog = true

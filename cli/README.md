@@ -4,4 +4,4 @@
 
 # Moonwave CLI
 
-A tool that makes it easy to get started using [Moonwave](https://github.com/UpliftGames/moonwave) by generating a Docusaurus project and extracting doc comments without the user needing any prior knowledge about the specific technologies used.
+A tool that makes it easy to get started using [Moonwave](https://github.com/evaera/moonwave) by generating a Docusaurus project and extracting doc comments without the user needing any prior knowledge about the specific technologies used.
