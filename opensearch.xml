@@ -4,8 +4,8 @@
   <ShortName>Moonwave</ShortName>
   <Description>Search Moonwave</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://upliftgames.github.io/moonwave/img/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://upliftgames.github.io/moonwave/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://upliftgames.github.io/moonwave/opensearch.xml" />
-  <moz:SearchForm>https://upliftgames.github.io/moonwave/</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://eryn.io/moonwave/img/favicon.ico</Image>
+  <Url type="text/html" method="get" template="https://eryn.io/moonwave/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://eryn.io/moonwave/opensearch.xml" />
+  <moz:SearchForm>https://eryn.io/moonwave/</moz:SearchForm>
 </OpenSearchDescription>
