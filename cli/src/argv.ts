@@ -27,7 +27,7 @@ const argv = yargs(process.argv.slice(2))
   .describe("help", "show help")
   .showHelpOnFail(true)
 
-  .command(
+  .command<Args>(
     "build",
     "build the docs website",
     (yargs) => {
@@ -40,7 +40,7 @@ const argv = yargs(process.argv.slice(2))
     },
     buildCommand
   )
-  .command(
+  .command<Args>(
     "dev",
     "run in development live-reload mode",
     (yargs) => {
