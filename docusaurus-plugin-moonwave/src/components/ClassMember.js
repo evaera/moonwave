@@ -26,13 +26,23 @@ export default function ClassMember({
     <>
       <div className={styles.divider} />
       <Heading as="h3" id={name}>
-        <code
-          style={{
-            textDecoration: deprecated ? "line-through" : "none",
-          }}
-        >
-          {name === "__call" ? <>{luaClassName}()</> : name}
-        </code>
+        {name === "__iter" ? (
+          <span
+            style={{
+              fontStyle: "italic",
+            }}
+          >
+            iterating over {luaClassName}
+          </span>
+        ) : (
+          <code
+            style={{
+              textDecoration: deprecated ? "line-through" : "none",
+            }}
+          >
+            {name === "__call" ? <>{luaClassName}()</> : name}
+          </code>
+        )}
       </Heading>
 
       {realm.map((realm) => (
