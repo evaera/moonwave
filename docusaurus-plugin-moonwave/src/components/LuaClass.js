@@ -118,15 +118,6 @@ const PrivateToggle = ({ showPrivate, setShowPrivate }) => (
   </label>
 )
 
-function siftPrivate(tocItem) {
-  return {
-    ...tocItem,
-    children: tocItem.children
-      ? tocItem.children.filter((item) => !item.private).map(siftPrivate)
-      : undefined,
-  }
-}
-
 export const TypeLinksContext = createContext()
 
 export default function LuaClass({
@@ -138,9 +129,10 @@ export default function LuaClass({
 }) {
   const [showPrivate, setShowPrivate] = useState(false)
   const [alreadyScrolledIntoView, setAlreadyScrolledIntoView] = useState(false)
+  const anyPrivateMembers = !!tocData.find((item) => item.private)
 
   if (!showPrivate) {
-    tocData = tocData.map(siftPrivate)
+    tocData = tocData.filter((item) => !item.private)
   }
 
   useEffect(() => {
@@ -245,10 +237,6 @@ export default function LuaClass({
     skipMembers.add(type)
   }
 
-  const anyPrivateFunctions = rawLuaClass["functions"].some(
-    (member) => member.private
-  )
-
   const windowSize = useWindowSize()
 
   const tocMinHeadingLevel = 2 // Must be between 2 and 6 and lower or equal to the max value.
@@ -346,7 +334,7 @@ export default function LuaClass({
                             ))}
                           </div>
 
-                          {anyPrivateFunctions && (
+                          {anyPrivateMembers && (
                             <PrivateToggle
                               showPrivate={showPrivate}
                               setShowPrivate={setShowPrivate}

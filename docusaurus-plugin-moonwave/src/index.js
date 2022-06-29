@@ -27,6 +27,27 @@ const mapLinks = (nameSet, items) =>
     }
   })
 
+function flattenTOC(toc) {
+  const flat = []
+
+  const iterate = (list) => {
+    for (const item of list) {
+      flat.push({
+        ...item,
+        children: undefined,
+      })
+
+      if (item.children) {
+        iterate(item.children)
+      }
+    }
+  }
+
+  iterate(toc)
+
+  return flat
+}
+
 function parseSimpleClassOrder(content, classOrder, nameSet) {
   const listedLinks = mapLinks(nameSet, classOrder)
 
@@ -355,7 +376,7 @@ module.exports = (context, options) => ({
 
       const tocData = await createData(
         `${luaClass.name}-toc.json`,
-        JSON.stringify(tocDataOrdered)
+        JSON.stringify(flattenTOC(tocDataOrdered))
       )
 
       console.log(`Adding path /api/${luaClass.name}`)
