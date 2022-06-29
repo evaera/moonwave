@@ -8,8 +8,6 @@ import Markdown from "./Markdown"
 import styles from "./styles.module.css"
 import { PrOp } from "./Syntax"
 
-const H3 = Heading("h3")
-
 const Param = ({ name, lua_type }) => (
   <>
     <code>{name}:&nbsp;</code>
@@ -76,11 +74,11 @@ export default function LuaFunction({
 
       {extraTypes && (
         <>
-          <H3>Types</H3>
+          <Heading as="h3">Types</Heading>
 
           {extraTypes.map((type) => (
             <>
-              <H3 id={type.name} />
+              <Heading as="h3" id={type.name} />
               <LuaTypeDef key={type.name} {...type} />
             </>
           ))}
@@ -91,7 +89,7 @@ export default function LuaFunction({
 
       {errors && (
         <>
-          <H3>Errors</H3>
+          <Heading as="h3">Errors</Heading>
           <table className={clsx(styles.errorTable)}>
             <thead>
               <tr>

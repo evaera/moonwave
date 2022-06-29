@@ -1,13 +1,18 @@
-import { ThemeClassNames } from "@docusaurus/theme-common"
+import { ThemeClassNames, useWindowSize } from "@docusaurus/theme-common"
 import DocSidebar from "@theme/DocSidebar"
 import Heading from "@theme/Heading"
-import useWindowSize from "@theme/hooks/useWindowSize"
 import IconArrow from "@theme/IconArrow"
 import Layout from "@theme/Layout"
 import TOC from "@theme/TOC"
 import TOCCollapsible from "@theme/TOCCollapsible"
 import clsx from "clsx"
-import React, { createContext, useCallback, useEffect, useState } from "react"
+import {
+  createContext,
+  default as React,
+  useCallback,
+  useEffect,
+  useState,
+} from "react"
 import Admonition from "./Admonition"
 import Badge from "./Badge"
 import ClassMember from "./ClassMember"
@@ -17,8 +22,6 @@ import LuaTypeDef from "./LuaTypeDef"
 import Markdown from "./Markdown"
 import styles from "./styles.module.css"
 import Tag from "./Tag"
-
-const Title = Heading("h2")
 
 const SECTIONS = [
   {
@@ -59,7 +62,9 @@ const ClassSection = ({
 
   return (
     <>
-      <Title id={section}>{capitalize(section)}</Title>
+      <Heading as="h2" id={section}>
+        {capitalize(section)}
+      </Heading>
       {members.map((member, key) => (
         <ClassMember
           key={key}

@@ -375,9 +375,7 @@ export function prepareProject(
     (options.install && fs.existsSync(tempDir)) ||
     needsCompleteRebuild(tempDir)
   ) {
-    console.log(
-      `Deleting ${tempDir} for complete re-install, this may take a while...`
-    )
+    console.log(`Deleting ${tempDir} for complete re-install`)
     fs.removeSync(tempDir)
   } else if (options.fresh && fs.existsSync(tempDir)) {
     for (const file of fs

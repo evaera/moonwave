@@ -6,8 +6,6 @@ import SourceLink from "./SourceLink"
 import styles from "./styles.module.css"
 import Tag from "./Tag"
 
-const H3 = Heading("h3")
-
 export default function ClassMember({
   name,
   desc,
@@ -27,7 +25,7 @@ export default function ClassMember({
   return (
     <>
       <div className={styles.divider} />
-      <H3 id={name}>
+      <Heading as="h3" id={name}>
         <code
           style={{
             textDecoration: deprecated ? "line-through" : "none",
@@ -35,7 +33,7 @@ export default function ClassMember({
         >
           {name === "__call" ? <>{luaClassName}()</> : name}
         </code>
-      </H3>
+      </Heading>
 
       {realm.map((realm) => (
         <Badge key={realm} label={realm} />

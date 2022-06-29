@@ -43,8 +43,6 @@ export default function getDocusaurusConfig({
     ...config.docusaurus,
 
     themeConfig: {
-      hideableSidebar: config.navbar?.hideableSidebar ?? true,
-
       prism: {
         additionalLanguages: ["lua"],
       },
@@ -100,6 +98,7 @@ export default function getDocusaurusConfig({
       [
         "docusaurus-plugin-moonwave",
         {
+          id: "moonwave",
           code: validCodePaths,
           sourceUrl: gitRepoUrl + `/blob/${config.gitSourceBranch ?? "master"}`,
           projectDir,
@@ -144,8 +143,8 @@ export default function getDocusaurusConfig({
           },
           theme: {
             customCss: [
-              "../src/css/moonwave.css",
-              ...(customCssExists ? ["../src/css/custom.css"] : []),
+              "src/css/moonwave.css",
+              ...(customCssExists ? ["src/css/custom.css"] : []),
             ],
           },
         },
