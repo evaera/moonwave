@@ -23,6 +23,7 @@
   "homepage": "https://github.com/evaera/moonwave#readme",
   "type": "module",
   "dependencies": {
+    "cachedir": "^2.3.0",
     "chokidar": "^3.5.3",
     "fs-extra": "^10.1.0",
     "gh-pages": "3.0.0",

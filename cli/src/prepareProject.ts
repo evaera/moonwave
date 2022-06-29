@@ -1,6 +1,6 @@
+import cachedir from "cachedir"
 import { execSync } from "child_process"
 import fs from "fs-extra"
-import os from "os"
 import parseGitConfig from "parse-git-config"
 import path, { dirname } from "path"
 import toml from "toml"
@@ -369,7 +369,7 @@ export function prepareProject(
   const config = getConfig(projectDir)
 
   const folderName = projectDir.split(path.sep).slice(-1)[0] ?? "unknown"
-  const tempDir = path.join(os.tmpdir(), "moonwave", folderName)
+  const tempDir = path.join(cachedir("moonwave"), folderName)
 
   if (
     (options.install && fs.existsSync(tempDir)) ||
