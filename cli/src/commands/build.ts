@@ -23,7 +23,7 @@ export default async function buildCommand(args: Args) {
       install: args.install,
       binaryPath: await getBinaryPath(),
     })
-    const buildDirName = args.builddir || "build"
+    const buildDirName = args["out-dir"] || "build"
     const buildDir = path.join(projectDir, buildDirName)
 
     const exitCode = await new Promise((resolve) => {

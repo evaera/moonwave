@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url)
 const version = require("../package.json").version as string
 
 export interface Args {
-  builddir: string
+  "out-dir": string
   fresh: boolean
   install: boolean
   code: string[]
@@ -39,9 +39,9 @@ const argv = yargs(process.argv.slice(2))
           "publish the built website to your gh-pages branch after building"
         )
       yargs
-        .string("builddir")
+        .string("out-dir")
         .describe(
-          "build-dir",
+          "out-dir",
           "set the build directory to a different path (relative to the current directory)"
         )
     },
