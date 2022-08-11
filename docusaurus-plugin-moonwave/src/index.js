@@ -241,7 +241,10 @@ module.exports = (context, options) => ({
           `"${binaryPath}" extract "${root.replace(
             /\\/g,
             "/"
-          )}" --base "${basePath}"`
+          )}" --base "${basePath}"`,
+          {
+            maxBuffer: 10 * 1024 * 1024
+          }
         )
           .then(({ stdout, stderr }) => {
             if (stderr.length > 0) {
