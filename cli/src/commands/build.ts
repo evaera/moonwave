@@ -23,11 +23,13 @@ export default async function buildCommand(args: Args) {
       install: args.install,
       binaryPath: await getBinaryPath(),
     })
+    const buildDirName = args["out-dir"] || "build"
+    const buildDir = path.join(projectDir, buildDirName)
 
     const exitCode = await new Promise((resolve) => {
       spawn(
         "npm" + (process.platform === "win32" ? ".cmd" : ""),
-        ["run", "build", "--", "--out-dir", path.join(projectDir, "build")],
+        ["run", "build", "--", "--out-dir", buildDir],
         {
           cwd: tempDir,
           stdio: "inherit",
@@ -42,12 +44,11 @@ export default async function buildCommand(args: Args) {
     }
 
     console.log(
-      "Moonwave: Website built into the `build` directory. Do not commit this folder: you should add it to your .gitignore file."
+      `Moonwave: Website built into the \`${buildDirName}\` directory. Do not commit this folder: you should add it to your .gitignore file.`
     )
 
     if (args.publish) {
       console.log("Moonwave: Publishing build to gh-pages branch...")
-      const buildDir = path.join(projectDir, "build")
       await publish(buildDir)
       console.log("Moonwave: Published! Your website should now be live.")
     }
