@@ -189,7 +189,12 @@ fn find_files(
     for entry in walker
         .filter_map(|e| e.ok())
         .filter(|e| e.file_type().is_file())
-        .filter(|e| e.file_name().to_string_lossy().ends_with(".lua"))
+        .filter(|e| {
+            matches!(
+                e.path().extension().and_then(|s| s.to_str()),
+                Some("lua") | Some("luau")
+            )
+        })
     {
         let path = entry.path();
         let contents = fs::read_to_string(path)?;
