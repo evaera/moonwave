@@ -14,9 +14,13 @@
 			"es2015",
 			"es2017",
 			"esnext"
-		]
+		],
+		"skipLibCheck": true
 	},
 	"include": [
 		"./src/**/*"
+	],
+	"exclude": [
+		"./node_modules/**/*"
 	]
 }
