@@ -8,6 +8,9 @@
     "dev": "tsc --watch",
     "tsc": "tsc"
   },
+  "engines": {
+    "node": ">=14" 
+  },
   "bin": {
     "moonwave": "dist/index.js"
   },
