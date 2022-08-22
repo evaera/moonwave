@@ -1,7 +1,7 @@
 import { ThemeClassNames, useWindowSize } from "@docusaurus/theme-common"
 import DocSidebar from "@theme/DocSidebar"
 import Heading from "@theme/Heading"
-import IconArrow from "@theme/IconArrow"
+import IconArrow from "@theme/Icon/Arrow"
 import Layout from "@theme/Layout"
 import TOC from "@theme/TOC"
 import TOCCollapsible from "@theme/TOCCollapsible"

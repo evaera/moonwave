@@ -501,3 +501,33 @@
     margin-top: 0;
   }
 }
+
+:global .admonition h5,
+:global .alert__heading,
+:global .text--uppercase {
+  text-transform: uppercase;
+}
+
+:global .admonition h5 {
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+:global .admonition-icon {
+  display: inline-block;
+  margin-right: 0.4em;
+  vertical-align: middle;
+}
+
+:global .admonition-icon svg {
+  stroke-width: 0;
+  stroke: var(--ifm-alert-foreground-color);
+  fill: var(--ifm-alert-foreground-color);
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+}
+
+:global .admonition {
+  margin-bottom: 1em;
+}
