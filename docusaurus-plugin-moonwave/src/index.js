@@ -138,7 +138,7 @@ function parseApiCategories(luaClass, apiCategories) {
       apiCategoryChild.push({
         value: capitalize(category),
         id: category,
-        level: 2,
+        level: 3,
         children: luaClass[section]
           .filter((member) => !member.ignore)
           .filter((member) => member.tags && member.tags.includes(category))
@@ -150,7 +150,7 @@ function parseApiCategories(luaClass, apiCategories) {
                   : getFunctionCallOperator(member.function_type) + member.name,
               id: member.name,
               children: [],
-              level: 3,
+              level: 4,
               private: member.private,
             }
           })
@@ -243,7 +243,7 @@ module.exports = (context, options) => ({
             "/"
           )}" --base "${basePath}"`,
           {
-            maxBuffer: 10 * 1024 * 1024
+            maxBuffer: 10 * 1024 * 1024,
           }
         )
           .then(({ stdout, stderr }) => {
