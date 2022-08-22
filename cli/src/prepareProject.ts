@@ -60,7 +60,6 @@ export type Config = Partial<{
   }>
 
   navbar: Partial<{
-    hideableSidebar: boolean
     title: string
     logo: { alt: string; src: string }
     items: { to: string; label: string; position: "left" | "right" }[]

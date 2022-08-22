@@ -34,9 +34,6 @@ url = "https://AuthorName.github.io"
 baseUrl = "/MyProjectName"
 tagline = "Your project's tagline"
 
-[navbar]
-hideableSidebar = true
-
 [footer]
 style = "dark"
 copyright = "Copyright © 2021 AuthorName. Built with Moonwave and Docusaurus"
