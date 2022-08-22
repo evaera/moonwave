@@ -85,7 +85,7 @@ pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::R
 
     errors.extend(source_file_errors.into_iter().map(Result::unwrap_err));
 
-    let entries: Vec<_> = entries.into_iter().map(Result::unwrap).flatten().collect();
+    let entries: Vec<_> = entries.into_iter().flat_map(Result::unwrap).collect();
 
     match into_classes(entries) {
         Ok(classes) => {

@@ -179,14 +179,13 @@ impl<'a> SourceFile {
         let (doc_entries, errors): (Vec<_>, Vec<_>) = self
             .doc_comments
             .iter()
-            .map(|c| DocEntry::parse(c))
+            .map(DocEntry::parse)
             .partition(Result::is_ok);
         let doc_entries: Vec<_> = doc_entries.into_iter().map(Result::unwrap).collect();
         let errors: Diagnostics = errors
             .into_iter()
             .map(Result::unwrap_err)
-            .map(Diagnostics::into_iter)
-            .flatten()
+            .flat_map(Diagnostics::into_iter)
             .collect::<Vec<_>>()
             .into();
 
