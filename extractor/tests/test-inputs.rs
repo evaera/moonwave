@@ -66,6 +66,11 @@ fn dynamic_param_return() -> anyhow::Result<()> {
 }
 
 #[test]
+fn triple_dash_wrong_comment() -> anyhow::Result<()> {
+    run_moonwave("passing/triple_dash_wrong_comment.lua", 0)
+}
+
+#[test]
 fn param_validation() -> anyhow::Result<()> {
     run_moonwave("failing/param_validation.lua", 1)
 }

@@ -81,7 +81,7 @@ impl<'a> SourceFile {
                     }
                     TokenType::Whitespace { .. } => {
                         let line = token.start_position().line();
-                        let is_consecutive_newline = line == self.last_line + 1;
+                        let is_consecutive_newline = line > self.last_line;
 
                         self.last_line = line;
 

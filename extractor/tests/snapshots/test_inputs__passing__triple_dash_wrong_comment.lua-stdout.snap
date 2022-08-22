@@ -1,0 +1,64 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+
+---
+[
+  {
+    "functions": [
+      {
+        "name": "contains",
+        "desc": "Returns true if value is equal to the `Ok` value",
+        "params": [
+          {
+            "name": "value",
+            "desc": "",
+            "lua_type": "any"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "boolean"
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 10,
+          "path": ""
+        }
+      },
+      {
+        "name": "containsErr",
+        "desc": "hi",
+        "params": [
+          {
+            "name": "value",
+            "desc": "",
+            "lua_type": "any"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "boolean\n"
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 15,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "Result",
+    "desc": "Lua implementation of Rust language's Result enum",
+    "source": {
+      "line": 3,
+      "path": ""
+    }
+  }
+]
+
