@@ -227,7 +227,7 @@ module.exports = (context, options) => ({
   },
 
   getPathsToWatch() {
-    return options.code.map((filePath) => `${filePath}/**/*.lua`)
+    return options.code.map((filePath) => `${filePath}/**/*.luau`)
   },
 
   async loadContent() {
