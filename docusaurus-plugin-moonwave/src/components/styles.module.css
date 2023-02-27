@@ -239,6 +239,7 @@
 :global pre[class*="language-"][class*="language-"] {
   padding: 1rem;
   margin: 1rem 0;
+  background: #292d3e;
 }
 
 :global code[class*="language-"][class*="language-"] {
