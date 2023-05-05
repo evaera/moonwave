@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     tags: ["*"]
+  workflow_dispatch:
 
 jobs:
   create_release:
@@ -114,7 +115,7 @@ jobs:
 
   linux:
     needs: create_release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v1
