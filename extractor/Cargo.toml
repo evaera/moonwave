@@ -22,7 +22,7 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = { git = "https://github.com/Kampfkarren/full-moon.git", rev = "5a8262720399c6540ade4210c4735d40b2e2df15" } # Specify commit fixing newlines until new release is cut
+full_moon = { version = "0.18.1", features = ["stacker"] }
 walkdir = "2"
 anyhow = "1.0.28"
 codespan-reporting = "0.9.5"
