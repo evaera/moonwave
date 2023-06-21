@@ -67,6 +67,7 @@ export type Config = Partial<{
 
   home: Partial<{
     enabled: boolean
+    bannerImage: string
     includeReadme: boolean
 
     features: {
