@@ -42,6 +42,10 @@ export default function getDocusaurusConfig({
 
     ...config.docusaurus,
 
+    customFields: {
+      bannerImage: config.home?.bannerImage
+    },
+
     themeConfig: {
       prism: {
         additionalLanguages: ["lua"],

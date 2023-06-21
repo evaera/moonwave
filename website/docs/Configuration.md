@@ -152,6 +152,7 @@ By default your project's README is used as the homepage. To use a custom homepa
 [home]
 enabled = true
 includeReadme = true # Optional
+bannerImage = "https://url" # Optional
 
 [[home.features]]
 title = "Feature 1"
