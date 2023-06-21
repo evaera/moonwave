@@ -41,11 +41,22 @@ export function HomepageFeatures() {
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext()
+  const bannerImage = siteConfig.customFields.bannerImage
+  const hasBannerImage = bannerImage ? true : false
+  const heroBannerStyle = hasBannerImage ? { backgroundImage: `url(${bannerImage})` } : null
+
+  const titleClassName = clsx("hero__title", {
+    [styles.titleOnBannerImage]: hasBannerImage
+  })
+  const taglineClassName = clsx("hero__subtitle", {
+    [styles.taglineOnBannerImage]: hasBannerImage
+  })
+
   return (
-    <header className={clsx("hero", styles.heroBanner)}>
+    <header className={clsx("hero", styles.heroBanner)} style={heroBannerStyle}>
       <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <h1 className={titleClassName}>{siteConfig.title}</h1>
+        <p className={taglineClassName}>{siteConfig.tagline}</p>
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
