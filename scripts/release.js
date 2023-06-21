@@ -66,6 +66,7 @@ replaceInFile(
 run("docusaurus-plugin-moonwave", "npm publish")
 
 run("cli/template/root", "npm i --package-lock-only")
+run("extractor", "cargo check")
 
 const tag = `v${version}`
 run(process.cwd(), "git add .")
