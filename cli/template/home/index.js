@@ -43,7 +43,7 @@ function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext()
   const bannerImage = siteConfig.customFields.bannerImage
   const hasBannerImage = bannerImage ? true : false
-  const heroBannerStyle = hasBannerImage ? { backgroundImage: `url(${bannerImage})` } : null
+  const heroBannerStyle = hasBannerImage ? { backgroundImage: `url("${bannerImage}")` } : null
 
   const titleClassName = clsx("hero__title", {
     [styles.titleOnBannerImage]: hasBannerImage
