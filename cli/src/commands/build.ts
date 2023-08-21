@@ -1,4 +1,4 @@
-import { spawn } from "child_process"
+import { SpawnOptions, spawn } from "child_process"
 import githubPages from "gh-pages"
 import path from "path"
 import { Args } from "../argv.js"
@@ -26,21 +26,46 @@ export default async function buildCommand(args: Args) {
     const buildDirName = args["out-dir"] || "build"
     const buildDir = path.join(projectDir, buildDirName)
 
+    const command = "npm" + (process.platform === "win32" ? ".cmd" : "")
+    const spawnOptions: SpawnOptions = {
+      cwd: tempDir,
+      stdio: "inherit",
+    }
+
+    const swizzleExitCode = await new Promise((resolve) => {
+      spawn(
+        command,
+        [
+          "run",
+          "swizzle",
+          "docusaurus-lunr-search",
+          "SearchBar",
+          "--",
+          "--eject",
+          "--danger",
+        ],
+        spawnOptions
+      )
+        .on("exit", resolve)
+        .on("error", console.error)
+    })
+
+    if (swizzleExitCode !== 0) {
+      throw new Error("Swizzle had an non-zero exit code")
+    }
+
     const exitCode = await new Promise((resolve) => {
       spawn(
-        "npm" + (process.platform === "win32" ? ".cmd" : ""),
+        command,
         ["run", "build", "--", "--out-dir", buildDir],
-        {
-          cwd: tempDir,
-          stdio: "inherit",
-        }
+        spawnOptions
       )
         .on("exit", resolve)
         .on("error", console.error)
     })
 
     if (exitCode !== 0) {
-      throw new Error("Non-zero exit code")
+      throw new Error("Build had an non-zero exit code")
     }
 
     console.log(
