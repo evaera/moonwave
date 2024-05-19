@@ -30,7 +30,7 @@ Lua is the moon. The moon is your code. The moon influences the waves in the oce
 ## Building in Development and Contributing
 
 Requirements:
-- [Node.js 14+](https://nodejs.org/en/)
+- [Node.js 16+](https://nodejs.org/en/)
 - [Rust 1.54.0 and Cargo](https://rustup.rs/)
 
 1. Clone this repository
