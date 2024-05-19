@@ -22,10 +22,10 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = { version = "0.18.1", features = ["stacker"] }
+full_moon = { version = "0.19.0", features = ["stacker"] }
 walkdir = "2"
 anyhow = "1.0.28"
-codespan-reporting = "0.9.5"
+codespan-reporting = "0.11.1"
 structopt = "0.3.18"
 serde = { version = "1.0.116", features = ["derive"] }
 serde_json = "1.0.58"
