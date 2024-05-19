@@ -8,7 +8,7 @@ import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
-import unified from "unified"
+import { unified } from "unified"
 import { TypeLinksContext } from "./LuaClass"
 
 const schema = {
