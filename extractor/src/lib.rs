@@ -214,7 +214,10 @@ fn find_files(
 
 fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String>) {
     let writer = StandardStream::stderr(ColorChoice::Auto);
-    let config = codespan_reporting::term::Config::default();
+    let config = codespan_reporting::term::Config {
+        end_context_lines: usize::MAX,
+        ..Default::default()
+    };
 
     for error in errors {
         match error {
