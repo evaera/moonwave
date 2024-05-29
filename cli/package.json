@@ -9,7 +9,7 @@
     "tsc": "tsc"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "bin": {
     "moonwave": "dist/index.js"
