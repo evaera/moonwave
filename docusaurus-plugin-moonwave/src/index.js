@@ -375,7 +375,9 @@ module.exports = (context, options) => ({
         JSON.stringify(luaClass)
       )
 
-      const tocDataOrdered = parseApiCategories(luaClass, apiCategories)
+      const tocDataOrdered = parseApiCategories(luaClass, apiCategories).filter(
+        (element) => element.children.length > 0
+      )
 
       const tocData = await createData(
         `${luaClass.name}-toc.json`,
