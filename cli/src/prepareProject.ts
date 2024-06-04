@@ -235,7 +235,7 @@ function copyChangelog(
   config: Config
 ): boolean {
   const changelogPath = path.join(projectDir, "CHANGELOG.md")
-  const targetPath = path.join(tempDir, "pages", "CHANGELOG.md")
+  const targetPath = path.join(tempDir, "pages", "changelog.md")
 
   if (config.changelog && fs.existsSync(changelogPath)) {
     fs.ensureDirSync(path.join(tempDir, "pages"))
