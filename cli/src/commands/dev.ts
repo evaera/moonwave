@@ -62,6 +62,7 @@ export default async function devCommand(args: Args) {
         ["run", "start"],
         {
           cwd: tempDir,
+          shell: true,
           stdio: "inherit",
         }
       )
