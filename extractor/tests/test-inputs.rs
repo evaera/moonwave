@@ -47,6 +47,11 @@ fn class_with_index() -> anyhow::Result<()> {
 }
 
 #[test]
+fn class_with_external() -> anyhow::Result<()> {
+    run_moonwave("passing/class_with_external.lua", 0)
+}
+
+#[test]
 fn drop_module() -> anyhow::Result<()> {
     run_moonwave("passing/drop_module.lua", 0)
 }

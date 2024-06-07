@@ -412,3 +412,31 @@ MyClass.__index = MyClass.prototype
 function MyClass.prototype:method()
 end
 ```
+
+
+### @external
+:::note Usage
+`@external <name> <url>`
+:::
+
+Allows you to link to external types.
+External types are defined in a Class, any doc comments under the Class will be able to use the external type.
+
+```lua
+--- @class MyClass
+--- @external Promise https://eryn.io/roblox-lua-promise/api/Promise
+--- A sample class.
+local MyClass = {}
+MyClass.__index = MyClass
+
+--[=[
+	This is a function that will return a [Promise].
+
+	@method returnAPromise
+	@within MyClass
+	@return Promise -- The Promise it returns
+]=]
+function MyClass:returnAPromise()
+	-- Returns a roblox-lua-promise
+end
+```
