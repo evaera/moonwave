@@ -1,5 +1,6 @@
 --[=[
 	@class Foo
+	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
 	@server
 	@client
 	@plugin
@@ -27,8 +28,10 @@
 	@within Foo
 	@param a A A A -- param a
 	@param b B B B -- param b
+	@param promise Promise -- external param
 	@return a -- return a
 	@return b -- return b
+	@return Promise -- return external type
 	@server
 	@client
 	@private
@@ -90,6 +93,7 @@
 	.Name string -- the name of the command
 	.Groups array<string> -- A list of groups that the command contains
 	.Recursion Command -- This breaks the universe
+	.Promise Promise -- This is a Promise
 
 	An object describing a command
 ]=]

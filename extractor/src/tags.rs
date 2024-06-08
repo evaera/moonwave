@@ -5,6 +5,7 @@ use std::convert::TryFrom;
 mod class;
 mod custom;
 mod error;
+mod external;
 mod field;
 mod function;
 mod index;
@@ -21,6 +22,7 @@ mod within;
 pub use class::ClassTag;
 pub use custom::CustomTag;
 pub use error::ErrorTag;
+pub use external::ExternalTag;
 pub use field::FieldTag;
 pub use function::FunctionTag;
 pub use index::IndexTag;
@@ -95,9 +97,9 @@ define_tags! {
     Custom(CustomTag),
     Error(ErrorTag),
     Index(IndexTag),
+    External(ExternalTag),
 
     // Unimplemented:
-    // External,
     // Link,
     // Enum,
 }
@@ -143,6 +145,7 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             "@field" => FieldTag::parse(tag_text()?).map(Tag::Field),
             "@prop" => PropertyTag::parse(tag_text()?).map(Tag::Property),
             "@class" => ClassTag::parse(tag_text()?).map(Tag::Class),
+            "@external" => ExternalTag::parse(tag_text()?).map(Tag::External),
             "@function" => FunctionTag::parse(tag_text()?, FunctionType::Static).map(Tag::Function),
             "@method" => FunctionTag::parse(tag_text()?, FunctionType::Method).map(Tag::Function),
             "@deprecated" => DeprecatedTag::parse(tag_text()?).map(Tag::Deprecated),

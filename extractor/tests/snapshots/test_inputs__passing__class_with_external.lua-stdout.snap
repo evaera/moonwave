@@ -1,0 +1,46 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [
+      {
+        "name": "exchangePromises",
+        "desc": "This is a function that uses the external type [Promise]",
+        "params": [
+          {
+            "name": "promise",
+            "desc": "this is your promise",
+            "lua_type": "Promise"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "and this is my promise",
+            "lua_type": "Promise"
+          }
+        ],
+        "function_type": "static",
+        "source": {
+          "line": 16,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "anotherclass",
+    "desc": "This is yet another class",
+    "external_types": [
+      {
+        "name": "Promise",
+        "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+      }
+    ],
+    "source": {
+      "line": 7,
+      "path": ""
+    }
+  }
+]
