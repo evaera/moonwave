@@ -95,6 +95,10 @@ section = "Another section name"
 classes = ["Class3", "Class4"]
 
 [[classOrder]]
+section = "Tag Section"
+tag = "TagForClasses"
+
+[[classOrder]]
 # No section name will link classes at the root level of the sidebar
 classes = ["Class5", "Class6"]
 

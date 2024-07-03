@@ -32,7 +32,8 @@ export type ClassOrder = (
   | string
   | {
       section?: string
-      classes: string[]
+      classes?: string[]
+      tag?:     string
     }
 )[]
 
