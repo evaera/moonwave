@@ -413,18 +413,23 @@ function MyClass.prototype:method()
 end
 ```
 
+## External Type Tag
 
 ### @external
 :::note Usage
 `@external <name> <url>`
 :::
 
-Allows you to link to external types.
-External types are defined in a Class, any doc comments under the Class will be able to use the external type.
+The `@external` tag lets you link external tags outside of your Moonwave project in your project.
+
+:::caution
+You can define this tag anywhere, and you can then use that external type anywhere in your project.
+
+Because of this, be sure to avoid External Types with the same name but a different link, you might encounter unintended behavior.
+:::
 
 ```lua
 --- @class MyClass
---- @external Promise https://eryn.io/roblox-lua-promise/api/Promise
 --- A sample class.
 local MyClass = {}
 MyClass.__index = MyClass
@@ -434,9 +439,14 @@ MyClass.__index = MyClass
 
 	@method returnAPromise
 	@within MyClass
+	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
 	@return Promise -- The Promise it returns
 ]=]
 function MyClass:returnAPromise()
 	-- Returns a roblox-lua-promise
 end
+
+--- @prop promise Promise
+--- @within MyClass
+--- I can also use the Promise type here!
 ```

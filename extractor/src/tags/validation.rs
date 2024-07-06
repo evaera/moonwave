@@ -34,16 +34,11 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Unreleased, TagType::Since),
     // Readonly doesn't make sense on a function
     (TagType::Function, TagType::ReadOnly),
-    // External only works with class kind
-    (TagType::External, TagType::Function),
-    (TagType::External, TagType::Type),
-    (TagType::External, TagType::Property),
 ];
 
 static DEPENDENT_TAGS: &[(TagType, TagType)] = &[
     (TagType::Property, TagType::Within),
     (TagType::Type, TagType::Within),
-    (TagType::External, TagType::Class),
 ];
 
 static ALLOW_MULTIPLE: &[TagType] = &[

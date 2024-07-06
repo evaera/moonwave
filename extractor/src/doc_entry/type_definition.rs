@@ -2,7 +2,7 @@ use crate::{
     diagnostic::Diagnostics,
     doc_comment::{DocComment, OutputSource},
     serde_util::is_false,
-    tags::{CustomTag, FieldTag, Tag},
+    tags::{CustomTag, ExternalTag, FieldTag, Tag},
 };
 use serde::Serialize;
 
@@ -38,6 +38,8 @@ pub struct TypeDocEntry<'a> {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<CustomTag<'a>>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub external_types: Vec<ExternalTag<'a>>,
     #[serde(skip_serializing_if = "is_false")]
     pub private: bool,
     #[serde(skip_serializing_if = "is_false")]
@@ -70,6 +72,7 @@ impl<'a> TypeDocEntry<'a> {
             fields: Vec::new(),
             within: within.unwrap(),
             tags: Vec::new(),
+            external_types: Vec::new(),
             private: false,
             ignore: false,
             output_source: source.output_source.clone(),
@@ -86,6 +89,7 @@ impl<'a> TypeDocEntry<'a> {
                 Tag::Field(field_tag) => doc_entry.fields.push(field_tag.into()),
 
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
+                Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Ignore(_) => doc_entry.ignore = true,

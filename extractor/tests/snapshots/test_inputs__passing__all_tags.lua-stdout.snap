@@ -13,7 +13,7 @@ expression: stdout
         "function_type": "static",
         "unreleased": true,
         "source": {
-          "line": 53,
+          "line": 57,
           "path": ""
         }
       }
@@ -25,7 +25,7 @@ expression: stdout
         "lua_type": "boolean",
         "unreleased": true,
         "source": {
-          "line": 73,
+          "line": 77,
           "path": ""
         }
       }
@@ -59,6 +59,11 @@ expression: stdout
             "name": "promise",
             "desc": "external param",
             "lua_type": "Promise"
+          },
+          {
+            "name": "status",
+            "desc": "external param",
+            "lua_type": "Status"
           }
         ],
         "returns": [
@@ -73,12 +78,26 @@ expression: stdout
           {
             "desc": "return external type",
             "lua_type": "Promise"
+          },
+          {
+            "desc": "return external type",
+            "lua_type": "Status"
           }
         ],
         "function_type": "static",
         "tags": [
           "uno",
           "dos"
+        ],
+        "external_types": [
+          {
+            "name": "Promise",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+          },
+          {
+            "name": "Status",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise#Status"
+          }
         ],
         "errors": [
           {
@@ -99,7 +118,7 @@ expression: stdout
         "yields": true,
         "ignore": true,
         "source": {
-          "line": 48,
+          "line": 52,
           "path": ""
         }
       }
@@ -127,7 +146,7 @@ expression: stdout
         "readonly": true,
         "ignore": true,
         "source": {
-          "line": 68,
+          "line": 72,
           "path": ""
         }
       }
@@ -144,7 +163,7 @@ expression: stdout
         "private": true,
         "ignore": true,
         "source": {
-          "line": 84,
+          "line": 88,
           "path": ""
         }
       },
@@ -171,16 +190,31 @@ expression: stdout
             "name": "Promise",
             "lua_type": "Promise",
             "desc": "This is a Promise"
+          },
+          {
+            "name": "Status",
+            "lua_type": "Status",
+            "desc": "Let's ignore that Promise:getStatus() exists"
           }
         ],
         "tags": [
           "cmdr",
           "lua"
         ],
+        "external_types": [
+          {
+            "name": "Promise",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+          },
+          {
+            "name": "Status",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise#Status"
+          }
+        ],
         "private": true,
         "ignore": true,
         "source": {
-          "line": 100,
+          "line": 107,
           "path": ""
         }
       }

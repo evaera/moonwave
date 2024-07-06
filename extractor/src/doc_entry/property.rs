@@ -5,7 +5,7 @@ use crate::{
     doc_comment::{DocComment, OutputSource},
     realm::Realm,
     serde_util::is_false,
-    tags::{CustomTag, DeprecatedTag, Tag},
+    tags::{CustomTag, DeprecatedTag, ExternalTag, Tag},
 };
 use serde::Serialize;
 
@@ -20,6 +20,8 @@ pub struct PropertyDocEntry<'a> {
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<CustomTag<'a>>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub external_types: Vec<ExternalTag<'a>>,
     #[serde(skip_serializing_if = "BTreeSet::is_empty")]
     pub realm: BTreeSet<Realm>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -63,6 +65,7 @@ impl<'a> PropertyDocEntry<'a> {
             deprecated: None,
             within: within.unwrap(),
             tags: Vec::new(),
+            external_types: Vec::new(),
             realm: BTreeSet::new(),
             private: false,
             unreleased: false,
@@ -82,6 +85,7 @@ impl<'a> PropertyDocEntry<'a> {
                 Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
+                Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Unreleased(_) => doc_entry.unreleased = true,

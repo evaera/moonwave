@@ -1,0 +1,78 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [
+      {
+        "name": "exchangePromises",
+        "desc": "This is a function that uses the external type [Promise]",
+        "params": [
+          {
+            "name": "promise",
+            "desc": "this is your promise",
+            "lua_type": "Promise"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "and this is my promise",
+            "lua_type": "Promise"
+          }
+        ],
+        "function_type": "static",
+        "external_types": [
+          {
+            "name": "Promise",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+          }
+        ],
+        "source": {
+          "line": 16,
+          "path": ""
+        }
+      },
+      {
+        "name": "getPromiseStatus",
+        "desc": "This is a function that uses two external types",
+        "params": [
+          {
+            "name": "promise",
+            "desc": "A promise",
+            "lua_type": "Promise"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "The Status of the Promise",
+            "lua_type": "Status"
+          }
+        ],
+        "function_type": "static",
+        "external_types": [
+          {
+            "name": "Promise",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+          },
+          {
+            "name": "Status",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise#Status"
+          }
+        ],
+        "source": {
+          "line": 27,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "anotherclass",
+    "desc": "This is yet another class",
+    "source": {
+      "line": 6,
+      "path": ""
+    }
+  }
+]

@@ -47,8 +47,8 @@ fn class_with_index() -> anyhow::Result<()> {
 }
 
 #[test]
-fn class_with_external() -> anyhow::Result<()> {
-    run_moonwave("passing/class_with_external.lua", 0)
+fn external_type() -> anyhow::Result<()> {
+    run_moonwave("passing/external_types.lua", 0)
 }
 
 #[test]
