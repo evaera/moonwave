@@ -7,7 +7,7 @@ use crate::{
     serde_util::is_false,
     tags::{CustomTag, DeprecatedTag, ErrorTag, ParamTag, ReturnTag, Tag},
 };
-use full_moon::ast::{types::TypeInfo::Tuple, FunctionBody};
+use full_moon::ast::{luau::TypeInfo::Tuple, FunctionBody};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -34,7 +34,7 @@ impl From<FunctionBody> for FunctionSource {
         for (parameter, type_specifier) in params_and_types {
             let source_param = FunctionParam {
                 name: match parameter {
-                    full_moon::ast::Parameter::Ellipse(_) => "...".to_owned(),
+                    full_moon::ast::Parameter::Ellipsis(_) => "...".to_owned(),
                     full_moon::ast::Parameter::Name(token) => {
                         if let full_moon::tokenizer::TokenType::Identifier { identifier } =
                             token.token_type()
