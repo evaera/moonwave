@@ -232,7 +232,15 @@ fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String
                     .unwrap()
                 }
             }
-            Error::FullMoonError(error) => eprintln!("{}", error),
+            Error::FullMoonError(errors) => {
+                let text = errors
+                    .iter()
+                    .map(|(s, e)| format!("Full-Moon: {}\n    in {}", e, s))
+                    .collect::<Vec<String>>()
+                    .join("\n");
+
+                eprintln!("{}", text)
+            }
         }
     }
 }
