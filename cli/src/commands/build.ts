@@ -26,6 +26,7 @@ export default async function buildCommand(args: Args) {
     const command = "npm" + (process.platform === "win32" ? ".cmd" : "")
     const spawnOptions: SpawnOptions = {
       cwd: tempDir,
+      shell: true,
       stdio: "inherit",
     }
 
