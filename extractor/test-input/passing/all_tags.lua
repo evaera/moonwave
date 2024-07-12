@@ -1,6 +1,6 @@
 --[=[
 	@class Foo
-	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
+	@external example www.example.com
 	@server
 	@client
 	@plugin
@@ -93,8 +93,8 @@
 	@ignore
 	@tag cmdr
 	@tag lua
-	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
-	@external Status https://eryn.io/roblox-lua-promise/api/Promise#Status
+	@external OtherExample www.example.com
+	@external AnotherExample www.example.com
 
 	.Name string -- the name of the command
 	.Groups array<string> -- A list of groups that the command contains

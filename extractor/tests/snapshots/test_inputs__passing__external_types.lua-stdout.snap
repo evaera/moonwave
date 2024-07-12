@@ -52,16 +52,12 @@ expression: stdout
         "function_type": "static",
         "external_types": [
           {
-            "name": "Promise",
-            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
-          },
-          {
             "name": "Status",
             "url": "https://eryn.io/roblox-lua-promise/api/Promise#Status"
           }
         ],
         "source": {
-          "line": 27,
+          "line": 26,
           "path": ""
         }
       }

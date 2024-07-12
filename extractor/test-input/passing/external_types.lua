@@ -19,7 +19,6 @@
 
 	@function getPromiseStatus
 	@within anotherclass
-	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
 	@param promise Promise -- A promise
 	@external Status https://eryn.io/roblox-lua-promise/api/Promise#Status
 	@return Status -- The Status of the Promise

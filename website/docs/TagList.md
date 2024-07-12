@@ -422,12 +422,6 @@ end
 
 The `@external` tag lets you link external tags outside of your Moonwave project in your project.
 
-:::caution
-You can define this tag anywhere, and you can then use that external type anywhere in your project.
-
-Because of this, be sure to avoid External Types with the same name but a different link, you might encounter unintended behavior.
-:::
-
 ```lua
 --- @class MyClass
 --- A sample class.

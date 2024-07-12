@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::{diagnostic::Diagnostic, span::Span};
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct DeprecatedTag<'a> {
     pub version: Option<Span<'a>>,
     pub desc: Option<Span<'a>>,
@@ -31,7 +31,7 @@ impl<'a> DeprecatedTag<'a> {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct SinceTag<'a> {
     pub version: Span<'a>,
     #[serde(skip)]

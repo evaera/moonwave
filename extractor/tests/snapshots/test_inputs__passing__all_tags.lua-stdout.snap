@@ -203,12 +203,12 @@ expression: stdout
         ],
         "external_types": [
           {
-            "name": "Promise",
-            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+            "name": "OtherExample",
+            "url": "www.example.com"
           },
           {
-            "name": "Status",
-            "url": "https://eryn.io/roblox-lua-promise/api/Promise#Status"
+            "name": "AnotherExample",
+            "url": "www.example.com"
           }
         ],
         "private": true,
@@ -228,8 +228,8 @@ expression: stdout
     ],
     "external_types": [
       {
-        "name": "Promise",
-        "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+        "name": "example",
+        "url": "www.example.com"
       }
     ],
     "realm": [

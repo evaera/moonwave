@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::{diagnostic::Diagnostic, doc_entry::FunctionType, span::Span};
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct FunctionTag<'a> {
     pub name: Span<'a>,
     pub function_type: FunctionType,

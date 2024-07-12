@@ -35,12 +35,12 @@ pub use property::PropertyTag;
 pub use return_tag::ReturnTag;
 pub use status::{DeprecatedTag, SinceTag};
 pub use type_tag::TypeTag;
-pub use validation::validate_tags;
+pub use validation::{validate_global_tags, validate_tags};
 pub use within::WithinTag;
 
 macro_rules! define_tags {
     ( $( $variant_name:ident($struct_name:ident),)* ) => {
-        #[derive(Debug, PartialEq, Serialize)]
+        #[derive(Debug, PartialEq, Serialize, Clone)]
         pub enum Tag<'a> {
             $( $variant_name($struct_name<'a>), )*
         }
