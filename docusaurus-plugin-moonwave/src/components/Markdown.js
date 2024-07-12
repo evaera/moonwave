@@ -6,10 +6,9 @@ import React, { useContext } from "react"
 import format from "rehype-format"
 import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
-import admonitions from "remark-admonitions"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
-import unified from "unified"
+import { unified } from "unified"
 import { TypeLinksContext } from "./LuaClass"
 
 const schema = {
@@ -75,7 +74,6 @@ export default function Markdown({ content, inline }) {
 
   const markdownHtml = unified()
     .use(parse)
-    .use(admonitions, {})
     .use(() => autoLinkReferences(typeLinks, siteConfig.baseUrl))
     .use(remark2rehype)
     .use(() => linkTransformer(siteConfig.baseUrl))
