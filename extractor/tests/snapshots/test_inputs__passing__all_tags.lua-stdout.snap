@@ -1,7 +1,6 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
-
 ---
 [
   {
@@ -14,7 +13,7 @@ expression: stdout
         "function_type": "static",
         "unreleased": true,
         "source": {
-          "line": 50,
+          "line": 57,
           "path": ""
         }
       }
@@ -26,7 +25,7 @@ expression: stdout
         "lua_type": "boolean",
         "unreleased": true,
         "source": {
-          "line": 70,
+          "line": 77,
           "path": ""
         }
       }
@@ -36,7 +35,7 @@ expression: stdout
     "desc": "",
     "unreleased": true,
     "source": {
-      "line": 24,
+      "line": 25,
       "path": ""
     }
   },
@@ -55,6 +54,16 @@ expression: stdout
             "name": "b",
             "desc": "param b",
             "lua_type": "B B B"
+          },
+          {
+            "name": "promise",
+            "desc": "external param",
+            "lua_type": "Promise"
+          },
+          {
+            "name": "status",
+            "desc": "external param",
+            "lua_type": "Status"
           }
         ],
         "returns": [
@@ -65,12 +74,30 @@ expression: stdout
           {
             "desc": "return b",
             "lua_type": "b"
+          },
+          {
+            "desc": "return external type",
+            "lua_type": "Promise"
+          },
+          {
+            "desc": "return external type",
+            "lua_type": "Status"
           }
         ],
         "function_type": "static",
         "tags": [
           "uno",
           "dos"
+        ],
+        "external_types": [
+          {
+            "name": "Promise",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise"
+          },
+          {
+            "name": "Status",
+            "url": "https://eryn.io/roblox-lua-promise/api/Promise#Status"
+          }
         ],
         "errors": [
           {
@@ -91,7 +118,7 @@ expression: stdout
         "yields": true,
         "ignore": true,
         "source": {
-          "line": 45,
+          "line": 52,
           "path": ""
         }
       }
@@ -119,7 +146,7 @@ expression: stdout
         "readonly": true,
         "ignore": true,
         "source": {
-          "line": 65,
+          "line": 72,
           "path": ""
         }
       }
@@ -136,7 +163,7 @@ expression: stdout
         "private": true,
         "ignore": true,
         "source": {
-          "line": 81,
+          "line": 88,
           "path": ""
         }
       },
@@ -158,16 +185,36 @@ expression: stdout
             "name": "Recursion",
             "lua_type": "Command",
             "desc": "This breaks the universe"
+          },
+          {
+            "name": "Promise",
+            "lua_type": "Promise",
+            "desc": "This is a Promise"
+          },
+          {
+            "name": "Status",
+            "lua_type": "Status",
+            "desc": "Let's ignore that Promise:getStatus() exists"
           }
         ],
         "tags": [
           "cmdr",
           "lua"
         ],
+        "external_types": [
+          {
+            "name": "OtherExample",
+            "url": "www.example.com"
+          },
+          {
+            "name": "AnotherExample",
+            "url": "www.example.com"
+          }
+        ],
         "private": true,
         "ignore": true,
         "source": {
-          "line": 96,
+          "line": 107,
           "path": ""
         }
       }
@@ -178,6 +225,12 @@ expression: stdout
       "bark",
       "meow",
       "rawr"
+    ],
+    "external_types": [
+      {
+        "name": "example",
+        "url": "www.example.com"
+      }
     ],
     "realm": [
       "Client",
@@ -192,9 +245,8 @@ expression: stdout
     "private": true,
     "ignore": true,
     "source": {
-      "line": 20,
+      "line": 21,
       "path": ""
     }
   }
 ]
-

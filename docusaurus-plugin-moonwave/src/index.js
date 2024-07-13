@@ -195,6 +195,18 @@ function parseApiCategories(luaClass, apiCategories) {
 async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
   const classNames = {}
 
+  // Handle external types before processing nameSet and classTypesNames, so that user created classes overwrite them
+  const externalTypes = luaClasses
+    .filter(
+      (luaClass) =>
+        luaClass.external_types && luaClass.external_types.length > 0
+    )
+    .forEach((luaClass) =>
+      luaClass.external_types.forEach(
+        (type) => (classNames[type.name] = type.url)
+      )
+    )
+
   nameSet.forEach((name) => (classNames[name] = `${baseUrl}api/${name}`))
 
   const classTypesNames = luaClasses
@@ -212,6 +224,7 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
 
   const typeLinks = {
     ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
+    ...externalTypes, // Should take precedence over Roblox types, but not user created classes
     ...classNames,
     ...classTypesNames,
   }

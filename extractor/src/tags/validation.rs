@@ -47,6 +47,7 @@ static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Custom,
     TagType::Field,
     TagType::Error,
+    TagType::External,
 ];
 
 fn build_diagnostic(
@@ -71,6 +72,42 @@ fn build_diagnostic(
     }
 
     diagnostic
+}
+
+pub fn validate_global_tags(tags: &[Tag]) -> Vec<Diagnostic> {
+    let mut diagnostics: Vec<Diagnostic> = Vec::new();
+
+    let mut name_occurrences: HashMap<(TagType, String), (usize, Vec<Tag>)> = HashMap::new();
+
+    for tag in tags {
+        let name = match tag {
+            Tag::External(external_tag) => external_tag.name,
+            Tag::Class(class_tag) => class_tag.name,
+            _ => continue,
+        }
+        .to_string();
+
+        let entry = name_occurrences
+            .entry((tag.tag_type(), name))
+            .or_insert((0usize, vec![]));
+        entry.0 += 1;
+        entry.1.push(tag.clone());
+    }
+
+    for ((tag_type, _), (count, tags)) in name_occurrences {
+        if count <= 1usize {
+            continue;
+        }
+
+        diagnostics.push(build_diagnostic(
+            &tags,
+            &[&tag_type],
+            "This tag cannot be used multiple times with the same name.",
+            "Appears here",
+        ))
+    }
+
+    diagnostics
 }
 
 pub fn validate_tags(tags: &[Tag]) -> Vec<Diagnostic> {

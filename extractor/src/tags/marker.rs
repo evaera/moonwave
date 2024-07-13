@@ -3,7 +3,7 @@ use serde::Serialize;
 
 macro_rules! define_marker_tag {
     ( $struct_name:ident ) => {
-        #[derive(Debug, PartialEq, Serialize)]
+        #[derive(Debug, PartialEq, Serialize, Clone)]
         pub struct $struct_name<'a> {
             #[serde(skip)]
             pub source: Span<'a>,

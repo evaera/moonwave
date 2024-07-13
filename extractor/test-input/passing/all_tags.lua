@@ -1,5 +1,6 @@
 --[=[
 	@class Foo
+	@external example www.example.com
 	@server
 	@client
 	@plugin
@@ -27,8 +28,12 @@
 	@within Foo
 	@param a A A A -- param a
 	@param b B B B -- param b
+	@param promise Promise -- external param
+	@param status Status -- external param
 	@return a -- return a
 	@return b -- return b
+	@return Promise -- return external type
+	@return Status -- return external type
 	@server
 	@client
 	@private
@@ -39,6 +44,8 @@
 	@tag uno
 	@tag dos
 	@error c -- this errors sometimes. shrug
+	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
+	@external Status https://eryn.io/roblox-lua-promise/api/Promise#Status
 
 	This function creates a new Foo
 ]=]
@@ -86,10 +93,14 @@
 	@ignore
 	@tag cmdr
 	@tag lua
+	@external OtherExample www.example.com
+	@external AnotherExample www.example.com
 
 	.Name string -- the name of the command
 	.Groups array<string> -- A list of groups that the command contains
 	.Recursion Command -- This breaks the universe
+	.Promise Promise -- This is a Promise
+	.Status Status -- Let's ignore that Promise:getStatus() exists
 
 	An object describing a command
 ]=]
