@@ -67,7 +67,7 @@ macro_rules! define_tags {
         }
 
         #[allow(unused)]
-        #[derive(Debug, PartialEq, Hash, Eq)]
+        #[derive(Debug, PartialEq, Hash, Eq, PartialOrd, Ord)]
         pub enum TagType {
             $( $variant_name, )*
         }

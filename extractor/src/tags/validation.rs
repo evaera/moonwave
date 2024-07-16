@@ -1,7 +1,7 @@
 use crate::diagnostic::Diagnostic;
 
 use super::{Tag, TagType};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     // Kind tags
@@ -77,7 +77,7 @@ fn build_diagnostic(
 pub fn validate_global_tags(tags: &[Tag]) -> Vec<Diagnostic> {
     let mut diagnostics: Vec<Diagnostic> = Vec::new();
 
-    let mut name_occurrences: HashMap<(TagType, String), (usize, Vec<Tag>)> = HashMap::new();
+    let mut name_occurrences: BTreeMap<(TagType, String), (usize, Vec<Tag>)> = BTreeMap::new();
 
     for tag in tags {
         let name = match tag {
