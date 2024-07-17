@@ -94,7 +94,7 @@ function parseSectionalClassOrder(content, classOrder, filteredContent) {
     }
 
     const toPush = [...namesWithTags, ...namesIncludedInClasses]
-    listedNames.push(toPush)
+    listedNames.push(...toPush)
   })
 
   const unlistedSidebar = content
