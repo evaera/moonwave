@@ -96,6 +96,7 @@ classes = ["Class3", "Class4"]
 
 [[classOrder]]
 section = "Tag Section"
+# You can add tagged classes with '@tag <tagName>' to a section like this
 tag = "TagForClasses"
 
 [[classOrder]]
