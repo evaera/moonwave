@@ -6,14 +6,22 @@ use crate::diagnostic::Diagnostics;
 #[non_exhaustive]
 pub enum Error {
     ParseErrors(Diagnostics),
-    FullMoonError(String),
+    FullMoonError(Vec<(String, full_moon::Error)>),
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Error::ParseErrors(parse_error) => write!(formatter, "{}", parse_error),
-            Error::FullMoonError(full_moon_error) => write!(formatter, "{}", full_moon_error),
+            Error::FullMoonError(full_moon_errors) => {
+                let text = full_moon_errors
+                    .iter()
+                    .map(|(s, e)| format!("Full-Moon: {}\n    in {}", e, s))
+                    .collect::<Vec<String>>()
+                    .join("\n");
+
+                write!(formatter, "{}", text)
+            }
         }
     }
 }
