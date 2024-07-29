@@ -55,7 +55,7 @@ export default async function buildCommand(args: Args) {
     const exitCode = await new Promise((resolve) => {
       spawn(
         command,
-        ["run", "build", "--", "--out-dir", buildDir],
+        ["run", "build", "--", "--out-dir", `"${buildDir}"`],
         spawnOptions
       )
         .on("exit", resolve)
