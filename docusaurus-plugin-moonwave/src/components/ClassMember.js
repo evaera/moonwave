@@ -1,6 +1,5 @@
 import Heading from "@theme/Heading"
 import React from "react"
-import Admonition from "./Admonition"
 import Badge from "./Badge"
 import SourceLink from "./SourceLink"
 import styles from "./styles.module.css"
@@ -79,13 +78,12 @@ export default function ClassMember({
       </div>
 
       {deprecated && (
-        <Admonition
-          variation="caution"
-          title={`This was deprecated in ${deprecated.version}`}
-        >
-          {deprecated.desc ||
-            "This item is deprecated. Do not use it for new work. "}
-        </Admonition>
+        <Markdown
+          content={`:::warning[This was deprecated in ${deprecated.version}]\n${
+            deprecated.desc ||
+            "This item is deprecated. Do not use it for new work. "
+          }\n:::`}
+        />
       )}
 
       {children}

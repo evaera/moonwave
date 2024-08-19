@@ -1,11 +1,14 @@
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import rehypePrism from "@mapbox/rehype-prism"
 import { defaultSchema } from "hast-util-sanitize"
+import { visit } from "unist-util-visit"
 import "prism-material-themes/themes/material-default.css"
 import React, { useContext } from "react"
 import format from "rehype-format"
 import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
+import directives from "remark-directive"
+import directivesToAdmonitions from "../directivesToAdmonitions"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import { unified } from "unified"
@@ -74,6 +77,8 @@ export default function Markdown({ content, inline }) {
 
   const markdownHtml = unified()
     .use(parse)
+    .use(directives)
+    .use(directivesToAdmonitions)
     .use(() => autoLinkReferences(typeLinks, siteConfig.baseUrl))
     .use(remark2rehype)
     .use(() => linkTransformer(siteConfig.baseUrl))
