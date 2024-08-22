@@ -71,6 +71,9 @@ const autoLinkReferences = (typeLinks, baseUrl) => (node) => {
   node.children = node.children.map(replaceLinkRefs)
 }
 
+// Fixes remark-directive from parsing ':foo', 'foo:bar' and 'foo::bar'
+const escapeMethodsRegexp = /(?<!:{2,}):((?:[A-Za-z]+))(?!\w*\[[^\]]*\])/gm
+
 export default function Markdown({ content, inline }) {
   const { siteConfig } = useDocusaurusContext()
   const typeLinks = useContext(TypeLinksContext)
@@ -86,7 +89,7 @@ export default function Markdown({ content, inline }) {
     .use(format)
     .use(html)
     .use(sanitize, schema)
-    .processSync(content)
+    .processSync(content.replace(escapeMethodsRegexp, "\\:$1"))
 
   const Tag = inline ? "span" : "div"
 
