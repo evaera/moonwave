@@ -47,6 +47,28 @@ export default function directivesToAdmonitions() {
         directive.type === "leafDirective" ||
         directive.type === "textDirective"
       ) {
+        if (typeof types[directive.name] === "undefined") {
+          console.error(
+            `:::${directive.name} is not a valid admonition, try :::info, :::note, :::tip, :::warning, or :::danger instead.`
+          )
+
+          const prefix = h("text")
+          const prefixData = prefix.data || (prefix.data = {})
+          prefixData.hName = "text"
+          prefix.value = `:::${directive.name}`
+
+          const suffix = h("text")
+          const suffixData = suffix.data || (suffix.data = {})
+          suffixData.hName = "text"
+          suffix.value = ":::"
+
+          directive.type = "paragraph"
+          directive.value = `::: ${directive.name} :::`
+          directive.children = [prefix, ...directive.children, suffix]
+
+          return directive
+        }
+
         let [admonitionName, alertType] = types[directive.name]
 
         let contentNodes = directive.children
