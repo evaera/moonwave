@@ -31,6 +31,6 @@
     "unist-util-visit": "^5.0.0",
     "remark-directive": "^3.0.0",
     "hastscript": "^9.0.0",
-    "hast-util-from-html": "^2.0.1"
+    "micromark-util-symbol": "2.0.0"
   }
 }

@@ -1,14 +1,14 @@
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import rehypePrism from "@mapbox/rehype-prism"
 import { defaultSchema } from "hast-util-sanitize"
-import { visit } from "unist-util-visit"
 import "prism-material-themes/themes/material-default.css"
 import React, { useContext } from "react"
 import format from "rehype-format"
 import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
 import directives from "remark-directive"
-import directivesToAdmonitions from "../directivesToAdmonitions"
+import remarkAdmonitions from "../unified/remarkAdmonitions"
+import remarkExtendedLinkReferences from "../unified/remarkExtendedLinkReferences"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import { unified } from "unified"
@@ -71,17 +71,15 @@ const autoLinkReferences = (typeLinks, baseUrl) => (node) => {
   node.children = node.children.map(replaceLinkRefs)
 }
 
-// Fixes remark-directive from parsing ':foo', 'foo:bar' and 'foo::bar'
-const escapeMethodsRegexp = /(?<!:{2,}):((?:[A-Za-z]+))(?!\w*\[[^\]]*\])/gm
-
 export default function Markdown({ content, inline }) {
   const { siteConfig } = useDocusaurusContext()
   const typeLinks = useContext(TypeLinksContext)
 
   const markdownHtml = unified()
     .use(parse)
+    .use(remarkExtendedLinkReferences)
     .use(directives)
-    .use(directivesToAdmonitions)
+    .use(remarkAdmonitions)
     .use(() => autoLinkReferences(typeLinks, siteConfig.baseUrl))
     .use(remark2rehype)
     .use(() => linkTransformer(siteConfig.baseUrl))
@@ -89,7 +87,7 @@ export default function Markdown({ content, inline }) {
     .use(format)
     .use(html)
     .use(sanitize, schema)
-    .processSync(content.replace(escapeMethodsRegexp, "\\:$1"))
+    .processSync(content)
 
   const Tag = inline ? "span" : "div"
 
