@@ -4,7 +4,7 @@ import { TypeLinksContext } from "./LuaClass"
 import styles from "./styles.module.css"
 import { Op, PrOp } from "./Syntax"
 
-const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
+const isPunc = (char) => !!char.match(/[\{\}<>\-\|&]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
@@ -130,6 +130,11 @@ function tokenize(code, isGroup) {
 
       if (punc === "|") {
         tokens.push({ type: "union" })
+        continue
+      }
+
+      if (punc === "&") {
+        tokens.push({ type: "intersection" })
         continue
       }
 
@@ -262,6 +267,8 @@ function Token({ token, depth }) {
       return <Op>{token.punc}</Op>
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
+    case "intersection":
+      return <Op>&nbsp;&amp;&nbsp;</Op>
     case "indexer":
       return (
         <span>
