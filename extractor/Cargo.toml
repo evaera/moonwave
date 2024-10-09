@@ -6,7 +6,7 @@ authors = ["eryn L. K. <eryn@eryn.io>"]
 license = "MPL-2.0"
 homepage = "https://eryn.io/moonwave/"
 repository = "https://github.com/evaera/moonwave"
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "libmoonwave"
@@ -22,7 +22,7 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = "1.0.0-rc.5"
+full_moon = "1.0.0"
 walkdir = "2.5.0"
 anyhow = "1.0.86"
 codespan-reporting = "0.11.1"
