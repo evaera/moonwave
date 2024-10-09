@@ -222,7 +222,10 @@ fn find_files(
 
 fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String>) {
     let writer = StandardStream::stderr(ColorChoice::Auto);
-    let config = codespan_reporting::term::Config::default();
+    let config = codespan_reporting::term::Config {
+        end_context_lines: usize::MAX,
+        ..Default::default()
+    };
 
     for error in errors {
         match error {
@@ -237,7 +240,15 @@ fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String
                     .unwrap()
                 }
             }
-            Error::FullMoonError(error) => eprintln!("{}", error),
+            Error::FullMoonError(errors) => {
+                let text = errors
+                    .iter()
+                    .map(|(s, e)| format!("Full-Moon: {}\n    in {}", e, s))
+                    .collect::<Vec<String>>()
+                    .join("\n");
+
+                eprintln!("{}", text)
+            }
         }
     }
 }

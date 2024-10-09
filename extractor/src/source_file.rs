@@ -17,7 +17,13 @@ pub struct SourceFile {
 
 impl<'a> SourceFile {
     pub fn from_str(source: &'a str, file_id: usize, relative_path: String) -> Result<Self, Error> {
-        let ast = full_moon::parse(source).map_err(|e| Error::FullMoonError(e.to_string()))?;
+        let ast = full_moon::parse(source).map_err(|e| {
+            Error::FullMoonError(
+                e.iter()
+                    .map(|e| (relative_path.clone(), e.to_owned()))
+                    .collect::<Vec<(String, full_moon::Error)>>(),
+            )
+        })?;
 
         struct Collector<'b> {
             buffer: Vec<(Token, Option<Stmt>)>,
