@@ -12,7 +12,7 @@ The rest of this guide will get you started using the Moonwave command line, whi
 
 ## Installation
 
-Ensure you have [Node.js](https://nodejs.org/en/) v14+ installed on your computer.
+Ensure you have [Node.js](https://nodejs.org/en/) v18+ installed on your computer.
 
 1. Open a terminal, like Command Prompt, Powershell, or [Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701) (recommended)
 2. Run the command `npm i -g moonwave`.

@@ -5,7 +5,7 @@ use crate::{
     doc_comment::{DocComment, OutputSource},
     realm::Realm,
     serde_util::is_false,
-    tags::{CustomTag, DeprecatedTag, ErrorTag, ParamTag, ReturnTag, Tag},
+    tags::{CustomTag, DeprecatedTag, ErrorTag, ExternalTag, ParamTag, ReturnTag, Tag},
 };
 use full_moon::ast::{luau::TypeInfo::Tuple, FunctionBody};
 use serde::Serialize;
@@ -126,6 +126,8 @@ pub struct FunctionDocEntry<'a> {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub tags: Vec<CustomTag<'a>>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub external_types: Vec<ExternalTag<'a>>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub errors: Vec<ErrorTag<'a>>,
     #[serde(skip_serializing_if = "BTreeSet::is_empty")]
     pub realm: BTreeSet<Realm>,
@@ -176,6 +178,7 @@ impl<'a> FunctionDocEntry<'a> {
             params: Vec::new(),
             returns: Vec::new(),
             tags: Vec::new(),
+            external_types: Vec::new(),
             errors: Vec::new(),
             realm: BTreeSet::new(),
             private: false,
@@ -244,6 +247,7 @@ impl<'a> FunctionDocEntry<'a> {
                 Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
+                Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
                 Tag::Error(error_tag) => doc_entry.errors.push(error_tag),
 
                 Tag::Private(_) => doc_entry.private = true,

@@ -1,4 +1,6 @@
-use crate::{diagnostic::Diagnostics, doc_comment::DocComment, doc_entry::DocEntry, error::Error};
+use crate::{
+    diagnostic::Diagnostics, doc_comment::DocComment, doc_entry::DocEntry, error::Error, tags::Tag,
+};
 use full_moon::{
     self,
     ast::{LastStmt, Stmt},
@@ -181,13 +183,18 @@ impl<'a> SourceFile {
         })
     }
 
-    pub fn parse(&'a self) -> Result<Vec<DocEntry>, Error> {
+    pub fn parse(&'a self) -> Result<(Vec<DocEntry>, Vec<Tag>), Error> {
         let (doc_entries, errors): (Vec<_>, Vec<_>) = self
             .doc_comments
             .iter()
             .map(DocEntry::parse)
             .partition(Result::is_ok);
-        let doc_entries: Vec<_> = doc_entries.into_iter().map(Result::unwrap).collect();
+
+        let (doc_entries, tags): (Vec<_>, Vec<_>) =
+            doc_entries.into_iter().map(Result::unwrap).unzip();
+
+        let tags: Vec<Tag> = tags.into_iter().flatten().collect();
+
         let errors: Diagnostics = errors
             .into_iter()
             .map(Result::unwrap_err)
@@ -196,7 +203,7 @@ impl<'a> SourceFile {
             .into();
 
         if errors.is_empty() {
-            Ok(doc_entries)
+            Ok((doc_entries, tags))
         } else {
             Err(Error::ParseErrors(errors))
         }

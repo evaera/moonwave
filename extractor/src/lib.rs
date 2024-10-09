@@ -22,6 +22,7 @@ use doc_entry::{ClassDocEntry, DocEntry, FunctionDocEntry, PropertyDocEntry, Typ
 use pathdiff::diff_paths;
 use serde::Serialize;
 
+use tags::{validate_global_tags, Tag};
 use walkdir::{self, WalkDir};
 
 mod cli;
@@ -78,14 +79,21 @@ pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::R
         }
     }
 
-    let (entries, source_file_errors): (Vec<_>, Vec<_>) = source_files
+    let (results, source_file_errors): (Vec<_>, Vec<_>) = source_files
         .iter()
         .map(SourceFile::parse)
         .partition(Result::is_ok);
 
     errors.extend(source_file_errors.into_iter().map(Result::unwrap_err));
 
-    let entries: Vec<_> = entries.into_iter().flat_map(Result::unwrap).collect();
+    let (entries, tags): (Vec<_>, Vec<_>) = results.into_iter().map(Result::unwrap).unzip();
+    let entries: Vec<DocEntry> = entries.into_iter().flatten().collect();
+    let tags: Vec<Tag> = tags.into_iter().flatten().collect();
+
+    let diagnostics = validate_global_tags(&tags);
+    if !diagnostics.is_empty() {
+        errors.push(Error::ParseErrors(Diagnostics::from(diagnostics)));
+    }
 
     match into_classes(entries) {
         Ok(classes) => {

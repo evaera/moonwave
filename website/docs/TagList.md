@@ -412,3 +412,35 @@ MyClass.__index = MyClass.prototype
 function MyClass.prototype:method()
 end
 ```
+
+## External Type Tag
+
+### @external
+:::note Usage
+`@external <name> <url>`
+:::
+
+The `@external` tag lets you link external tags outside of your Moonwave project in your project.
+
+```lua
+--- @class MyClass
+--- A sample class.
+local MyClass = {}
+MyClass.__index = MyClass
+
+--[=[
+	This is a function that will return a [Promise].
+
+	@method returnAPromise
+	@within MyClass
+	@external Promise https://eryn.io/roblox-lua-promise/api/Promise
+	@return Promise -- The Promise it returns
+]=]
+function MyClass:returnAPromise()
+	-- Returns a roblox-lua-promise
+end
+
+--- @prop promise Promise
+--- @within MyClass
+--- I can also use the Promise type here!
+```

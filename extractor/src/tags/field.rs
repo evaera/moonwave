@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::{diagnostic::Diagnostic, span::Span};
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct FieldTag<'a> {
     pub name: Span<'a>,
     pub desc: Span<'a>,

@@ -4,7 +4,7 @@ import { TypeLinksContext } from "./LuaClass"
 import styles from "./styles.module.css"
 import { Op, PrOp } from "./Syntax"
 
-const isPunc = (char) => !!char.match(/[\{\}<>\-\|]/)
+const isPunc = (char) => !!char.match(/[\{\}<>\-\|&]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
@@ -25,17 +25,31 @@ function tokenize(code, isGroup) {
   }
 
   const readBalanced = (left, right) => {
+    const leftChars = left.split("")
+    const rightChars = right.split("")
+
+    let leftDepth = 0
+    let rightDepth = 0
+
     let buffer = ""
 
     let depth = 0
     while (peek()) {
-      if (peek() === left) {
+      if (peek() === leftChars[leftDepth]) {
+        leftDepth++
         depth++
-      } else if (peek() === right) {
-        if (depth === 0) {
-          break
+      } else if (peek() === rightChars[rightDepth]) {
+        rightDepth++
+
+        if (rightDepth === rightChars.length) {
+          if (depth === 0) {
+            break
+          } else {
+            depth--
+          }
         } else {
-          depth--
+          next()
+          continue
         }
       }
 
@@ -66,10 +80,21 @@ function tokenize(code, isGroup) {
 
     if (peek() === "[") {
       next()
-      tokens.push({
-        type: "indexer",
-        tokens: tokenize(readBalanced("[", "]")),
-      })
+
+      if (peek() === "[") {
+        next()
+        tokens.push({
+          type: "stringLiteral",
+          luaType: `[[${readBalanced("[[", "]]")}]]`,
+        })
+        next()
+      } else {
+        tokens.push({
+          type: "indexer",
+          tokens: tokenize(readBalanced("[", "]")),
+        })
+      }
+
       next()
       continue
     }
@@ -108,6 +133,11 @@ function tokenize(code, isGroup) {
         continue
       }
 
+      if (punc === "&") {
+        tokens.push({ type: "intersection" })
+        continue
+      }
+
       tokens.push({
         type: "punc",
         punc,
@@ -122,12 +152,24 @@ function tokenize(code, isGroup) {
     if (atom) {
       if (atom.endsWith(":")) {
         tokens.push({ type: "identifier", identifier: atom.slice(0, -1) })
-      } else {
+        continue
+      }
+
+      if (
+        (atom.startsWith("'") && atom.endsWith("'")) ||
+        (atom.startsWith('"') && atom.endsWith('"'))
+      ) {
         tokens.push({
-          type: "luaType",
+          type: "stringLiteral",
           luaType: atom,
         })
+        continue
       }
+
+      tokens.push({
+        type: "luaType",
+        luaType: atom,
+      })
       continue
     }
 
@@ -225,6 +267,8 @@ function Token({ token, depth }) {
       return <Op>{token.punc}</Op>
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
+    case "intersection":
+      return <Op>&nbsp;&amp;&nbsp;</Op>
     case "indexer":
       return (
         <span>
@@ -233,6 +277,8 @@ function Token({ token, depth }) {
           <PrOp>]</PrOp>
         </span>
       )
+    case "stringLiteral":
+      return <code className={styles.blue}>{token.luaType}</code>
     case "luaType":
       const sanitizedToken = token.luaType.replace(/\W/g, "")
       if (sanitizedToken in typeLinks) {

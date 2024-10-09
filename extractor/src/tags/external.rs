@@ -3,26 +3,26 @@ use serde::Serialize;
 use crate::{diagnostic::Diagnostic, span::Span};
 
 #[derive(Debug, PartialEq, Serialize, Clone)]
-pub struct PropertyTag<'a> {
+pub struct ExternalTag<'a> {
     pub name: Span<'a>,
-    pub lua_type: Span<'a>,
+    pub url: Span<'a>,
     #[serde(skip)]
     pub source: Span<'a>,
 }
 
-impl<'a> PropertyTag<'a> {
+impl<'a> ExternalTag<'a> {
     pub fn parse(span: Span<'a>) -> Result<Self, Diagnostic> {
         let mut pieces = span.splitn(2, " ");
         let name = pieces.next().unwrap().trim();
 
-        let lua_type = pieces
+        let url = pieces
             .next()
             .map(Span::trim)
-            .ok_or_else(|| span.diagnostic("Property type is required"))?;
+            .ok_or_else(|| span.diagnostic("A url is required"))?;
 
         Ok(Self {
             name,
-            lua_type,
+            url,
             source: span,
         })
     }

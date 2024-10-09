@@ -199,7 +199,7 @@ fn determine_kind(
 }
 
 impl<'a> DocEntry<'a> {
-    pub fn parse(doc_comment: &'a DocComment) -> Result<DocEntry<'a>, Diagnostics> {
+    pub fn parse(doc_comment: &'a DocComment) -> Result<(DocEntry<'a>, Vec<Tag<'a>>), Diagnostics> {
         let stmt = doc_comment.stmt.as_ref();
 
         let span: Span<'a> = doc_comment.into();
@@ -281,6 +281,8 @@ impl<'a> DocEntry<'a> {
         let mut tags: Vec<_> = tags.into_iter().map(Result::unwrap).collect();
         let mut errors: Vec<_> = errors.into_iter().map(Result::unwrap_err).collect();
 
+        let all_tags: Vec<Tag> = tags.clone();
+
         errors.extend(validate_tags(&tags));
 
         if !errors.is_empty() {
@@ -304,44 +306,50 @@ impl<'a> DocEntry<'a> {
                 name,
                 function_type,
                 function_source,
-            } => DocEntry::Function(FunctionDocEntry::parse(
-                DocEntryParseArguments {
-                    within: Some(within),
-                    name,
-                    desc,
-                    tags,
-                    source: doc_comment,
-                },
-                function_type,
-                function_source,
-            )?),
-            DocEntryKind::Property { within, name } => {
+            } => (
+                DocEntry::Function(FunctionDocEntry::parse(
+                    DocEntryParseArguments {
+                        within: Some(within),
+                        name,
+                        desc,
+                        tags,
+                        source: doc_comment,
+                    },
+                    function_type,
+                    function_source,
+                )?),
+                all_tags,
+            ),
+            DocEntryKind::Property { within, name } => (
                 DocEntry::Property(PropertyDocEntry::parse(DocEntryParseArguments {
                     within: Some(within),
                     name,
                     desc,
                     tags,
                     source: doc_comment,
-                })?)
-            }
-            DocEntryKind::Type { within, name } => {
+                })?),
+                all_tags,
+            ),
+            DocEntryKind::Type { within, name } => (
                 DocEntry::Type(TypeDocEntry::parse(DocEntryParseArguments {
                     within: Some(within),
                     name,
                     desc,
                     tags,
                     source: doc_comment,
-                })?)
-            }
-            DocEntryKind::Class { name } => {
+                })?),
+                all_tags,
+            ),
+            DocEntryKind::Class { name } => (
                 DocEntry::Class(ClassDocEntry::parse(DocEntryParseArguments {
                     within: None,
                     name,
                     desc,
                     tags,
                     source: doc_comment,
-                })?)
-            }
+                })?),
+                all_tags,
+            ),
         })
     }
 }

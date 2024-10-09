@@ -1,0 +1,22 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: This tag cannot be used multiple times with the same name.
+   ┌─ test-input/failing/duplicate_names.lua:2:2
+   │
+ 2 │     @class name1
+   │     ^^^^^^^^^^^^ This tag cannot be used multiple times with the same name.
+   ·
+10 │     @class name1
+   │     ------------ Appears here
+
+error: This tag cannot be used multiple times with the same name.
+  ┌─ test-input/failing/duplicate_names.lua:3:2
+  │
+3 │     @external Promise https://eryn.io/roblox-lua-promise/api/Promise
+  │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This tag cannot be used multiple times with the same name.
+4 │     @external Promise https://eryn.io/roblox-lua-promise/api/Promise
+  │     ---------------------------------------------------------------- Appears here
+
+error: aborting due to diagnostic error

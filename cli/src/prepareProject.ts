@@ -26,13 +26,16 @@ const NO_GIT_REPO_TEXT = `# This project has no configured title
 The site title is usually pulled from your Git repo, but no git repo could be detected.
 Either set this project up as a Git repo, or configure the website title in moonwave.toml`
 
-export type FoldersEnabled = { [index in typeof COPY_FOLDERS[number]]: boolean }
+export type FoldersEnabled = {
+  [index in (typeof COPY_FOLDERS)[number]]: boolean
+}
 
 export type ClassOrder = (
   | string
   | {
       section?: string
-      classes: string[]
+      classes?: string[]
+      tag?: string
     }
 )[]
 
@@ -235,7 +238,7 @@ function copyChangelog(
   config: Config
 ): boolean {
   const changelogPath = path.join(projectDir, "CHANGELOG.md")
-  const targetPath = path.join(tempDir, "pages", "CHANGELOG.md")
+  const targetPath = path.join(tempDir, "pages", "changelog.md")
 
   if (config.changelog && fs.existsSync(changelogPath)) {
     fs.ensureDirSync(path.join(tempDir, "pages"))
@@ -451,9 +454,12 @@ export function prepareProject(
     tempDir,
     projectDir,
     watchPaths: [
-      typeof config.home?.includeReadme === "string"
-        ? config.home.includeReadme
-        : "README.md",
+      path.join(
+        projectDir,
+        typeof config.home?.includeReadme === "string"
+          ? config.home.includeReadme
+          : "README.md"
+      ),
       path.join(projectDir, "moonwave.toml"),
       path.join(projectDir, "moonwave.json"),
       path.join(projectDir, "CHANGELOG.md"),

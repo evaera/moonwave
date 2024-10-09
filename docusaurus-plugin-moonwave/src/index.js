@@ -12,7 +12,7 @@ const breakCapitalWordsZeroWidth = (text) =>
 const getFunctionCallOperator = (type) =>
   type === "static" ? "." : type === "method" ? ":" : ""
 
-const mapLinks = (nameSet, items) =>
+const mapLinksByName = (nameSet, items) =>
   items.map((name) => {
     if (!nameSet.has(name)) {
       throw new Error(
@@ -49,7 +49,7 @@ function flattenTOC(toc) {
 }
 
 function parseSimpleClassOrder(content, classOrder, nameSet) {
-  const listedLinks = mapLinks(nameSet, classOrder)
+  const listedLinks = mapLinksByName(nameSet, classOrder)
 
   const unlistedLinks = content
     .map((luaClass) => luaClass.name)
@@ -64,22 +64,37 @@ function parseSimpleClassOrder(content, classOrder, nameSet) {
   return [...listedLinks, ...unlistedLinks]
 }
 
-function parseSectionalClassOrder(content, classOrder, nameSet) {
-  const listedNames = classOrder.flatMap((section) => section.classes)
+function parseSectionalClassOrder(content, classOrder, filteredContent) {
+  const nameSet = new Set()
+  filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
+
+  const listedNames = []
 
   const listedSidebar = []
   classOrder.forEach((element) => {
+    const namesWithTags = filteredContent
+      .filter((luaClass) => luaClass.tags ? luaClass.tags.includes(element.tag) : false)
+      .map((luaClass) => luaClass.name)
+    const namesIncludedInClasses = element.classes || []
+
+    const tagsItems = mapLinksByName(nameSet, namesWithTags)
+    const classesItems = mapLinksByName(nameSet, namesIncludedInClasses)
+
     if (element.section) {
       listedSidebar.push({
         type: "category",
         label: element.section,
         collapsible: true,
         collapsed: element.collapsed ?? true,
-        items: mapLinks(nameSet, element.classes),
+        items: [...classesItems, ...tagsItems],
       })
     } else {
-      listedSidebar.push(...mapLinks(nameSet, element.classes))
+      const toPush = [...classesItems, ...tagsItems]
+      listedSidebar.push(...toPush)
     }
+
+    const toPush = [...namesWithTags, ...namesIncludedInClasses]
+    listedNames.push(...toPush)
   })
 
   const unlistedSidebar = content
@@ -95,7 +110,9 @@ function parseSectionalClassOrder(content, classOrder, nameSet) {
   return [...listedSidebar, ...unlistedSidebar]
 }
 
-function parseClassOrder(content, classOrder, nameSet) {
+function parseClassOrder(content, classOrder, filteredContent) {
+  const nameSet = new Set()
+  filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
   if (classOrder.length === 0) {
     return [...nameSet].sort().map((name) => ({
       type: "link",
@@ -109,7 +126,7 @@ function parseClassOrder(content, classOrder, nameSet) {
     return parseSimpleClassOrder(content, classOrder, nameSet)
   } else {
     // Handles cases where classOrder is assigned via TOML tables
-    return parseSectionalClassOrder(content, classOrder, nameSet)
+    return parseSectionalClassOrder(content, classOrder, filteredContent)
   }
 }
 
@@ -195,6 +212,18 @@ function parseApiCategories(luaClass, apiCategories) {
 async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
   const classNames = {}
 
+  // Handle external types before processing nameSet and classTypesNames, so that user created classes overwrite them
+  const externalTypes = luaClasses
+    .filter(
+      (luaClass) =>
+        luaClass.external_types && luaClass.external_types.length > 0
+    )
+    .forEach((luaClass) =>
+      luaClass.external_types.forEach(
+        (type) => (classNames[type.name] = type.url)
+      )
+    )
+
   nameSet.forEach((name) => (classNames[name] = `${baseUrl}api/${name}`))
 
   const classTypesNames = luaClasses
@@ -212,6 +241,7 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
 
   const typeLinks = {
     ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
+    ...externalTypes, // Should take precedence over Roblox types, but not user created classes
     ...classNames,
     ...classTypesNames,
   }
@@ -329,7 +359,7 @@ module.exports = (context, options) => ({
     const allLuaClassNamesOrdered = parseClassOrder(
       filteredContent,
       classOrder,
-      nameSet
+      filteredContent
     )
 
     const sidebarClassNames = await createData(
@@ -375,7 +405,9 @@ module.exports = (context, options) => ({
         JSON.stringify(luaClass)
       )
 
-      const tocDataOrdered = parseApiCategories(luaClass, apiCategories)
+      const tocDataOrdered = parseApiCategories(luaClass, apiCategories).filter(
+        (element) => element.children.length > 0
+      )
 
       const tocData = await createData(
         `${luaClass.name}-toc.json`,

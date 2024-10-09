@@ -25,7 +25,7 @@ impl KindTagType {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct KindTag<'a> {
     pub name: Span<'a>,
     pub kind_type: KindTagType,
