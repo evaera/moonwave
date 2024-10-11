@@ -25,12 +25,11 @@
     "rehype-sanitize": "^6.0.0",
     "rehype-stringify": "^10.0.0",
     "remark-parse": "^11.0.0",
-    "remark-react": "^9.0.0",
     "remark-rehype": "^11.1.0",
     "unified": "^11.0.4",
     "unist-util-visit": "^5.0.0",
     "remark-directive": "^3.0.0",
-    "hastscript": "^9.0.0",
-    "micromark-util-symbol": "2.0.0"
+    "hast-util-from-html": "^2.0.3",
+    "micromark-util-symbol": "^2.0.0"
   }
 }

@@ -13,6 +13,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import Admonition from "./Admonition"
 import Badge from "./Badge"
 import ClassMember from "./ClassMember"
 import LuaFunction from "./LuaFunction"
@@ -341,12 +342,13 @@ export default function LuaClass({
                           )}
 
                           {luaClass.deprecated && (
-                            <Markdown
-                              content={`:::warning[This was deprecated in ${luaClass.deprecated.version}]\n${
-                                luaClass.deprecated.desc ||
-                                "This item is deprecated. Do not use it for new work. "
-                              }\n:::`}
-                            />
+                            <Admonition
+                              variation="caution"
+                              title={`This was deprecated in ${luaClass.deprecated.version}`}
+                            >
+                              {luaClass.deprecated.desc ||
+                                "This item is deprecated. Do not use it for new work. "}
+                            </Admonition>
                           )}
 
                           <Markdown content={luaClass.desc} />

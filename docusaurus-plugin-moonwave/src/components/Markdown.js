@@ -7,8 +7,8 @@ import format from "rehype-format"
 import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
 import directives from "remark-directive"
-import remarkAdmonitions from "../unified/remarkAdmonitions"
-import remarkExtendedLinkReferences from "../unified/remarkExtendedLinkReferences"
+import remarkRehypeAdmonitions from "../remark/remarkRehypeAdmonitions"
+import remarkExtendedLinkReferences from "../remark/remarkExtendedLinkReferences"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import { unified } from "unified"
@@ -79,9 +79,10 @@ export default function Markdown({ content, inline }) {
     .use(parse)
     .use(remarkExtendedLinkReferences)
     .use(directives)
-    .use(remarkAdmonitions)
     .use(() => autoLinkReferences(typeLinks, siteConfig.baseUrl))
-    .use(remark2rehype)
+    .use(remark2rehype, {
+      handlers: { ...remarkRehypeAdmonitions}
+    })
     .use(() => linkTransformer(siteConfig.baseUrl))
     .use(rehypePrism)
     .use(format)
