@@ -1,0 +1,59 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: Assignments cannot have more than one variable
+  ┌─ test-input/failing/anonymous_function_assignment.lua:6:1
+  │  
+6 │ ╭ --- @within Class
+7 │ │ --- Multiple variables should fail
+  │ ╰──────────────────────────────────^ Assignments cannot have more than one variable
+8 │   class.foo, class.bar = function(x: number): number end, function(y: string): string end
+  │              --------- Additional variable here
+
+error: Assignments cannot have more than one variable
+   ┌─ test-input/failing/anonymous_function_assignment.lua:10:1
+   │  
+10 │ ╭ --- @within Class
+11 │ │ --- Multiple variables should fail
+   │ ╰──────────────────────────────────^ Assignments cannot have more than one variable
+12 │   local freeFunctionA, freeFunctionB = function(x: number): number end, function(y: string): string end
+   │                        ------------- Additional variable here
+
+error: Assignments cannot have more than one variable
+   ┌─ test-input/failing/anonymous_function_assignment.lua:14:1
+   │  
+14 │ ╭ --- @within Class
+15 │ │ --- Multiple variables should fail
+   │ ╰──────────────────────────────────^ Assignments cannot have more than one variable
+16 │   baz, qux = function(x: number): number end, function(y: string): string end
+   │        --- Additional variable here
+
+error: Assignments cannot have more than one variable
+   ┌─ test-input/failing/anonymous_function_assignment.lua:18:1
+   │  
+18 │ ╭ --- @within Class
+19 │ │ --- Multiple variables should fail
+   │ ╰──────────────────────────────────^ Assignments cannot have more than one variable
+20 │   local a, b = function(x: number): number end, function(y: string): string end
+   │            - Additional variable here
+
+error: Assignments cannot have more than one expression
+   ┌─ test-input/failing/anonymous_function_assignment.lua:22:1
+   │  
+22 │ ╭ --- @within Class
+23 │ │ --- Multiple expressions should fail
+   │ ╰────────────────────────────────────^ Assignments cannot have more than one expression
+24 │   quux = function(x: number): number end, function(y: string): string end
+   │                                           ------------------------------- Additional expression here
+
+error: Assignments cannot have more than one expression
+   ┌─ test-input/failing/anonymous_function_assignment.lua:26:1
+   │  
+26 │ ╭ --- @within Class
+27 │ │ --- Multiple expressions should fail
+   │ ╰────────────────────────────────────^ Assignments cannot have more than one expression
+28 │   local fum = function(x: number): number end, function(y: string): string end
+   │                                                ------------------------------- Additional expression here
+
+error: aborting due to diagnostic error

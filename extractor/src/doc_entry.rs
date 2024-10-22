@@ -7,7 +7,10 @@ use crate::{
     span::Span,
     tags::{validate_tags, Tag},
 };
-use full_moon::ast::Stmt;
+use full_moon::{
+    ast::{self, punctuated::Punctuated, Stmt},
+    node::Node,
+};
 
 mod class;
 mod function;
@@ -113,6 +116,36 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
     Ok(None)
 }
 
+fn assert_token_sequence_is_single<T>(
+    sequence: &Punctuated<T>,
+    doc_comment: &DocComment,
+    token_kind: &str,
+) -> Result<(), Diagnostic>
+where
+    T: Node,
+{
+    if sequence.len() > 1 {
+        if let Some((start, end)) = sequence.last().unwrap().range() {
+            return Err(Diagnostic {
+                additional_diagnostics: vec![Diagnostic {
+                    text: format!("Additional {token_kind} here"),
+                    start: start.bytes(),
+                    len: end.bytes() - start.bytes(),
+                    file_id: doc_comment.file_id,
+                    additional_diagnostics: vec![],
+                }],
+                ..doc_comment.diagnostic(format!(
+                    "Assignments cannot have more than one {token_kind}"
+                ))
+            });
+        }
+    } else if sequence.is_empty() {
+        return Err(doc_comment.diagnostic(format!("Assignments must have one {token_kind}")));
+    }
+
+    Ok(())
+}
+
 fn determine_kind(
     doc_comment: &DocComment,
     stmt: Option<&Stmt>,
@@ -192,6 +225,88 @@ fn determine_kind(
                 })
             }
         },
+        Some(Stmt::LocalAssignment(assignment)) => {
+            let expressions = assignment.expressions();
+            let variables = assignment.names();
+
+            assert_token_sequence_is_single(variables, doc_comment, "variable")?;
+            assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
+
+            match expressions.first().unwrap().value() {
+                ast::Expression::Function(function_box) => {
+                    let function_body = &function_box.1;
+
+                    let within = if let Some(within) = within_tag {
+                        within.name.as_str().to_owned()
+                    } else {
+                        return Err(doc_comment.diagnostic("Function requires @within tag"));
+                    };
+
+                    let name = variables.first().unwrap().value().token().to_string();
+
+                    Ok(DocEntryKind::Function {
+                        name,
+                        within,
+                        function_type: FunctionType::Static,
+                        function_source: Some(function_body.clone().into()),
+                    })
+                }
+                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+            }
+        }
+        Some(Stmt::Assignment(assignment)) => {
+            let expressions = assignment.expressions();
+            let variables = assignment.variables();
+
+            assert_token_sequence_is_single(variables, doc_comment, "variable")?;
+            assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
+
+            match expressions.into_iter().next().unwrap() {
+                ast::Expression::Function(function_box) => {
+                    let function_body = &function_box.1;
+
+                    let within = if let Some(within) = within_tag {
+                        within.name.as_str().to_owned()
+                    } else {
+                        return Err(doc_comment.diagnostic("Function requires @within tag"));
+                    };
+
+                    let name = match variables.into_iter().next().unwrap() {
+                        ast::Var::Name(token) => Some(token.token().to_string()),
+                        ast::Var::Expression(var_expression) => {
+                            match var_expression.suffixes().next().unwrap() {
+                                ast::Suffix::Index(index) => match index {
+                                    ast::Index::Brackets {
+                                        brackets: _,
+                                        expression: ast::Expression::String(token_reference),
+                                    } => Some(token_reference.token().to_string()),
+                                    ast::Index::Dot { dot: _, name } => {
+                                        Some(name.token().to_string())
+                                    }
+                                    _ => None,
+                                },
+                                _ => None,
+                            }
+                        }
+                        _ => None,
+                    };
+
+                    if name.is_none() {
+                        return Err(doc_comment.diagnostic(
+                            "Explicitly specify a kind tag, like @function, @prop, or @class.",
+                        ));
+                    }
+
+                    Ok(DocEntryKind::Function {
+                        name: name.unwrap(),
+                        within,
+                        function_type: FunctionType::Static,
+                        function_source: Some(function_body.clone().into()),
+                    })
+                }
+                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+            }
+        }
 
         _ => Err(doc_comment
             .diagnostic("Explicitly specify a kind tag, like @function, @prop, or @class.")),
