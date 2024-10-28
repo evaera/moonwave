@@ -25,31 +25,17 @@ function tokenize(code, isGroup) {
   }
 
   const readBalanced = (left, right) => {
-    const leftChars = left.split("")
-    const rightChars = right.split("")
-
-    let leftDepth = 0
-    let rightDepth = 0
-
     let buffer = ""
 
     let depth = 0
     while (peek()) {
-      if (peek() === leftChars[leftDepth]) {
-        leftDepth++
+      if (peek() === left) {
         depth++
-      } else if (peek() === rightChars[rightDepth]) {
-        rightDepth++
-
-        if (rightDepth === rightChars.length) {
-          if (depth === 0) {
-            break
-          } else {
-            depth--
-          }
+      } else if (peek() === right) {
+        if (depth === 0) {
+          break
         } else {
-          next()
-          continue
+          depth--
         }
       }
 
@@ -85,7 +71,7 @@ function tokenize(code, isGroup) {
         next()
         tokens.push({
           type: "stringLiteral",
-          luaType: `[[${readBalanced("[[", "]]")}]]`,
+          luaType: `[[${readBalanced("[", "]")}]]`,
         })
         next()
       } else {
