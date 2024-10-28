@@ -76,6 +76,16 @@ fn triple_dash_wrong_comment() -> anyhow::Result<()> {
 }
 
 #[test]
+fn anomymous_function_assignment() -> anyhow::Result<()> {
+    run_moonwave("passing/anonymous_function_assignment.lua", 0)
+}
+
+#[test]
+fn failing_anomymous_function_assignment() -> anyhow::Result<()> {
+    run_moonwave("failing/anonymous_function_assignment.lua", 1)
+}
+
+#[test]
 fn param_validation() -> anyhow::Result<()> {
     run_moonwave("failing/param_validation.lua", 1)
 }

@@ -7,10 +7,10 @@ use serde::Serialize;
 #[derive(Debug, Default, Serialize)]
 pub struct Diagnostic {
     pub text: String,
-    start: usize,
-    len: usize,
-    file_id: usize,
-    additional_diagnostics: Vec<Diagnostic>,
+    pub start: usize,
+    pub len: usize,
+    pub file_id: usize,
+    pub additional_diagnostics: Vec<Diagnostic>,
 }
 
 impl Diagnostic {
