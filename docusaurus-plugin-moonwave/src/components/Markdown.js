@@ -72,9 +72,23 @@ const autoLinkReferences = (typeLinks, baseUrl) => (node) => {
   node.children = node.children.map(replaceLinkRefs)
 }
 
+// Backwards compatibility for Docusaurus V2 Admonitions
+function convertAdmonitions(content) {
+  const blocksToConvert =
+    /:::(\w+)(?:[ \t]+([^\[\]{}\n]+))?\n((?:[ \t]*\n?(?:(?!:::).)*\n?)+):::/gm
+
+  return content.replace(blocksToConvert, (_, name, label, innerContent) => {
+    label = label ? `[${label}]` : ""
+
+    return `:::${name}${label}\n${innerContent}\n:::`
+  })
+}
+
 export default function Markdown({ content, inline }) {
   const { siteConfig } = useDocusaurusContext()
   const typeLinks = useContext(TypeLinksContext)
+
+  content = convertAdmonitions(content)
 
   const markdownHtml = unified()
     .use(parse)

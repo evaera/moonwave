@@ -8,7 +8,19 @@ import Admonition from "../components/Admonition"
 const handlers = {
   containerDirective: directivesToHast,
   leafDirective: directivesToHast,
-  inlineDirective: directivesToHast,
+  textDirective: textDirective,
+}
+
+// Backwards compatibility for :method()
+function textDirective(state, directive, parent) {
+  if (directive.children?.length == 0) {
+    const html = fromHtml(`:${directive.name}`, { fragment: true })
+
+    state.patch(directive, html)
+    return state.applyData(directive, html).children[0]
+  }
+
+  return directivesToHast(state, directive)
 }
 
 // Docusaurus style admonitions from remark directives
