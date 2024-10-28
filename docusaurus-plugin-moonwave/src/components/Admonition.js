@@ -113,7 +113,9 @@ export default function Admonition({ variation, title, children }) {
         <div className="admonition-heading">
           <h5>
             <span className="admonition-icon">{icon}</span>
-            <span className = "admonition-title" >{title || variation.toUpperCase()}</span>
+            <span className="admonition-title">
+              {title || variation.toUpperCase()}
+            </span>
           </h5>
         </div>
         <div className="admonition-content">{children}</div>

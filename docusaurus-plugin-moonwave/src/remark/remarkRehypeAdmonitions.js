@@ -26,15 +26,9 @@ function textDirective(state, directive, parent) {
 // Docusaurus style admonitions from remark directives
 function directivesToHast(state, directive) {
   let children = directive.children || []
-  let title = children[0]?.data?.directiveLabel
-    ? children.shift()
-    : undefined
+  let title = children[0]?.data?.directiveLabel ? children.shift() : undefined
 
-  const admonition = renderToString(
-    <Admonition
-      variation={directive.name}
-    />
-  )
+  const admonition = renderToString(<Admonition variation={directive.name} />)
 
   const html = fromHtml(admonition)
 
@@ -47,7 +41,9 @@ function directivesToHast(state, directive) {
     })
   }
 
-  if (title) { transformContent(title, "admonition-title") }
+  if (title) {
+    transformContent(title, "admonition-title")
+  }
   transformContent(directive, "admonition-content")
 
   state.patch(directive, html)
