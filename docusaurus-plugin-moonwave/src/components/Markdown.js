@@ -6,6 +6,10 @@ import React, { useContext } from "react"
 import format from "rehype-format"
 import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
+import directives from "remark-directive"
+import remarkGfm from "remark-gfm"
+import remarkRehypeAdmonitions from "../remark/remarkRehypeAdmonitions"
+import remarkExtendedLinkReferences from "../remark/remarkExtendedLinkReferences"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import { unified } from "unified"
@@ -68,14 +72,33 @@ const autoLinkReferences = (typeLinks, baseUrl) => (node) => {
   node.children = node.children.map(replaceLinkRefs)
 }
 
+// Backwards compatibility for Docusaurus V2 Admonitions
+function convertAdmonitions(content) {
+  const blocksToConvert =
+    /:::(\w+)(?:[ \t]+([^\[\]{}\n]+))?\n((?:[ \t]*\n?(?:(?!:::).)*\n?)+):::/gm
+
+  return content.replace(blocksToConvert, (_, name, label, innerContent) => {
+    label = label ? `[${label}]` : ""
+
+    return `:::${name}${label}\n${innerContent}\n:::`
+  })
+}
+
 export default function Markdown({ content, inline }) {
   const { siteConfig } = useDocusaurusContext()
   const typeLinks = useContext(TypeLinksContext)
 
+  content = convertAdmonitions(content)
+
   const markdownHtml = unified()
     .use(parse)
+    .use(remarkExtendedLinkReferences)
+    .use(remarkGfm)
+    .use(directives)
     .use(() => autoLinkReferences(typeLinks, siteConfig.baseUrl))
-    .use(remark2rehype)
+    .use(remark2rehype, {
+      handlers: { ...remarkRehypeAdmonitions },
+    })
     .use(() => linkTransformer(siteConfig.baseUrl))
     .use(rehypePrism)
     .use(format)
