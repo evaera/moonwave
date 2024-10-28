@@ -96,16 +96,12 @@ const VARIATIONS = {
 export default function Admonition({ variation, title, children }) {
   if (!VARIATIONS[variation]) {
     return (
-      <p
-        style={{
-          background: "red",
-          color: "white",
-          fontStyle: "italic",
-        }}
-      >
-        This Admonition variation `{variation}` is not supported. Try `note`,
-        `info`, `tip`, `warning`, or `danger`.
-      </p>
+      <div class="alert alert--danger" role="alert">
+        <strong>
+          This Admonition variation `{variation}` is not supported. Try `note`,
+          `info`, `tip`, `warning`, or `danger`.
+        </strong>
+      </div>
     )
   }
 
