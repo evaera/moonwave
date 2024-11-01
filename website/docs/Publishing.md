@@ -13,6 +13,21 @@ If you are using git and Github pages, you can publish your doc website with one
 
 Otherwise, you can run `moonwave build`, and your built website will be in a folder called `build` in your project directory.
 
+## Using GitHub Actions
+
+When you publish your doc via GitHub Actions you might need to provide the author details and GitHub token.
+
+```yaml
+- name: Publish
+    run: |
+    git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+    git config --global user.email "your@email.com"
+    git config --global user.name "Your Name"
+    moonwave build --publish
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
 :::caution
 Remember to add the `build` folder to your `.gitignore`!
 :::
@@ -47,3 +62,11 @@ Even if you are using Github Pages, and:
 ## Github Pages Custom Domain CNAME file
 
 Github Pages requires you to create a CNAME file in your website to host on a custom domain. You should create this file at `yourProjectRoot/.moonwave/static/CNAME` (create the folders if they don't exist) and put your domain in the file. 
+
+## Custom build directory
+
+You can set a custom build folder instead the default `build` if needed by passing the `--out-dir` argument to `moonwave build` command.
+
+```sh
+moonwave --out-dir=custom_dir build
+```
