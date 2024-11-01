@@ -65,7 +65,7 @@ Github Pages requires you to create a CNAME file in your website to host on a cu
 
 ## Custom build directory
 
-You can set a custom build folder instead the default `build` if needed by passing the `--out-dir` argument to `moonwave build` command.
+You can set a custom build directory instead of the default `build` if needed by passing the `--out-dir` argument to `moonwave build` command.
 
 ```sh
 moonwave --out-dir=custom_dir build
