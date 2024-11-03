@@ -66,8 +66,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Publish doc to GitHub Pages
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - run: npm i -g moonwave@latest
       - name: Publish
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
