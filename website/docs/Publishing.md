@@ -13,7 +13,7 @@ If you are using git and Github pages, you can publish your doc website with one
 
 Otherwise, you can run `moonwave build`, and your built website will be in a folder called `build` in your project directory.
 
-Or you can specify the `--out-dir [path]` argument to set the build directory to a different path.
+Additionally, you can also specify the `--out-dir [path]` argument to set the build directory to a different path other than the default `build` directory.
 
 :::caution
 Remember to add the `build` folder to your `.gitignore`!
@@ -52,24 +52,25 @@ Github Pages requires you to create a CNAME file in your website to host on a cu
 
 ## Using GitHub Actions
 
-You can create a GitHub Actions workflow to automatically publish your doc webiste to GitHub Pages. To begin, you need to create a new workflow in the `.github/workflows` directory of your repository that will build and publish your website.
+You can create a GitHub Actions workflow to automatically publish your docs webiste to GitHub Pages. To begin, you need to create a new workflow in the `.github/workflows` directory of your repository that will build and publish your website.
 
-Here is an example of such workflow where the job will run on each push to the `master` branch:
+Here is an example of such a workflow where the job will run on each push to the `master` branch:
 
 ```yaml
-# .github/workflows/publish.yml
+# .github/workflows/publish-docs.yml
+name: publish-docs
 on:
   push:
     branches: ["master"]
 jobs:
   status:
     runs-on: ubuntu-latest
-    name: Publish doc to GitHub Pages
+    name: Publish docs to GitHub Pages
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "22"
       - run: npm i -g moonwave@latest
       - name: Publish
         run: |
