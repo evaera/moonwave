@@ -73,7 +73,9 @@ function parseSectionalClassOrder(content, classOrder, filteredContent) {
   const listedSidebar = []
   classOrder.forEach((element) => {
     const namesWithTags = filteredContent
-      .filter((luaClass) => luaClass.tags ? luaClass.tags.includes(element.tag) : false)
+      .filter((luaClass) =>
+        luaClass.tags ? luaClass.tags.includes(element.tag) : false
+      )
       .map((luaClass) => luaClass.name)
     const namesIncludedInClasses = element.classes || []
 
@@ -211,39 +213,47 @@ function parseApiCategories(luaClass, apiCategories) {
 
 async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
   const classNames = {}
-
-  // Handle external types before processing nameSet and classTypesNames, so that user created classes overwrite them
-  const externalTypes = luaClasses
-    .filter(
-      (luaClass) =>
-        luaClass.external_types && luaClass.external_types.length > 0
-    )
-    .forEach((luaClass) =>
-      luaClass.external_types.forEach(
-        (type) => (classNames[type.name] = type.url)
-      )
-    )
-
   nameSet.forEach((name) => (classNames[name] = `${baseUrl}api/${name}`))
 
-  const classTypesNames = luaClasses
+  const classTypesNames = {}
+  luaClasses
     .filter((luaClass) => luaClass.types.length > 0)
     .forEach((luaClass) =>
       luaClass.types.forEach(
         (type) =>
-          (classNames[
+          (classTypesNames[
             type.name
           ] = `${baseUrl}api/${luaClass.name}#${type.name}`)
       )
     )
 
+  const externalTypeNames = {}
+  luaClasses.forEach((luaClass) => {
+    const entries = [
+      luaClass,
+      ...luaClass.functions,
+      ...luaClass.properties,
+      ...luaClass.types,
+    ]
+
+    entries
+      .filter(
+        (entry) => entry.external_types && entry.external_types.length > 0
+      )
+      .forEach((entry) => {
+        entry.external_types.forEach((type) => {
+          externalTypeNames[type.name] = type.url
+        })
+      })
+  })
+
   const robloxTypes = await generateRobloxTypes()
 
   const typeLinks = {
     ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
-    ...externalTypes, // Should take precedence over Roblox types, but not user created classes
     ...classNames,
     ...classTypesNames,
+    ...externalTypeNames,
   }
 
   return typeLinks
