@@ -1,0 +1,84 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [
+      {
+        "name": "foo",
+        "desc": "",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "number "
+          }
+        ],
+        "function_type": "static",
+        "source": {
+          "line": 6,
+          "path": ""
+        }
+      },
+      {
+        "name": "freeFunction",
+        "desc": "",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "number "
+          }
+        ],
+        "function_type": "static",
+        "source": {
+          "line": 9,
+          "path": ""
+        }
+      },
+      {
+        "name": "bar",
+        "desc": "",
+        "params": [
+          {
+            "name": "x",
+            "desc": "",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "",
+            "lua_type": "number "
+          }
+        ],
+        "function_type": "static",
+        "source": {
+          "line": 12,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "Class",
+    "desc": "",
+    "source": {
+      "line": 2,
+      "path": ""
+    }
+  }
+]
