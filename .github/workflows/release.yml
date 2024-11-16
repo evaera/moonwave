@@ -60,7 +60,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: moonwave-extractor-${{ env.REF }}-win64
         path: extractor/target/release/moonwave-extractor.exe
@@ -108,7 +108,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: moonwave-extractor-${{ env.REF }}-macos
         path: extractor/target/release/moonwave-extractor
@@ -151,7 +151,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: moonwave-extractor-${{ env.REF }}-linux
         path: extractor/target/release/moonwave-extractor
