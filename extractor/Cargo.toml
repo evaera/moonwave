@@ -22,7 +22,7 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = "1.0.0"
+full_moon = "1.1.0"
 walkdir = "2.5.0"
 anyhow = "1.0.86"
 codespan-reporting = "0.11.1"
@@ -30,7 +30,7 @@ structopt = "0.3.26"
 serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.120"
 pathdiff = "0.2.1"
-fs-err = "2.11.0"
+fs-err = "3.0.0"
 
 [dev-dependencies]
 insta = { version = "1.39.0", features = ["yaml"] }
