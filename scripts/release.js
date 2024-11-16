@@ -63,7 +63,7 @@ replaceInFile(
   `version = "${version}"`
 )
 
-run("docusaurus-plugin-moonwave", "npm publish")
+//run("docusaurus-plugin-moonwave", "npm publish")
 
 run("cli/template/root", "npm i --package-lock-only")
 run("extractor", "cargo check")
