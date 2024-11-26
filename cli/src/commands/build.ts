@@ -6,9 +6,12 @@ import { getBinaryPath } from "../binary.js"
 import { prepareProject } from "../prepareProject.js"
 
 function publish(buildDir: string): Promise<void> {
-  return githubPages.publish(buildDir, {
-    dotfiles: true,
-    message: "Built and published by Moonwave",
+  return new Promise((resolve, reject) => {
+    githubPages.publish(
+      buildDir,
+      { dotfiles: true, message: "Built and published by Moonwave" },
+      (err) => (err ? reject(err) : resolve())
+    )
   })
 }
 
