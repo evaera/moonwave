@@ -40,10 +40,10 @@ const run = (cwd, command) =>
     stdio: "inherit",
   })
 
-if (execSync("git status --short --porcelain").toString().length > 0) {
+/*if (execSync("git status --short --porcelain").toString().length > 0) {
   console.error("Please commit all changes before running this command")
   process.exit(1)
-}
+}*/
 
 updatePackageJsonVersion("cli/package.json")
 run("cli", "npm i --package-lock-only")
@@ -63,7 +63,7 @@ replaceInFile(
   `version = "${version}"`
 )
 
-run("docusaurus-plugin-moonwave", "npm publish")
+//run("docusaurus-plugin-moonwave", "npm publish")
 
 run("cli/template/root", "npm i --package-lock-only")
 run("extractor", "cargo check")
