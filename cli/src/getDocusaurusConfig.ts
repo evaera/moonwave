@@ -48,7 +48,17 @@ export default function getDocusaurusConfig({
 
     themeConfig: {
       prism: {
-        additionalLanguages: ["lua"],
+        additionalLanguages: [
+          "lua",
+          "bash",
+          "css",
+          "javascript",
+          "diff",
+          "git",
+          "json",
+          "typescript",
+          "toml",
+        ],
       },
 
       navbar: {
