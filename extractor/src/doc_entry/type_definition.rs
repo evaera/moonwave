@@ -4,6 +4,7 @@ use crate::{
     serde_util::is_false,
     tags::{CustomTag, ExternalTag, FieldTag, Tag},
 };
+use full_moon::ast::luau::TypeInfo;
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -55,7 +56,10 @@ pub struct TypeDocEntry<'a> {
 }
 
 impl<'a> TypeDocEntry<'a> {
-    pub(super) fn parse(args: DocEntryParseArguments<'a>) -> Result<Self, Diagnostics> {
+    pub(super) fn parse(
+        args: DocEntryParseArguments<'a>,
+        type_info: Option<TypeInfo>,
+    ) -> Result<Self, Diagnostics> {
         let DocEntryParseArguments {
             name,
             desc,
@@ -83,7 +87,9 @@ impl<'a> TypeDocEntry<'a> {
         for tag in tags {
             match tag {
                 Tag::Type(type_tag) => {
-                    doc_entry.lua_type = Some(type_tag.lua_type.as_str().to_owned())
+                    if let Some(explicit_lua_type) = type_tag.lua_type {
+                        doc_entry.lua_type = Some(explicit_lua_type.as_str().to_owned())
+                    }
                 }
 
                 Tag::Field(field_tag) => doc_entry.fields.push(field_tag.into()),
@@ -96,6 +102,10 @@ impl<'a> TypeDocEntry<'a> {
 
                 _ => unused_tags.push(tag),
             }
+        }
+
+        if doc_entry.lua_type.is_none() && type_info.is_some() {
+            doc_entry.lua_type = Some(type_info.unwrap().to_string())
         }
 
         if !unused_tags.is_empty() {

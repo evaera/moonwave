@@ -8,7 +8,7 @@ use crate::{
     tags::{validate_tags, Tag},
 };
 use full_moon::{
-    ast::{self, punctuated::Punctuated, Stmt},
+    ast::{self, luau::TypeInfo, punctuated::Punctuated, Stmt},
     node::Node,
 };
 
@@ -40,6 +40,7 @@ enum DocEntryKind {
     Type {
         within: String,
         name: String,
+        type_info: Option<TypeInfo>,
     },
     Class {
         name: String,
@@ -101,12 +102,14 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                 return Ok(Some(DocEntryKind::Type {
                     name: type_tag.name.as_str().to_owned(),
                     within: get_within_tag(tags, tag)?,
+                    type_info: None,
                 }))
             }
             Tag::Interface(interface_tag) => {
                 return Ok(Some(DocEntryKind::Type {
                     name: interface_tag.name.as_str().to_owned(),
                     within: get_within_tag(tags, tag)?,
+                    type_info: None,
                 }))
             }
             _ => (),
@@ -307,6 +310,40 @@ fn determine_kind(
                 _ => Err(doc_comment.diagnostic("Expression must be a function")),
             }
         }
+        Some(Stmt::TypeDeclaration(declaration)) => {
+            let name = declaration.type_name().to_string();
+
+            let within = if let Some(within) = within_tag {
+                within.name.as_str().to_owned()
+            } else {
+                return Err(doc_comment.diagnostic("Type requires @within tag"));
+            };
+
+            Ok(DocEntryKind::Type {
+                name,
+                within,
+                type_info: Some(declaration.type_definition().to_owned()),
+            })
+        }
+        Some(Stmt::ExportedTypeDeclaration(export_declaration)) => {
+            let declaration = export_declaration.type_declaration();
+
+            // maybe there is some way to reuse code from the branch above?
+
+            let name = declaration.type_name().to_string();
+
+            let within = if let Some(within) = within_tag {
+                within.name.as_str().to_owned()
+            } else {
+                return Err(doc_comment.diagnostic("Type requires @within tag"));
+            };
+
+            Ok(DocEntryKind::Type {
+                name,
+                within,
+                type_info: Some(declaration.type_definition().to_owned()),
+            })
+        }
 
         _ => Err(doc_comment
             .diagnostic("Explicitly specify a kind tag, like @function, @prop, or @class.")),
@@ -445,14 +482,17 @@ impl<'a> DocEntry<'a> {
                 })?),
                 all_tags,
             ),
-            DocEntryKind::Type { within, name } => (
-                DocEntry::Type(TypeDocEntry::parse(DocEntryParseArguments {
-                    within: Some(within),
-                    name,
-                    desc,
-                    tags,
-                    source: doc_comment,
-                })?),
+            DocEntryKind::Type { within, name , type_info} => (
+                DocEntry::Type(TypeDocEntry::parse(
+                    DocEntryParseArguments {
+                        within: Some(within),
+                        name,
+                        desc,
+                        tags,
+                        source: doc_comment,
+                    },
+                    type_info,
+                )?),
                 all_tags,
             ),
             DocEntryKind::Class { name } => (

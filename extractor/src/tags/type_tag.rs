@@ -5,7 +5,7 @@ use crate::{diagnostic::Diagnostic, span::Span};
 #[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct TypeTag<'a> {
     pub name: Span<'a>,
-    pub lua_type: Span<'a>,
+    pub lua_type: Option<Span<'a>>,
     #[serde(skip)]
     pub source: Span<'a>,
 }
@@ -17,8 +17,7 @@ impl<'a> TypeTag<'a> {
 
         let lua_type = pieces
             .next()
-            .map(Span::trim)
-            .ok_or_else(|| span.diagnostic("Property type is required"))?;
+            .map(Span::trim);
 
         Ok(Self {
             name,
