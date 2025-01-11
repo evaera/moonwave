@@ -1,7 +1,7 @@
 import React from "react"
-import InlineDescription from "./InlineDescription"
-import LuaType from "./LuaType"
-import Markdown from "./Markdown"
+import InlineDescription from "./InlineDescription.js"
+import LuaType from "./LuaType.js"
+import Markdown from "./Markdown.js"
 import styles from "./styles.module.css"
 
 const TypeAlias = ({ name, luaType }) => (

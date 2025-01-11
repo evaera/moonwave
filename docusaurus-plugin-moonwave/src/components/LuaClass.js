@@ -13,15 +13,15 @@ import {
   useEffect,
   useState,
 } from "react"
-import Admonition from "./Admonition"
-import Badge from "./Badge"
-import ClassMember from "./ClassMember"
-import LuaFunction from "./LuaFunction"
-import LuaProp from "./LuaProp"
-import LuaTypeDef from "./LuaTypeDef"
-import Markdown from "./Markdown"
+import Admonition from "./Admonition.js"
+import Badge from "./Badge.js"
+import ClassMember from "./ClassMember.js"
+import LuaFunction from "./LuaFunction.js"
+import LuaProp from "./LuaProp.js"
+import LuaTypeDef from "./LuaTypeDef.js"
+import Markdown from "./Markdown.js"
 import styles from "./styles.module.css"
-import Tag from "./Tag"
+import Tag from "./Tag.js"
 
 const SECTIONS = [
   {

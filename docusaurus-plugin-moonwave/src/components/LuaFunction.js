@@ -1,12 +1,12 @@
 import Heading from "@theme/Heading"
 import clsx from "clsx"
 import React from "react"
-import InlineDescription from "./InlineDescription"
-import LuaType from "./LuaType"
-import LuaTypeDef from "./LuaTypeDef"
-import Markdown from "./Markdown"
+import InlineDescription from "./InlineDescription.js"
+import LuaType from "./LuaType.js"
+import LuaTypeDef from "./LuaTypeDef.js"
+import Markdown from "./Markdown.js"
 import styles from "./styles.module.css"
-import { PrOp } from "./Syntax"
+import { PrOp } from "./Syntax.js"
 
 const Param = ({ name, lua_type }) => (
   <>

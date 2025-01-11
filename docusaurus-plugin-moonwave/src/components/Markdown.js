@@ -8,12 +8,12 @@ import sanitize from "rehype-sanitize"
 import html from "rehype-stringify"
 import directives from "remark-directive"
 import remarkGfm from "remark-gfm"
-import remarkRehypeAdmonitions from "../remark/remarkRehypeAdmonitions"
-import remarkExtendedLinkReferences from "../remark/remarkExtendedLinkReferences"
+import remarkRehypeAdmonitions from "../remark/remarkRehypeAdmonitions.js"
+import remarkExtendedLinkReferences from "../remark/remarkExtendedLinkReferences.js"
 import parse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import { unified } from "unified"
-import { TypeLinksContext } from "./LuaClass"
+import { TypeLinksContext } from "./LuaClass.js"
 
 const schema = {
   ...defaultSchema,
