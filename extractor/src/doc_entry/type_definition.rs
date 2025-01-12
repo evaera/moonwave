@@ -111,8 +111,19 @@ impl<'a> TypeDocEntry<'a> {
             return Err(Diagnostics::from(diagnostics));
         }
 
-        if doc_entry.lua_type.is_none() {
-            doc_entry.lua_type = Some(type_info.unwrap().to_string());
+        if let Some(type_info) = type_info {
+            match type_info {
+                TypeInfo::Table { fields, .. } => {
+                    for field in fields {
+                        doc_entry.fields.push(Field {
+                            name: field.key().to_string(),
+                            lua_type: field.value().to_string(),
+                            desc: String::new(),
+                        });
+                    }
+                },
+                _ => doc_entry.lua_type = Some(type_info.to_string())
+            }
         }
 
         Ok(doc_entry)
