@@ -87,9 +87,7 @@ impl<'a> TypeDocEntry<'a> {
         for tag in tags {
             match tag {
                 Tag::Type(type_tag) => {
-                    if let Some(explicit_lua_type) = type_tag.lua_type {
-                        doc_entry.lua_type = Some(explicit_lua_type.as_str().to_owned())
-                    }
+                    doc_entry.lua_type = Some(type_tag.lua_type.as_str().to_owned());
                 }
 
                 Tag::Field(field_tag) => doc_entry.fields.push(field_tag.into()),
@@ -104,10 +102,6 @@ impl<'a> TypeDocEntry<'a> {
             }
         }
 
-        if doc_entry.lua_type.is_none() && type_info.is_some() {
-            doc_entry.lua_type = Some(type_info.unwrap().to_string())
-        }
-
         if !unused_tags.is_empty() {
             let mut diagnostics = Vec::new();
             for tag in unused_tags {
@@ -115,6 +109,10 @@ impl<'a> TypeDocEntry<'a> {
             }
 
             return Err(Diagnostics::from(diagnostics));
+        }
+
+        if doc_entry.lua_type.is_none() {
+            doc_entry.lua_type = Some(type_info.unwrap().to_string());
         }
 
         Ok(doc_entry)
