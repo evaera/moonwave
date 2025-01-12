@@ -1,0 +1,84 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [],
+    "properties": [],
+    "types": [
+      {
+        "name": "baseData ",
+        "desc": "Table gets converted to interface.\r",
+        "fields": [
+          {
+            "name": "\tid",
+            "lua_type": "number\r\n",
+            "desc": ""
+          }
+        ],
+        "source": {
+          "line": 6,
+          "path": ""
+        }
+      },
+      {
+        "name": "pet ",
+        "desc": "Everything else uses a basic string representation.\r",
+        "lua_type": "\"cat\" | \"dog\"\r\n",
+        "source": {
+          "line": 12,
+          "path": ""
+        }
+      },
+      {
+        "name": "petData ",
+        "desc": "Unions and intersections are not marked as interfaces.\r",
+        "lua_type": "baseData & {\r\n\tpet: pet\r\n}\r\n",
+        "source": {
+          "line": 16,
+          "path": ""
+        }
+      },
+      {
+        "name": "response ",
+        "desc": "Exported types work the same.\r",
+        "lua_type": "petData?\r\n",
+        "source": {
+          "line": 22,
+          "path": ""
+        }
+      },
+      {
+        "name": "petFetcher",
+        "desc": "\\@type can override.\r",
+        "lua_type": "(id: number) -> response",
+        "source": {
+          "line": 27,
+          "path": ""
+        }
+      },
+      {
+        "name": "petLibrary",
+        "desc": "\\@interface can override.\r",
+        "fields": [
+          {
+            "name": "toPet",
+            "lua_type": "(baseData) -> petData",
+            "desc": ""
+          }
+        ],
+        "source": {
+          "line": 33,
+          "path": ""
+        }
+      }
+    ],
+    "name": "TypeStatementInference",
+    "desc": "Infer types from type statements.\r",
+    "source": {
+      "line": 3,
+      "path": ""
+    }
+  }
+]
