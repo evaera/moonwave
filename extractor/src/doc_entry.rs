@@ -154,7 +154,7 @@ fn parse_type_declaration(
     doc_comment: &DocComment,
     within_tag: Option<&crate::tags::WithinTag<'_>>
 ) -> Result<DocEntryKind, Diagnostic> {
-    let name = declaration.type_name().to_string();
+    let name = declaration.type_name().token().to_string();
 
     let within = if let Some(within) = within_tag {
         within.name.as_str().to_owned()

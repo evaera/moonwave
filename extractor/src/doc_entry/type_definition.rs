@@ -122,7 +122,7 @@ impl<'a> TypeDocEntry<'a> {
                         });
                     }
                 },
-                _ => doc_entry.lua_type = Some(type_info.to_string())
+                _ => doc_entry.lua_type = Some(type_info.to_string().trim().to_string())
             }
         }
 
