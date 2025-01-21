@@ -2,7 +2,7 @@
 --- Infer types from type statements.
 
 --- @within TypeStatementInference
---- Table gets converted to interface.
+--- Tables get converted to interfaces.
 type baseData = {
 	id: number
 }
@@ -12,22 +12,45 @@ type baseData = {
 type pet = "cat" | "dog"
 
 --- @within TypeStatementInference
---- Unions and intersections are not marked as interfaces.
+--- Anything not strictly a table (union, intersection, et cetera) is not marked as an interface.
 type petData = baseData & {
 	pet: pet
 }
 
 --- @within TypeStatementInference
---- Exported types work the same.
+--- Exported types work the same as non exported.
 export type response = petData?
 
 --- @within TypeStatementInference
+--- Exported interfaces work the same as non exported.
+export type responseFull = {
+	method: "GET",
+	body: petData?
+}
+
+--- @within TypeStatementInference
 --- @type petFetcher (id: number) -> response
---- \@type can override.
+--- `@type` can override.
 type randomFetcher = any
 
 --- @within TypeStatementInference
 --- @interface petLibrary
 --- @field toPet (baseData) -> petData
---- \@interface can override.
+--- @field getDatabase () -> petDatabase
+--- `@interface` can override.
 type randomLibrary = any
+
+--- @within TypeStatementInference
+--- Trivia is used to add field descriptions.
+type petStorage = {
+	entries: {petData} -- Maximum size of 100.
+}
+
+--- @within TypeStatementInference
+--- @field get (id: number) -> responseFull
+--- @field set -- `id` must match `data.id`
+--- `@field` can overwrite information on existing fields.
+type petDatabase = {
+	get: (id: number) -> pet,
+	set: (id: number, data: petData) -> () -- This comment will be removed.
+}
