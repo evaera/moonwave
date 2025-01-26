@@ -43,7 +43,19 @@ type randomLibrary = any
 --- @within TypeStatementInference
 --- Trivia is used to add field descriptions.
 type petStorage = {
-	entries: {petData} -- Maximum size of 100.
+	entries: {petData}, --- Maximum size of 100.
+
+	--- Current size of `entries`.
+	size: number,
+
+	lastAdded: number --- Unix timestamp.
+}
+
+--- @within TypeStatementInference
+--- Extra test for leading unpunctuated trivia.
+type petStorageUnreleased = {
+	--- Unix timestamp. Changes for insertions and deletions.
+	lastSizeChanged: number
 }
 
 --- @within TypeStatementInference
@@ -51,6 +63,6 @@ type petStorage = {
 --- @field set -- `id` must match `data.id`
 --- `@field` can overwrite information on existing fields.
 type petDatabase = {
-	get: (id: number) -> pet,
-	set: (id: number, data: petData) -> () -- This comment will be removed.
+	get: (id: number) -> pet, --- Cached in [petStorage].
+	set: (id: number, data: petData) -> () --- This comment will be removed.
 }

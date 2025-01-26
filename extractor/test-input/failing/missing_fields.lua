@@ -2,7 +2,7 @@
 --- Fail to add information for fields that do not exist.
 
 --- @within MissingFields
---- @field reason -- Ratelimit or id not found.
+--- @field HTTP -- True for database related errors.
 type petError = {
 	name: string
 }
