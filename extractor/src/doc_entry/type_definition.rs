@@ -49,10 +49,7 @@ fn gen_decl_param_to_string(gen_decl_param: &GenericDeclarationParameter) -> Opt
         Some(string ) => string,
         None => return None,
     };
-    let equals_string = match gen_decl_param.equals() {
-        Some(equals) => equals.token().to_string(),
-        None => String::new(),
-    };
+    let equals_string = optional_token_to_string(gen_decl_param.equals());
     let type_string = match gen_decl_param.default_type() {
         Some(parameter) => match type_info_to_string(parameter) {
             Some(string) => string,
@@ -94,13 +91,6 @@ fn gen_decl_to_string(gen_decl: &GenericDeclaration) -> Option<String> {
         generics_string,
         end.token()
     ))
-}
-
-fn optional_token_to_string(token: Option<&TokenReference>) -> String {
-    match token {
-        Some(token) => token.token().to_string(),
-        None => String::new(),
-    }
 }
 
 fn punctuated_type_argument_to_string(punctuated: &Punctuated<TypeArgument>) -> Option<String> {
@@ -172,6 +162,14 @@ fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<St
     }
 }
 
+/// Converts an optional TokenReference to a String representation, excluding trivia.
+fn optional_token_to_string(token: Option<&TokenReference>) -> String {
+    match token {
+        Some(token) => token.token().to_string(),
+        None => String::new(),
+    }
+}
+
 /// Converts a TypeArgument to a String representation, excluding trivia.
 fn type_argument_to_string(type_argument: &TypeArgument) -> Option<String> {
     let name_string = match type_argument.name() {
@@ -197,10 +195,7 @@ fn type_argument_to_string(type_argument: &TypeArgument) -> Option<String> {
 
 /// Converts a TypeField to a String representation, excluding trivia.
 fn type_field_to_string(type_field: &TypeField) -> Option<String> {
-    let access = match type_field.access() {
-        Some(access) => access.token().to_string(),
-        None => String::new(),
-    };
+    let access = optional_token_to_string(type_field.access());
     let key = match type_field_key_to_string(type_field.key()) {
         Some(string) => string,
         None => return None,
@@ -237,10 +232,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
     match type_info {
         TypeInfo::Array { braces, access, type_info } => {
             let (start, end) = braces.tokens();
-            let access_string = match access {
-                Some(access) => access.token().to_string(),
-                None => String::new(),
-            };
+            let access_string = optional_token_to_string(access.as_ref());
             Some(format!(
                 "{}{}{}{}",
                 start.token(),
@@ -309,10 +301,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             ))
         }
         TypeInfo::Intersection(intersection) => {
-            let leading_string = match intersection.leading() {
-                Some(leading) => leading.token().to_string(),
-                None => String::new(),
-            };
+            let leading_string = optional_token_to_string(intersection.leading());
             let types_string = match punctuated_type_info_to_string(intersection.types()) {
                 Some(string) => string,
                 None => return None,
@@ -383,10 +372,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             ))
         }
         TypeInfo::Union(union) => {
-            let leading_string = match union.leading() {
-                Some(leading) => leading.token().to_string(),
-                None => String::new(),
-            };
+            let leading_string = optional_token_to_string(union.leading());
             let types_string = match punctuated_type_info_to_string(union.types()) {
                 Some(string) => string,
                 None => return None,
