@@ -6,7 +6,7 @@ use crate::{
 };
 use full_moon::{ast::{luau::{
     GenericDeclaration, GenericDeclarationParameter, GenericParameterInfo, IndexedTypeInfo, TypeArgument, TypeField, TypeFieldKey, TypeInfo
-}, punctuated::{Punctuated}}, node::Node, tokenizer::{TokenReference, TokenType}};
+}, punctuated::Punctuated}, node::Node, tokenizer::{TokenReference, TokenType}};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
