@@ -9,7 +9,7 @@ expression: stdout
     "types": [
       {
         "name": "baseData",
-        "desc": "Tables get converted to interfaces.\r",
+        "desc": "Tables get converted to interfaces.",
         "fields": [
           {
             "name": "id",
@@ -24,7 +24,7 @@ expression: stdout
       },
       {
         "name": "pet",
-        "desc": "Everything else uses a basic string representation.\r",
+        "desc": "Everything else uses a basic string representation.",
         "lua_type": "\"cat\"|\"dog\"",
         "source": {
           "line": 12,
@@ -33,7 +33,7 @@ expression: stdout
       },
       {
         "name": "petData",
-        "desc": "Anything not strictly a table (union, intersection, et cetera) is not marked as an interface.\r",
+        "desc": "Anything not strictly a table (union, intersection, et cetera) is not marked as an interface.",
         "lua_type": "baseData&{pet:pet}",
         "source": {
           "line": 16,
@@ -42,7 +42,7 @@ expression: stdout
       },
       {
         "name": "response",
-        "desc": "Exported types work the same as non exported.\r",
+        "desc": "Exported types work the same as non exported.",
         "lua_type": "petData?",
         "source": {
           "line": 22,
@@ -51,7 +51,7 @@ expression: stdout
       },
       {
         "name": "responseFull",
-        "desc": "Exported interfaces work the same as non exported.\r",
+        "desc": "Exported interfaces work the same as non exported.",
         "fields": [
           {
             "name": "method",
@@ -71,7 +71,7 @@ expression: stdout
       },
       {
         "name": "petFetcher",
-        "desc": "`@type` can override.\r",
+        "desc": "`@type` can override.",
         "lua_type": "(id: number) -> response",
         "source": {
           "line": 34,
@@ -80,7 +80,7 @@ expression: stdout
       },
       {
         "name": "petLibrary",
-        "desc": "`@interface` can override.\r",
+        "desc": "`@interface` can override.",
         "fields": [
           {
             "name": "toPet",
@@ -100,7 +100,7 @@ expression: stdout
       },
       {
         "name": "petStorage",
-        "desc": "Trivia is used to add field descriptions.\r",
+        "desc": "Trivia is used to add field descriptions.",
         "fields": [
           {
             "name": "entries",
@@ -125,7 +125,7 @@ expression: stdout
       },
       {
         "name": "petStorageUnreleased",
-        "desc": "Extra test for leading unpunctuated trivia.\r",
+        "desc": "Extra test for leading unpunctuated trivia.",
         "fields": [
           {
             "name": "lastSizeChanged",
@@ -140,7 +140,7 @@ expression: stdout
       },
       {
         "name": "petDatabase",
-        "desc": "`@field` can overwrite information on existing fields.\r",
+        "desc": "`@field` can overwrite information on existing fields.",
         "fields": [
           {
             "name": "get",
@@ -160,7 +160,7 @@ expression: stdout
       }
     ],
     "name": "TypeStatementInference",
-    "desc": "Infer types from type statements.\r",
+    "desc": "Infer types from type statements.",
     "source": {
       "line": 3,
       "path": ""
