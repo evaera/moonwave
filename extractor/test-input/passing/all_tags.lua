@@ -14,7 +14,7 @@
 
 	Here's a description for you
 
-	::: info
+	:::info
 	with an admonition
 	:::
 ]=]
@@ -80,6 +80,8 @@
 	@within Foo
 	@private
 	@ignore
+	@deprecated v2.0.0 -- We have finally removed all optional values from the library.
+	@since v0.1.0
 	@tag arrgh
 	@tag yarr
 
@@ -87,10 +89,20 @@
 ]=]
 
 --[=[
+	@type nilOrVector nil | vector
+	@within Bar
+	@unreleased
+
+	We are still experimenting with vector technology.
+]=]
+
+--[=[
 	@interface Command
 	@within Foo
 	@private
 	@ignore
+	@deprecated v0.7.3 -- Adding something that can break the universe was not such a good idea.
+	@since v0.7.2
 	@tag cmdr
 	@tag lua
 	@external OtherExample www.example.com
@@ -103,4 +115,17 @@
 	.Status Status -- Let's ignore that Promise:getStatus() exists
 
 	An object describing a command
+]=]
+
+--[=[
+	@interface Command2
+	@within Bar
+	@unreleased
+
+	.Name string -- The name of the command.
+	.Recursion Command2 -- No longer breaks the universe.
+	.Promise Promise -- A reference to the Promise library.
+	.Status Status -- The status of the internal promise.
+
+	We have fixed recursion! Unfortunately, it comes at the cost of groups.
 ]=]

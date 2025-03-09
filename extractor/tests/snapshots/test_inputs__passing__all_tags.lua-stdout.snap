@@ -30,7 +30,49 @@ expression: stdout
         }
       }
     ],
-    "types": [],
+    "types": [
+      {
+        "name": "nilOrVector",
+        "desc": "We are still experimenting with vector technology.",
+        "lua_type": "nil | vector",
+        "unreleased": true,
+        "source": {
+          "line": 98,
+          "path": ""
+        }
+      },
+      {
+        "name": "Command2",
+        "desc": "We have fixed recursion! Unfortunately, it comes at the cost of groups.",
+        "fields": [
+          {
+            "name": "Name",
+            "lua_type": "string",
+            "desc": "The name of the command."
+          },
+          {
+            "name": "Recursion",
+            "lua_type": "Command2",
+            "desc": "No longer breaks the universe."
+          },
+          {
+            "name": "Promise",
+            "lua_type": "Promise",
+            "desc": "A reference to the Promise library."
+          },
+          {
+            "name": "Status",
+            "lua_type": "Status",
+            "desc": "The status of the internal promise."
+          }
+        ],
+        "unreleased": true,
+        "source": {
+          "line": 132,
+          "path": ""
+        }
+      }
+    ],
     "name": "Bar",
     "desc": "",
     "unreleased": true,
@@ -160,10 +202,15 @@ expression: stdout
           "arrgh",
           "yarr"
         ],
+        "since": "v0.1.0",
+        "deprecated": {
+          "version": "v2.0.0",
+          "desc": "We have finally removed all optional values from the library."
+        },
         "private": true,
         "ignore": true,
         "source": {
-          "line": 88,
+          "line": 90,
           "path": ""
         }
       },
@@ -211,16 +258,21 @@ expression: stdout
             "url": "www.example.com"
           }
         ],
+        "since": "v0.7.2",
+        "deprecated": {
+          "version": "v0.7.3",
+          "desc": "Adding something that can break the universe was not such a good idea."
+        },
         "private": true,
         "ignore": true,
         "source": {
-          "line": 107,
+          "line": 119,
           "path": ""
         }
       }
     ],
     "name": "Foo",
-    "desc": "Here's a description for you\n\n::: info\nwith an admonition\n:::",
+    "desc": "Here's a description for you\n\n:::info\nwith an admonition\n:::",
     "tags": [
       "bark",
       "meow",
