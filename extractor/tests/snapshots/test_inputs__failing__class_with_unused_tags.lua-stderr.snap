@@ -28,5 +28,21 @@ error: This tag is mutually exclusive...
 3 │     @yields
   │     ------- ...with this tag.
 
-error: aborting due to diagnostic error
+error: This tag is mutually exclusive...
+  ┌─ test-input/failing/class_with_unused_tags.lua:7:2
+  │
+7 │     @unreleased
+  │     ^^^^^^^^^^^ This tag is mutually exclusive...
+8 │     @since v0.1.0
+  │     ------------- ...with this tag.
 
+error: This tag is mutually exclusive...
+  ┌─ test-input/failing/class_with_unused_tags.lua:7:2
+  │
+7 │     @unreleased
+  │     ^^^^^^^^^^^ This tag is mutually exclusive...
+8 │     @since v0.1.0
+9 │     @deprecated v1.0.0
+  │     ------------------ ...with this tag.
+
+error: aborting due to diagnostic error
