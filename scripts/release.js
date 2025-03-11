@@ -1,5 +1,5 @@
-const { execSync } = require("child_process")
-const fs = require("fs")
+import { execSync } from "child_process"
+import { readFileSync, writeFileSync } from "fs"
 
 const version = process.argv[2]
 if (!version || version.length < 3) {
@@ -10,28 +10,35 @@ if (!version || version.length < 3) {
 console.log(`Publishing version ${version}...`)
 
 function updatePackageJsonVersion(filePath) {
-  const json = JSON.parse(fs.readFileSync(filePath, { encoding: "utf-8" }))
+  const json = JSON.parse(readFileSync(filePath, { encoding: "utf-8" }))
 
   json.version = version
 
-  fs.writeFileSync(filePath, JSON.stringify(json, null, 2))
+  writeFileSync(filePath, JSON.stringify(json, null, 2))
 }
 
 function updatePackageDependencyVersion(filePath, dependencyName, version) {
-  const json = JSON.parse(fs.readFileSync(filePath, { encoding: "utf-8" }))
+  const json = JSON.parse(readFileSync(filePath, { encoding: "utf-8" }))
 
   json.dependencies[dependencyName] = "^" + version
 
-  fs.writeFileSync(filePath, JSON.stringify(json, null, 2))
+  writeFileSync(filePath, JSON.stringify(json, null, 2))
 }
 
 function replaceInFile(filePath, pattern, replacement) {
-  fs.writeFileSync(
+  writeFileSync(
     filePath,
-    fs
-      .readFileSync(filePath, { encoding: "utf-8" })
+    readFileSync(filePath, { encoding: "utf-8" })
       .replace(pattern, replacement)
   )
+}
+
+async function pollPluginPublished() {
+  const response = execSync("npm view docusaurus-plugin-moonwave version");
+  if (response.toString().trim() !== version.trim()) {
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    await pollPluginPublished();
+  }
 }
 
 const run = (cwd, command) =>
@@ -40,10 +47,10 @@ const run = (cwd, command) =>
     stdio: "inherit",
   })
 
-/*if (execSync("git status --short --porcelain").toString().length > 0) {
+if (execSync("git status --short --porcelain").toString().length > 0) {
   console.error("Please commit all changes before running this command")
   process.exit(1)
-}*/
+}
 
 updatePackageJsonVersion("cli/package.json")
 run("cli", "npm i --package-lock-only")
@@ -63,7 +70,8 @@ replaceInFile(
   `version = "${version}"`
 )
 
-//run("docusaurus-plugin-moonwave", "npm publish")
+run("docusaurus-plugin-moonwave", "npm publish")
+await pollPluginPublished();
 
 run("cli/template/root", "npm i --package-lock-only")
 run("extractor", "cargo check")
