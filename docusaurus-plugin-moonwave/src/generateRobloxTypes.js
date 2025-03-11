@@ -6,7 +6,7 @@
  * Copyright © 2018 Eryn L. K.
  *****/
 
-const fetch = require("node-fetch")
+import fetch from "node-fetch"
 
 const dataTypes = [
   "Axes",
@@ -42,7 +42,7 @@ const dataTypes = [
   "Vector3int16",
 ]
 
-module.exports.generateRobloxTypes = async function generateRobloxTypes() {
+export async function generateRobloxTypes() {
   const req = await fetch(
     "https://raw.githubusercontent.com/CloneTrooper1019/Roblox-Client-Watch/roblox/API-Dump.json"
   )

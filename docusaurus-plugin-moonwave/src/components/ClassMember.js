@@ -1,10 +1,10 @@
 import Heading from "@theme/Heading"
 import React from "react"
-import Admonition from "./Admonition"
-import Badge from "./Badge"
-import SourceLink from "./SourceLink"
+import Admonition from "./Admonition.js"
+import Badge from "./Badge.js"
+import SourceLink from "./SourceLink.js"
 import styles from "./styles.module.css"
-import Tag from "./Tag"
+import Tag from "./Tag.js"
 
 export default function ClassMember({
   name,

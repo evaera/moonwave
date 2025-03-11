@@ -2,7 +2,7 @@ import { visit, EXIT } from "unist-util-visit"
 import { fromHtml } from "hast-util-from-html"
 import { renderToString } from "react-dom/server"
 
-import Admonition from "../components/Admonition"
+import Admonition from "../components/Admonition.js"
 
 /// remark-rehype handlers
 const handlers = {

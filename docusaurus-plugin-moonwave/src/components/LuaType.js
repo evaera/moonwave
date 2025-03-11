@@ -1,8 +1,8 @@
 import React, { useContext } from "react"
-import GenericLink from "./GenericLink"
-import { TypeLinksContext } from "./LuaClass"
+import GenericLink from "./GenericLink.js"
+import { TypeLinksContext } from "./LuaClass.js"
 import styles from "./styles.module.css"
-import { Op, PrOp } from "./Syntax"
+import { Op, PrOp } from "./Syntax.js"
 
 const isPunc = (char) => !!char.match(/[\{\}<>\-\|&]/)
 const isWhitespace = (char) => !!char.match(/\s/)

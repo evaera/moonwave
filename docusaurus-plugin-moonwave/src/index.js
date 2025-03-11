@@ -1,8 +1,8 @@
-const path = require("path")
-const fs = require("fs")
-const { promisify } = require("util")
+import { resolve } from "path"
+import { existsSync } from "fs"
+import { promisify } from "util"
 const exec = promisify(require("child_process").exec)
-const { generateRobloxTypes } = require("./generateRobloxTypes")
+import { generateRobloxTypes } from "./generateRobloxTypes.js"
 
 const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
 
@@ -259,11 +259,11 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
   return typeLinks
 }
 
-module.exports = (context, options) => ({
+export default (context, options) => ({
   name: "docusaurus-plugin-moonwave",
 
   getThemePath() {
-    return path.resolve(__dirname, "./theme")
+    return resolve(__dirname, "./theme")
   },
 
   getPathsToWatch() {
@@ -271,7 +271,7 @@ module.exports = (context, options) => ({
   },
 
   async loadContent() {
-    const basePath = options.projectDir || path.resolve(process.cwd(), "..")
+    const basePath = options.projectDir || resolve(process.cwd(), "..")
 
     const binaryPath = options.binaryPath ?? "moonwave-extractor"
 
@@ -402,7 +402,7 @@ module.exports = (context, options) => ({
     addRoute({
       path: baseUrl + "api/",
       exact: true,
-      component: path.resolve(__dirname, "components/Redirect.js"),
+      component: resolve(__dirname, "components/Redirect.js"),
       modules: {
         sidebarClassNames,
         pluginOptions,
@@ -428,7 +428,7 @@ module.exports = (context, options) => ({
 
       addRoute({
         path: `${baseUrl}api/${luaClass.name}`,
-        component: path.resolve(__dirname, "components/LuaClass.js"),
+        component: resolve(__dirname, "components/LuaClass.js"),
         modules: {
           luaClass: apiDataPath,
           sidebarClassNames,
@@ -442,7 +442,7 @@ module.exports = (context, options) => ({
   },
 })
 
-module.exports.validateOptions = ({ options }) => {
+export function validateOptions({ options }) {
   if (!options.code) {
     throw new Error(
       "Moonwave plugin: expected option `code` to point to your source code."
@@ -472,9 +472,9 @@ module.exports.validateOptions = ({ options }) => {
       )
     }
 
-    const resolvedPath = path.resolve(process.cwd(), codePath)
+    const resolvedPath = resolve(process.cwd(), codePath)
 
-    if (!fs.existsSync(resolvedPath)) {
+    if (!existsSync(resolvedPath)) {
       throw new Error(
         `Moonwave plugin: code path ${resolvedPath} does not actually exist.`
       )
