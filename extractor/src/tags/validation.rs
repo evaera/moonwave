@@ -32,6 +32,7 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Yields, TagType::Class),
     // Can't be unreleased and released at the same time
     (TagType::Unreleased, TagType::Since),
+    (TagType::Unreleased, TagType::Deprecated),
     // Readonly doesn't make sense on a function
     (TagType::Function, TagType::ReadOnly),
 ];
