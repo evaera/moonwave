@@ -30,7 +30,7 @@ impl<'a> FieldTag<'a> {
         let lua_type = pieces
             .next()
             .map(|name| name.trim())
-            .ok_or_else(|| span.diagnostic("Field type is required"))?;
+            .unwrap_or_else(|| Span::dummy(""));
 
         Ok(Self {
             name,

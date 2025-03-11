@@ -1,0 +1,169 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [],
+    "properties": [],
+    "types": [
+      {
+        "name": "baseData",
+        "desc": "Tables get converted to interfaces.",
+        "fields": [
+          {
+            "name": "id",
+            "lua_type": "number",
+            "desc": ""
+          }
+        ],
+        "source": {
+          "line": 6,
+          "path": ""
+        }
+      },
+      {
+        "name": "pet",
+        "desc": "Everything else uses a basic string representation.",
+        "lua_type": "\"cat\"|\"dog\"",
+        "source": {
+          "line": 12,
+          "path": ""
+        }
+      },
+      {
+        "name": "petData",
+        "desc": "Anything not strictly a table (union, intersection, et cetera) is not marked as an interface.",
+        "lua_type": "baseData&{pet:pet}",
+        "source": {
+          "line": 16,
+          "path": ""
+        }
+      },
+      {
+        "name": "response",
+        "desc": "Exported types work the same as non exported.",
+        "lua_type": "petData?",
+        "source": {
+          "line": 22,
+          "path": ""
+        }
+      },
+      {
+        "name": "responseFull",
+        "desc": "Exported interfaces work the same as non exported.",
+        "fields": [
+          {
+            "name": "method",
+            "lua_type": "\"GET\"",
+            "desc": ""
+          },
+          {
+            "name": "body",
+            "lua_type": "petData?",
+            "desc": ""
+          }
+        ],
+        "source": {
+          "line": 26,
+          "path": ""
+        }
+      },
+      {
+        "name": "petFetcher",
+        "desc": "`@type` can override.",
+        "lua_type": "(id: number) -> response",
+        "source": {
+          "line": 34,
+          "path": ""
+        }
+      },
+      {
+        "name": "petLibrary",
+        "desc": "`@interface` can override.",
+        "fields": [
+          {
+            "name": "toPet",
+            "lua_type": "(baseData) -> petData",
+            "desc": ""
+          },
+          {
+            "name": "getDatabase",
+            "lua_type": "() -> petDatabase",
+            "desc": ""
+          }
+        ],
+        "source": {
+          "line": 41,
+          "path": ""
+        }
+      },
+      {
+        "name": "petStorage",
+        "desc": "Trivia is used to add field descriptions.",
+        "fields": [
+          {
+            "name": "entries",
+            "lua_type": "{petData}",
+            "desc": "Maximum size of 100."
+          },
+          {
+            "name": "size",
+            "lua_type": "number",
+            "desc": "Current size of `entries`."
+          },
+          {
+            "name": "lastAdded",
+            "lua_type": "number",
+            "desc": "Unix timestamp."
+          }
+        ],
+        "source": {
+          "line": 45,
+          "path": ""
+        }
+      },
+      {
+        "name": "petStorageUnreleased",
+        "desc": "Extra test for leading unpunctuated trivia.",
+        "fields": [
+          {
+            "name": "lastSizeChanged",
+            "lua_type": "number",
+            "desc": "Unix timestamp. Changes for insertions and deletions."
+          }
+        ],
+        "source": {
+          "line": 56,
+          "path": ""
+        }
+      },
+      {
+        "name": "petDatabase",
+        "desc": "`@field` can overwrite information on existing fields.",
+        "fields": [
+          {
+            "name": "get",
+            "lua_type": "(id: number) -> responseFull",
+            "desc": "Cached in [petStorage]."
+          },
+          {
+            "name": "set",
+            "lua_type": "(id:number,data:petData)->()",
+            "desc": "`id` must match `data.id`"
+          }
+        ],
+        "source": {
+          "line": 65,
+          "path": ""
+        }
+      }
+    ],
+    "name": "TypeStatementInference",
+    "desc": "Infer types from type statements.",
+    "source": {
+      "line": 3,
+      "path": ""
+    }
+  }
+]

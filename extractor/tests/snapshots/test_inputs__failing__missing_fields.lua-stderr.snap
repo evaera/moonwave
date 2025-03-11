@@ -1,0 +1,11 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: Field "HTTP" does not actually exist in interface
+  ┌─ test-input/failing/missing_fields.lua:5:12
+  │
+5 │ --- @field HTTP -- True for database related errors.
+  │            ^^^^ Field "HTTP" does not actually exist in interface
+
+error: aborting due to diagnostic error
