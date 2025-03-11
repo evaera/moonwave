@@ -2,7 +2,7 @@ use crate::{
     diagnostic::Diagnostics,
     doc_comment::{DocComment, OutputSource},
     serde_util::is_false,
-    tags::{CustomTag, ExternalTag, FieldTag, Tag},
+    tags::{CustomTag, DeprecatedTag, ExternalTag, FieldTag, Tag},
 };
 use serde::Serialize;
 
@@ -40,8 +40,14 @@ pub struct TypeDocEntry<'a> {
     pub tags: Vec<CustomTag<'a>>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub external_types: Vec<ExternalTag<'a>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub since: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deprecated: Option<DeprecatedTag<'a>>,
     #[serde(skip_serializing_if = "is_false")]
     pub private: bool,
+    #[serde(skip_serializing_if = "is_false")]
+    pub unreleased: bool,
     #[serde(skip_serializing_if = "is_false")]
     pub ignore: bool,
 
@@ -69,11 +75,14 @@ impl<'a> TypeDocEntry<'a> {
             desc,
             source,
             lua_type: None,
+            since: None,
+            deprecated: None,
             fields: Vec::new(),
             within: within.unwrap(),
             tags: Vec::new(),
             external_types: Vec::new(),
             private: false,
+            unreleased: false,
             ignore: false,
             output_source: source.output_source.clone(),
         };
@@ -88,10 +97,13 @@ impl<'a> TypeDocEntry<'a> {
 
                 Tag::Field(field_tag) => doc_entry.fields.push(field_tag.into()),
 
+                Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
+                Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
                 Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
 
                 Tag::Private(_) => doc_entry.private = true,
+                Tag::Unreleased(_) => doc_entry.unreleased = true,
                 Tag::Ignore(_) => doc_entry.ignore = true,
 
                 _ => unused_tags.push(tag),
