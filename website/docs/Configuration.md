@@ -183,3 +183,20 @@ License Information
 ```
 
 Only the content underneath/above the HTML comment will be included in your Moonwave homepage.
+
+When both comments are used and `hide-after` is placed above `hide-before`, then only the content between them will be removed.
+
+```html
+[badges/github]: link to image
+[project]: link to repository
+
+<!--moonwave-hide-after-this-line-->
+
+# Project name
+
+<!--moonwave-hide-before-this-line-->
+
+[![Source code][badges/github]][project]
+
+My project fulfills all your testing needs.
+```
