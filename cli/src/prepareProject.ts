@@ -160,7 +160,11 @@ function prepareReadme(readmeContent: string): string {
   const index_after = readmeContent.indexOf(SNIP_AFTER)
 
   if (index_before > -1 && index_after > -1) {
-    return readmeContent.slice(0, index_after) + readmeContent.slice(index_before + SNIP_BEFORE.length)
+    if (index_after < index_before) {
+      return readmeContent.slice(0, index_after) + readmeContent.slice(index_before + SNIP_BEFORE.length)
+    } else {
+      return readmeContent.slice(index_before + SNIP_BEFORE.length, index_after)
+    }
   }
   
   if (index_before > -1) {
