@@ -162,22 +162,47 @@ bannerImage = "https://url" # Optional
 [[home.features]]
 title = "Feature 1"
 description = "This is a feature"
-image = "https://url
+image = "https://url"
 
 [[home.features]]
 title = "Feature 2"
 description = "This is a second feature"
-image = "https://url
+image = "https://url"
 ```
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
 
-If your project's README begins with some content that you don't want included in your home page, you can place an HTML comment in your project's README that will not include any content before it.
+If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
 
 ```html
-Project Logo, Project Name, Etc
+# AmazingProject
+
 <!--moonwave-hide-before-this-line-->
+
 My project is amazing and it does everything you could ever want.
+
+<!--moonwave-hide-after-this-line-->
+
+Copyrighted under the MIT License.
 ```
 
-Only the content underneath the HTML comment will be included in your Moonwave homepage.
+Only the content underneath/above the HTML comment will be included in your Moonwave homepage.
+
+When both comments are used and `hide-after` is placed above `hide-before`, then only the content between them will be removed.
+
+```html
+[badges/github]: link to image
+[project]: link to repository
+
+<!--moonwave-hide-after-this-line-->
+
+# TestingProject
+
+<!--moonwave-hide-before-this-line-->
+
+[![Source code][badges/github]][project]
+
+My project fulfills all your testing needs.
+```
+
+Keep in mind that both `hide-before` and `hide-after` can only be used once each in a README.
