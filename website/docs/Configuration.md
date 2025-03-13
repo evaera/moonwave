@@ -162,12 +162,12 @@ bannerImage = "https://url" # Optional
 [[home.features]]
 title = "Feature 1"
 description = "This is a feature"
-image = "https://url
+image = "https://url"
 
 [[home.features]]
 title = "Feature 2"
 description = "This is a second feature"
-image = "https://url
+image = "https://url"
 ```
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
