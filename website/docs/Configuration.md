@@ -175,11 +175,15 @@ Optionally, you can include `includeReadme = true`, which will append your proje
 If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
 
 ```html
-Project Logo, Project Name, Etc
+# AmazingProject
+
 <!--moonwave-hide-before-this-line-->
+
 My project is amazing and it does everything you could ever want.
+
 <!--moonwave-hide-after-this-line-->
-License Information
+
+Copyrighted under the MIT License.
 ```
 
 Only the content underneath/above the HTML comment will be included in your Moonwave homepage.
@@ -192,7 +196,7 @@ When both comments are used and `hide-after` is placed above `hide-before`, then
 
 <!--moonwave-hide-after-this-line-->
 
-# Project name
+# TestingProject
 
 <!--moonwave-hide-before-this-line-->
 
@@ -200,3 +204,5 @@ When both comments are used and `hide-after` is placed above `hide-before`, then
 
 My project fulfills all your testing needs.
 ```
+
+Keep in mind that both `hide-before` and `hide-after` can only be used once each in a README.
