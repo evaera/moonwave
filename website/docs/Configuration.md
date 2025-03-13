@@ -172,12 +172,14 @@ image = "https://url
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
 
-If your project's README begins with some content that you don't want included in your home page, you can place an HTML comment in your project's README that will not include any content before it.
+If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
 
 ```html
 Project Logo, Project Name, Etc
 <!--moonwave-hide-before-this-line-->
 My project is amazing and it does everything you could ever want.
+<!--moonwave-hide-after-this-line-->
+License Information
 ```
 
-Only the content underneath the HTML comment will be included in your Moonwave homepage.
+Only the content underneath/above the HTML comment will be included in your Moonwave homepage.
