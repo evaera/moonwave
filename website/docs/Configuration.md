@@ -172,37 +172,24 @@ image = "https://url"
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
 
-If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
+If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment. When `hide-after` is placed above `hide-before`, then only the content between them will be removed.
 
 ```html
-# AmazingProject
+Hide #1
 
 <!--moonwave-hide-before-this-line-->
 
-My project is amazing and it does everything you could ever want.
+Show #1
 
 <!--moonwave-hide-after-this-line-->
 
-Copyrighted under the MIT License.
-```
-
-Only the content underneath/above the HTML comment will be included in your Moonwave homepage.
-
-When both comments are used and `hide-after` is placed above `hide-before`, then only the content between them will be removed.
-
-```html
-[badges/github]: link to image
-[project]: link to repository
-
-<!--moonwave-hide-after-this-line-->
-
-# TestingProject
+Hide #2
 
 <!--moonwave-hide-before-this-line-->
 
-[![Source code][badges/github]][project]
+Show #2
 
-My project fulfills all your testing needs.
+<!--moonwave-hide-after-this-line-->
+
+Hide #3
 ```
-
-Keep in mind that both `hide-before` and `hide-after` can only be used once each in a README.
