@@ -41,7 +41,7 @@ It is best to install all dependencies immediately.
 2. In `/cli`, run `npm i`, `npm run tsc`, and `npm link`
 3. In `/docusaurus-plugin-moonwave`, run `npm i`
 4. In `/extractor`, run `cargo install --path . --locked`
-5. In `/website`, run `npm `i
+5. In `/website`, run `npm i`
 
 **Extractor**
 
