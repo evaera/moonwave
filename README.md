@@ -36,9 +36,12 @@ Requirements:
 - [Node.js 18+](https://nodejs.org/en/)
 - [Rust 1.75.0 and Cargo](https://rustup.rs/)
 
-Clone this repository to get a local copy to develop with. Run `git clone https://github.com/evaera/moonwave`.
-
-Moonwave has different parts, so make sure to read through all the information on the part that you want to edit, which includes installation instructions.
+It is best to install all dependencies immediately.
+1. Clone this repository by running `git clone https://github.com/evaera/moonwave`
+2. In `/cli`, run `npm i`, `npm run tsc`, and `npm link`
+3. In `/docusaurus-plugin-moonwave`, run `npm i`
+4. In `/extractor`, run `cargo install --path . --locked`
+5. In `/website`, run `npm `i
 
 **Extractor**
 
@@ -46,19 +49,17 @@ The extractor is written in Rust and outputs JSON code which describes all the L
 
 **Command line interface**
 
-Moonwave comes with a CLI written in TypeScript found in `/cli`. In `/cli` and run `npm i`, `npm run tsc`, and `npm link`.
+Moonwave comes with a CLI written in TypeScript found in `/cli`. It has two commands: [`moonwave dev`](https://eryn.io/moonwave/docs/intro#use-moonwave-with-your-project) and [`moonwave build`](https://eryn.io/moonwave/docs/Publishing). It is recommended to use `moonwave dev` with the environment variable `MOONWAVE_DEV=1`, which requires manually installing the extractor.
 
-It has two commands: [`moonwave dev`](https://eryn.io/moonwave/docs/intro#use-moonwave-with-your-project) and [`moonwave build`](https://eryn.io/moonwave/docs/Publishing). It is recommended to use `moonwave dev` with the environment variable `MOONWAVE_DEV=1`, which requires manually installing the extractor.
-
-You can enter `/cli` and run `npm run dev` to automatically recompile the CLI every time a file is changed. This means that the next time you run a command, it will use the latest changes. Keep in mind that although `moonwave dev` supports hot reload for Luau files, it does not reload for the CLI, so it is necessary to rerun the command every time the command line interface is updated.
+In `/cli`, you can run `npm run dev` to automatically recompile the CLI every time a file is changed. This means that the next time you run a command, it will use the latest changes. Keep in mind that although `moonwave dev` supports hot reload for Luau files, it does not reload for the CLI, so it is necessary to rerun the command every time the command line interface is updated.
 
 **Docusaurus plugin**
 
-Moonwave integrates with Docusaurus via a JavaScript plugin. In `docusaurus-plugin-moonwave`, run `npm i`. Using `moonwave dev` in development mode will hot reload for this package.
+Moonwave integrates with Docusaurus via a JavaScript plugin. Using `moonwave dev` in development mode will hot reload for this package.
 
 **Official Moonwave website**
 
-Moonwave has its own [website](https://eryn.io/moonwave/) that documents usage of the tool. The code is found in `/website`. Run `npm i`. Use `npm run start` to locally view the website. The website pages are stored in `/website/docs`. Hot reload is supported.
+Moonwave has its own [website](https://eryn.io/moonwave/) that documents usage of the tool. The code is found in `/website`. Use `npm run start` to locally view the website. The website pages are stored in `/website/docs`. Hot reload is supported.
 
 **Exclamation mark**
 
