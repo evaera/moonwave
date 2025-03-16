@@ -156,26 +156,25 @@ function getConfig(projectDir: string): Config {
 }
 
 function prepareReadme(readmeContent: string): string {
-  const index_before = readmeContent.indexOf(SNIP_BEFORE)
-  const index_after = readmeContent.indexOf(SNIP_AFTER)
+  while (true) {
+    const index_before = readmeContent.indexOf(SNIP_BEFORE)
+    const index_after = readmeContent.indexOf(SNIP_AFTER)
 
-  if (index_before > -1 && index_after > -1) {
-    if (index_after < index_before) {
-      return readmeContent.slice(0, index_after) + readmeContent.slice(index_before + SNIP_BEFORE.length)
+    if (index_before > -1) {
+      if (index_after > -1 && index_after < index_before) {
+        // snip text between comments
+        readmeContent = readmeContent.slice(0, index_after) + readmeContent.slice(index_before + SNIP_BEFORE.length)
+      } else {
+        // regular hide before
+        readmeContent = readmeContent.slice(index_before + SNIP_BEFORE.length)
+      }
+    } else if (index_after > -1) {
+      // can only handle a lone hide-after if no hide-before
+      readmeContent = readmeContent.slice(0, index_after)
     } else {
-      return readmeContent.slice(index_before + SNIP_BEFORE.length, index_after)
+      return readmeContent
     }
   }
-  
-  if (index_before > -1) {
-    return readmeContent.slice(index_before + SNIP_BEFORE.length)
-  }
-  
-  if (index_after > -1) {
-    return readmeContent.slice(0, index_after)
-  }
-
-  return readmeContent
 }
 
 function makeHomePage(projectDir: string, tempDir: string, config: Config) {
