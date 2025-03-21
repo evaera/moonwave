@@ -172,24 +172,26 @@ image = "https://url"
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
 
-If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment. When `hide-after` is placed above `hide-before`, then only the content between them will be removed.
+If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
 
 ```html
-Hide #1
-
+All content behind this comment will be hidden.
 <!--moonwave-hide-before-this-line-->
 
-Show #1
+While everything in between both comments will be visible!
 
 <!--moonwave-hide-after-this-line-->
+And everything ahead of this comment will also be hidden.
+```
 
-Hide #2
+You can also combine both HTML tags to hide things in the middle of your content.
+
+```html
+The beginning of my content will be visible.
+<!--moonwave-hide-after-this-line-->
+
+This content will be hidden.
 
 <!--moonwave-hide-before-this-line-->
-
-Show #2
-
-<!--moonwave-hide-after-this-line-->
-
-Hide #3
+While the rest of my content will also be visible.
 ```
