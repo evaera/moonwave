@@ -78,6 +78,11 @@ export type Config = Partial<{
       description: string
       image: string
     }[]
+
+    buttons: {
+      text: string
+      url: string
+    }[]
   }>
 
   footer: Partial<{
@@ -175,11 +180,19 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
         return feature
       })
 
+      let buttons = config.home?.buttons ?? [
+        {
+          text: "Get Started →",
+          url: "/docs/intro"
+        }
+      ]
+
       let indexSource = fs
         .readFileSync(path.join(TEMPLATE_PATH, "home", "index.js"), {
           encoding: "utf-8",
         })
         .replace("/***features***/", JSON.stringify(features ?? null))
+        .replace("/***buttons***/", JSON.stringify(buttons))
 
       const readmePath = path.join(
         projectDir,

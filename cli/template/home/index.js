@@ -39,6 +39,19 @@ export function HomepageFeatures() {
   )
 }
 
+const BUTTONS = /***buttons***/
+
+function Button({ text, url }) {
+  return (
+    <Link
+      className="button button--secondary button--lg"
+      to={url}
+    >
+      {text}
+    </Link>
+  )
+}
+
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext()
   const bannerImage = siteConfig.customFields.bannerImage
@@ -58,12 +71,9 @@ function HomepageHeader() {
         <h1 className={titleClassName}>{siteConfig.title}</h1>
         <p className={taglineClassName}>{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro"
-          >
-            Get Started →
-          </Link>
+          {BUTTONS.map((props) => (
+            <Button {...props} />
+          ))}
         </div>
       </div>
     </header>
