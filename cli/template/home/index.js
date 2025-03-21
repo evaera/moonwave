@@ -7,21 +7,21 @@ import styles from "./index.module.css"
 
 const FEATURES = /***features***/
 
-  function Feature({ image, title, description }) {
-    return (
-      <div className={clsx("col col--4")}>
-        {image && (
-          <div className="text--center">
-            <img className={styles.featureSvg} alt={title} src={image} />
-          </div>
-        )}
-        <div className="text--center padding-horiz--md">
-          <h3>{title}</h3>
-          <p>{description}</p>
+function Feature({ image, title, description }) {
+  return (
+    <div className={clsx("col col--4")}>
+      {image && (
+        <div className="text--center">
+          <img className={styles.featureSvg} alt={title} src={image} />
         </div>
+      )}
+      <div className="text--center padding-horiz--md">
+        <h3>{title}</h3>
+        <p>{description}</p>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
 export function HomepageFeatures() {
   if (!FEATURES) return null
