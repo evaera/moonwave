@@ -184,7 +184,7 @@ While everything in between both comments will be visible!
 And everything ahead of this comment will also be hidden.
 ```
 
-You can also combine both HTML tags to hide things in the middle of your content.
+You can also combine both HTML tags to hide things in the middle of your README.
 
 ```html
 The beginning of my content will be visible.
