@@ -4,7 +4,7 @@ import { TypeLinksContext } from "./LuaClass.js"
 import styles from "./styles.module.css"
 import { Op, PrOp } from "./Syntax.js"
 
-const isPunc = (char) => !!char.match(/[\{\}<>\-\|&()\[\]]/)
+const isPunc = (char) => !!char.match(/[\{\}\[\]()<>\-\|&]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
