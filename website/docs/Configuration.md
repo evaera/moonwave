@@ -162,22 +162,36 @@ bannerImage = "https://url" # Optional
 [[home.features]]
 title = "Feature 1"
 description = "This is a feature"
-image = "https://url
+image = "https://url"
 
 [[home.features]]
 title = "Feature 2"
 description = "This is a second feature"
-image = "https://url
+image = "https://url"
 ```
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
 
-If your project's README begins with some content that you don't want included in your home page, you can place an HTML comment in your project's README that will not include any content before it.
+If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
 
 ```html
-Project Logo, Project Name, Etc
+All content behind this comment will be hidden.
 <!--moonwave-hide-before-this-line-->
-My project is amazing and it does everything you could ever want.
+
+While everything in between both comments will be visible!
+
+<!--moonwave-hide-after-this-line-->
+And everything ahead of this comment will also be hidden.
 ```
 
-Only the content underneath the HTML comment will be included in your Moonwave homepage.
+You can also combine both HTML tags to hide things in the middle of your README.
+
+```html
+The beginning of my content will be visible.
+<!--moonwave-hide-after-this-line-->
+
+This content will be hidden.
+
+<!--moonwave-hide-before-this-line-->
+While the rest of my content will also be visible.
+```
