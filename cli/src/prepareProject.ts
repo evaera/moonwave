@@ -14,7 +14,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATE_PATH = path.join(__dirname, "../template")
 const ROOT_PATH = path.join(TEMPLATE_PATH, "root")
 
-const SNIP = "<!--moonwave-hide-before-this-line-->"
+const SNIP_BEFORE = "<!--moonwave-hide-before-this-line-->"
+const SNIP_AFTER = "<!--moonwave-hide-after-this-line-->"
 const INDEX_EXTS = ["html", "js", "mdx", "md"]
 const COPY_FOLDERS = ["blog", "docs", "pages"] as const
 
@@ -159,6 +160,28 @@ function getConfig(projectDir: string): Config {
   }
 }
 
+function prepareReadme(readmeContent: string): string {
+  while (true) {
+    const index_before = readmeContent.indexOf(SNIP_BEFORE)
+    const index_after = readmeContent.indexOf(SNIP_AFTER)
+
+    if (index_before > -1) {
+      if (index_after > -1 && index_after < index_before) {
+        // snip text between comments
+        readmeContent = readmeContent.slice(0, index_after) + readmeContent.slice(index_before + SNIP_BEFORE.length)
+      } else {
+        // regular hide before
+        readmeContent = readmeContent.slice(index_before + SNIP_BEFORE.length)
+      }
+    } else if (index_after > -1) {
+      // can only handle a lone hide-after if no hide-before
+      readmeContent = readmeContent.slice(0, index_after)
+    } else {
+      return readmeContent
+    }
+  }
+}
+
 function makeHomePage(projectDir: string, tempDir: string, config: Config) {
   if (
     INDEX_EXTS.filter((ext) =>
@@ -205,10 +228,7 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
 
         let readmeContent = fs.readFileSync(readmePath, { encoding: "utf-8" })
 
-        const snip = readmeContent.indexOf(SNIP)
-        if (snip > 0) {
-          readmeContent = readmeContent.slice(snip + SNIP.length)
-        }
+        readmeContent = prepareReadme(readmeContent)
 
         fs.writeFileSync(path.join(tempDir, "README.md"), readmeContent)
         indexSource = 'import README from "../README.md"\n' + indexSource
@@ -228,10 +248,7 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
       if (fs.existsSync(readmePath)) {
         let readmeContent = fs.readFileSync(readmePath, { encoding: "utf-8" })
 
-        const snip = readmeContent.indexOf(SNIP)
-        if (snip > 0) {
-          readmeContent = readmeContent.slice(snip + SNIP.length)
-        }
+        readmeContent = prepareReadme(readmeContent)
 
         fs.writeFileSync(indexPath, readmeContent)
       } else {
