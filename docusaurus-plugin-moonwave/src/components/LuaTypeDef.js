@@ -24,14 +24,14 @@ const Interface = ({ name, fields }) => (
     <code>
       {name} {"{"}
     </code>
-    <div className={styles.inset}>
+    {fields && <div className={styles.inset}>
       {fields.map(({ name, lua_type: luaType, desc }) => (
         <div key={name}>
           <Param name={name} luaType={luaType} />
           {desc && <InlineDescription content={desc} />}
         </div>
       ))}
-    </div>
+    </div>}
     <code>{"}"}</code>
   </>
 )
