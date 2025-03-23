@@ -42,6 +42,11 @@ fn method_stmt_with_within() -> anyhow::Result<()> {
 }
 
 #[test]
+fn qualified_names() -> anyhow::Result<()> {
+    run_moonwave("passing/qualified_names.lua", 0)
+}
+
+#[test]
 fn class_with_index() -> anyhow::Result<()> {
     run_moonwave("passing/class_with_index.lua", 0)
 }
