@@ -46,6 +46,9 @@ function Button({ text, url }) {
     <Link
       className="button button--secondary button--lg"
       to={url}
+      style={{
+        margin: "5px"
+      }}
     >
       {text}
     </Link>
