@@ -27,7 +27,7 @@ Moonwave integrates with Docusaurus via a JavaScript plugin. Using `moonwave dev
 
 **Official Moonwave website**
 
-Moonwave has its own [website](https://eryn.io/moonwave/) that documents usage of the tool. The code is found in `/website`. Use `npm run start` to locally view the website. The website pages are stored in `/website/docs`. Hot reload is supported.
+Moonwave has its own [website](https://eryn.io/moonwave/) that documents usage of the tool. The code is found in `/website`. Use `npm run start` to locally view the website. Hot reload is supported.
 
 **Exclamation mark**
 
