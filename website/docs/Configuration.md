@@ -168,6 +168,15 @@ image = "https://url
 title = "Feature 2"
 description = "This is a second feature"
 image = "https://url
+
+# This is the default button. Adding any buttons will remove it, so this code adds it back.
+[[home.buttons]]
+text = "Get Started →"
+url = "/docs/intro"
+
+[[home.buttons]]
+text = "Download"
+url = "https://url"
 ```
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
