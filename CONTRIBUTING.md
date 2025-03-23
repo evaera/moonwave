@@ -19,7 +19,7 @@ The extractor is written in Rust and outputs JSON code which describes all the L
 
 Moonwave comes with a CLI written in TypeScript found in `/cli`. It has two commands: [`moonwave dev`](https://eryn.io/moonwave/docs/intro#use-moonwave-with-your-project) and [`moonwave build`](https://eryn.io/moonwave/docs/Publishing). It is recommended to use `moonwave dev` with the environment variable `MOONWAVE_DEV=1`.
 
-In `/cli`, you can run `npm run dev` to automatically recompile the CLI every time a file is changed. This means that the next time you run a command, it will use the latest changes. Keep in mind that although `moonwave dev` supports hot reload for Luau files, it does not reload for the CLI, so it is necessary to rerun the command every time the command line interface is updated.
+In `/cli`, use `npm run dev` to automatically recompile the CLI every time a file is changed. This means that the next time a Moonwave command is executed, it will use the latest changes. Keep in mind that although `moonwave dev` supports hot reload for Luau files, it does not reload for the CLI, so it is necessary to rerun the command every time the command line interface is updated.
 
 **Docusaurus plugin**
 
