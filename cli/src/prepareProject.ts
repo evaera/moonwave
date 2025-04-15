@@ -82,7 +82,8 @@ export type Config = Partial<{
 
     buttons: {
       text: string
-      url: string
+      to: string
+      href: string
     }[]
   }>
 

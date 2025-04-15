@@ -41,11 +41,12 @@ export function HomepageFeatures() {
 
 const BUTTONS = /***buttons***/
 
-function Button({ text, url }) {
+function Button({ text, to, href }) {
   return (
     <Link
       className="button button--secondary button--lg"
-      to={url}
+      to={to}
+      href={href}
       style={{
         margin: "5px"
       }}
