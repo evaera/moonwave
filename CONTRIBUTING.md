@@ -28,9 +28,3 @@ Moonwave integrates with Docusaurus via a JavaScript plugin. Using `moonwave dev
 **Official Moonwave website**
 
 Moonwave has its own [website](https://eryn.io/moonwave/) that documents usage of the tool. The code is found in `/website`. Use `npm run start` to locally view the website. Hot reload is supported.
-
-**Exclamation mark**
-
-Make sure there are no exclamation marks (!) in the path to your local Moonwave repository. This will cause an error where Webpack says that it can not find the part of the path before the exclamation mark.
-
-Further reading: https://github.com/webpack/webpack/issues/5320
