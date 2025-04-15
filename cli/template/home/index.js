@@ -46,12 +46,12 @@ function Button({ text, to, href, className, colour, outline, active, disabled, 
     <Link
       className={className ??
         "button"
-        + (outline  ? " button--outline"   : "")
-        + (active   ? " button--active"    : "")
-        + (disabled ? " disabled"          : "")
-        + (size     ? " button--" + size   : "")
-        + (block    ? " button--block"     : "")
-        + (colour   ? " button--" + colour : " button--secondary")
+        + (outline ? " button--outline" : "")
+        + (active ? " button--active" : "")
+        + (disabled ? " disabled" : "")
+        + (size ? " button--" + size : "")
+        + (block ? " button--block" : "")
+        + (colour ? " button--" + colour : " button--secondary")
       }
       to={to}
       href={href}
