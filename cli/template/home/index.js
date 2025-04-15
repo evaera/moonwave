@@ -83,8 +83,8 @@ function HomepageHeader() {
         <h1 className={titleClassName}>{siteConfig.title}</h1>
         <p className={taglineClassName}>{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          {BUTTONS.map((props) => (
-            <Button {...props} />
+          {BUTTONS.map((props, idx) => (
+            <Button key={idx} {...props} />
           ))}
         </div>
       </div>
