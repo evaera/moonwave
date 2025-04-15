@@ -80,11 +80,18 @@ export type Config = Partial<{
       image: string
     }[]
 
-    buttons: {
+    buttons: Partial<{
       text: string
       to: string
       href: string
-    }[]
+      className: string
+      colour: "primary" | "secondary" | "success" | "info" | "warning" | "danger" | "link"
+      outline: boolean
+      active: boolean
+      disabled: boolean
+      size: "sm" | "lg"
+      block: boolean
+    }>[]
   }>
 
   footer: Partial<{
@@ -204,10 +211,11 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
         return feature
       })
 
-      let buttons = config.home?.buttons ?? [
+      const buttons = config.home?.buttons ?? [
         {
           text: "Get Started →",
-          url: "/docs/intro"
+          href: "/docs/intro",
+          size: "lg"
         }
       ]
 

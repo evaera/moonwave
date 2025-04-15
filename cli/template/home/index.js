@@ -41,10 +41,18 @@ export function HomepageFeatures() {
 
 const BUTTONS = /***buttons***/
 
-function Button({ text, to, href }) {
+function Button({ text, to, href, className, colour, outline, active, disabled, size, block }) {
   return (
     <Link
-      className="button button--secondary button--lg"
+      className={className ??
+        "button"
+        + (outline  ? " button--outline"   : "")
+        + (active   ? " button--active"    : "")
+        + (disabled ? " disabled"          : "")
+        + (size     ? " button--" + size   : "")
+        + (block    ? " button--block"     : "")
+        + (colour   ? " button--" + colour : " button--secondary")
+      }
       to={to}
       href={href}
       style={{
