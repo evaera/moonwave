@@ -52,7 +52,7 @@ Github Pages requires you to create a CNAME file in your website to host on a cu
 
 ## Using GitHub Actions
 
-You can create a GitHub Actions workflow to automatically publish your docs webiste to GitHub Pages. To begin, you need to create a new workflow in the `.github/workflows` directory of your repository that will build and publish your website.
+You can create a GitHub Actions workflow to automatically publish your docs website to GitHub Pages. To begin, you need to create a new workflow in the `.github/workflows` directory of your repository that will build and publish your website.
 
 Here is an example of such a workflow where the job will run on each push to the `master` branch:
 
