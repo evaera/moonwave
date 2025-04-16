@@ -65,7 +65,7 @@ struct DocEntryParseArguments<'a> {
     source: &'a DocComment,
 }
 
-fn get_explicit_within<'a>(tags: &'a [Tag]) -> Option<String> {
+fn get_explicit_within(tags: &[Tag]) -> Option<String> {
     for tag in tags {
         if let Tag::Within(within_tag) = tag {
             return Some(within_tag.name.as_str().to_owned());
@@ -75,7 +75,7 @@ fn get_explicit_within<'a>(tags: &'a [Tag]) -> Option<String> {
     None
 }
 
-fn get_qualified_within(name: &String) -> Option<(String, String)> {
+fn get_qualified_within(name: &str) -> Option<(String, String)> {
     if let Some((first, second)) = name.split_once(".") {
         if !first.is_empty() && !second.is_empty() {
             return Some((first.to_owned(), second.to_owned()));
@@ -85,8 +85,8 @@ fn get_qualified_within(name: &String) -> Option<(String, String)> {
     None
 }
 
-fn get_within_and_name<'a>(
-    tags: &'a [Tag],
+fn get_within_and_name(
+    tags: &[Tag],
     kind_tag: &Tag,
     name: String,
 ) -> Result<(String, String), Diagnostic> {
