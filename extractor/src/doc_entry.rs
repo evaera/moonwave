@@ -78,20 +78,24 @@ fn get_explicit_within<'a>(tags: &'a [Tag]) -> Option<String> {
 fn get_qualified_within(name: &String) -> Option<(String, String)> {
     if let Some((first, second)) = name.split_once(".") {
         if !first.is_empty() && !second.is_empty() {
-            return Some((first.to_owned(), second.to_owned()))
+            return Some((first.to_owned(), second.to_owned()));
         }
     }
 
     None
 }
 
-fn get_within_and_name<'a>(tags: &'a [Tag], kind_tag: &Tag, name: String) -> Result<(String, String), Diagnostic> {
+fn get_within_and_name<'a>(
+    tags: &'a [Tag],
+    kind_tag: &Tag,
+    name: String,
+) -> Result<(String, String), Diagnostic> {
     if let Some(within) = get_explicit_within(tags) {
-        return Ok((within, name))
+        return Ok((within, name));
     }
 
     if let Some(results) = get_qualified_within(&name) {
-        return Ok(results)
+        return Ok(results);
     }
 
     Err(kind_tag.diagnostic("Must specify containing class with @within tag"))
@@ -118,26 +122,17 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
             Tag::Property(property_tag) => {
                 let name = property_tag.name.as_str().to_owned();
                 let (within, name) = get_within_and_name(tags, tag, name)?;
-                return Ok(Some(DocEntryKind::Property {
-                    name,
-                    within,
-                }))
+                return Ok(Some(DocEntryKind::Property { name, within }));
             }
             Tag::Type(type_tag) => {
                 let name = type_tag.name.as_str().to_owned();
                 let (within, name) = get_within_and_name(tags, tag, name)?;
-                return Ok(Some(DocEntryKind::Type {
-                    name,
-                    within,
-                }))
+                return Ok(Some(DocEntryKind::Type { name, within }));
             }
             Tag::Interface(interface_tag) => {
                 let name = interface_tag.name.as_str().to_owned();
                 let (within, name) = get_within_and_name(tags, tag, name)?;
-                return Ok(Some(DocEntryKind::Type {
-                    name,
-                    within,
-                }))
+                return Ok(Some(DocEntryKind::Type { name, within }));
             }
             _ => (),
         }
