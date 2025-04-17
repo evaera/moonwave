@@ -1,6 +1,10 @@
-use libmoonwave::{generate_docs_from_path, Args, Subcommand};
+use anyhow::Context;
+use cli::{report_errors, Args, Subcommand};
+use libmoonwave::{find_files, generate_docs_from_sources, parse_source_files_at_path};
 use std::env::current_dir;
 use structopt::StructOpt;
+
+mod cli;
 
 fn run(args: Args) -> anyhow::Result<()> {
     match args.subcommand {
@@ -15,9 +19,31 @@ fn run(args: Args) -> anyhow::Result<()> {
                 None => path.clone(),
             };
 
-            generate_docs_from_path(&path, &base_path)
+            let (codespan_files, files) =
+                find_files(&path).context("failed to find source files")?;
+
+            let result = parse_source_files_at_path(&codespan_files, &files, &base_path);
+            let result = if let Ok(source_files) = &result {
+                generate_docs_from_sources(source_files)
+            } else {
+                Err(result.unwrap_err())
+            };
+
+            match result {
+                Ok(classes) => println!(
+                    "{}",
+                    serde_json::to_string_pretty(&classes)
+                        .context("failed to serialize classes to JSON")?
+                ),
+                Err(errors) => {
+                    report_errors(errors, &codespan_files);
+                    anyhow::bail!("errors found in source")
+                }
+            }
         }
     }
+
+    Ok(())
 }
 
 fn main() {

@@ -15,6 +15,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "moonwave-extractor"
 path = "src/main.rs"
+required-features = ["bin"]
 
 [profile.dev]
 opt-level = 1
@@ -24,11 +25,11 @@ opt-level = 1
 [dependencies]
 full_moon = "1.2.0"
 walkdir = "2.5.0"
-anyhow = "1.0.86"
+anyhow = { version = "1.0.86", optional = true }
 codespan-reporting = "0.11.1"
-structopt = "0.3.26"
+structopt = { version = "0.3.26", optional = true }
 serde = { version = "1.0.204", features = ["derive"] }
-serde_json = "1.0.120"
+serde_json = { version = "1.0.120", optional = true }
 pathdiff = "0.2.1"
 fs-err = "3.0.0"
 
@@ -36,5 +37,6 @@ fs-err = "3.0.0"
 insta = { version = "1.39.0", features = ["yaml"] }
 
 [features]
-default = ["roblox"]
+default = ["roblox", "bin"]
 roblox = ["full_moon/roblox"]
+bin = ["dep:anyhow", "dep:structopt", "dep:serde_json"]
