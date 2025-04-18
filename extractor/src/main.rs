@@ -36,8 +36,13 @@ fn run(args: Args) -> anyhow::Result<()> {
                         .context("failed to serialize classes to JSON")?
                 ),
                 Err(errors) => {
+                    let count_errors = errors.len();
                     report_errors(errors, &codespan_files);
-                    anyhow::bail!("errors found in source")
+                    if count_errors == 1 {
+                        anyhow::bail!("aborting due to diagnostic error");
+                    } else {
+                        anyhow::bail!("aborting due to {} diagnostic errors", count_errors);
+                    }
                 }
             }
         }
