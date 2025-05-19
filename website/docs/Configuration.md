@@ -113,24 +113,28 @@ You can create hierarchical organization with nested sections:
 ```toml
 [[classOrder]]
 section = "Parent Section"
-items = [
-  # Child section with classes
-  { section = "Child Section 1", classes = ["Class1", "Class2"] },
-  
-  # Child section with tagged classes
-  { section = "Child Section 2", tag = "childTag" },
-  
-  # Classes directly under Parent Section (no subsection)
-  { classes = ["Class3"] },
-  
-  # Deeper nesting with grandchild section
-  { 
-    section = "Child Section 3", 
-    items = [
-      { section = "Grandchild Section", classes = ["Class4", "Class5"] }
-    ]
-  }
-]
+
+# Child section with classes
+[[classOrder.items]]
+section = "Child Section 1"
+classes = ["Class1", "Class2"]
+
+# Child section with tagged classes
+[[classOrder.items]]
+section = "Child Section 2"
+tag = "childTag"
+
+# Classes directly under Parent Section (no subsection)
+[[classOrder.items]]
+classes = ["Class3"]
+
+# Deeper nesting with grandchild section
+[[classOrder.items]]
+section = "Child Section 3"
+
+[[classOrder.items.items]]
+section = "Grandchild Section"
+classes = ["Class4", "Class5"]
 
 # The original format still works alongside nested sections
 [[classOrder]]
@@ -144,13 +148,11 @@ You can control the collapsed state at any nesting level:
 [[classOrder]]
 section = "Always Expanded"
 collapsed = false
-items = [
-  { 
-    section = "Always Collapsed Child", 
-    collapsed = true, 
-    classes = ["Class1"] 
-  }
-]
+
+[[classOrder.items]]
+section = "Always Collapsed Child"
+collapsed = true
+classes = ["Class1"]
 ```
 
 Nested sections support all the same features as top-level sections, including class lists, tags, and collapse control, at any level of nesting.
