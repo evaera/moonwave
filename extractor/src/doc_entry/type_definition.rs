@@ -47,16 +47,10 @@ fn gen_param_info_to_string(gen_param_info: &GenericParameterInfo) -> Option<Str
 }
 
 fn gen_decl_param_to_string(gen_decl_param: &GenericDeclarationParameter) -> Option<String> {
-    let parameter_string = match gen_param_info_to_string(gen_decl_param.parameter()) {
-        Some(string) => string,
-        None => return None,
-    };
+    let parameter_string = gen_param_info_to_string(gen_decl_param.parameter())?;
     let equals_string = optional_token_to_string(gen_decl_param.equals());
     let type_string = match gen_decl_param.default_type() {
-        Some(parameter) => match type_info_to_string(parameter) {
-            Some(string) => string,
-            None => return None,
-        },
+        Some(parameter) => type_info_to_string(parameter)?,
         None => String::new(),
     };
     Some(format!(
@@ -71,10 +65,7 @@ fn punctuated_generics_to_string(
     let mut string = String::new();
 
     for generic in punctuated {
-        let generic_string = match gen_decl_param_to_string(generic) {
-            Some(string) => string,
-            None => return None,
-        };
+        let generic_string = gen_decl_param_to_string(generic)?;
         string.push_str(generic_string.as_str())
     }
 
@@ -83,10 +74,7 @@ fn punctuated_generics_to_string(
 
 fn gen_decl_to_string(gen_decl: &GenericDeclaration) -> Option<String> {
     let (start, end) = gen_decl.arrows().tokens();
-    let generics_string = match punctuated_generics_to_string(gen_decl.generics()) {
-        Some(string) => string,
-        None => return None,
-    };
+    let generics_string = punctuated_generics_to_string(gen_decl.generics())?;
     Some(format!(
         "{}{}{}",
         start.token(),
@@ -99,10 +87,7 @@ fn punctuated_type_argument_to_string(punctuated: &Punctuated<TypeArgument>) -> 
     let mut string = String::new();
 
     for pair in punctuated.pairs() {
-        let type_string = match type_argument_to_string(pair.value()) {
-            Some(string) => string,
-            None => return None,
-        };
+        let type_string = type_argument_to_string(pair.value())?;
         string.push_str(type_string.as_str());
         string.push_str(optional_token_to_string(pair.punctuation()).as_str());
     }
@@ -114,10 +99,7 @@ fn punctuated_type_field_to_string(punctuated: &Punctuated<TypeField>) -> Option
     let mut string = String::new();
 
     for pair in punctuated.pairs() {
-        let type_string = match type_field_to_string(pair.value()) {
-            Some(string) => string,
-            None => return None,
-        };
+        let type_string = type_field_to_string(pair.value())?;
         string.push_str(type_string.as_str());
         string.push_str(optional_token_to_string(pair.punctuation()).as_str());
     }
@@ -129,10 +111,7 @@ fn punctuated_type_info_to_string(punctuated: &Punctuated<TypeInfo>) -> Option<S
     let mut string = String::new();
 
     for pair in punctuated.pairs() {
-        let type_string = match type_info_to_string(pair.value()) {
-            Some(string) => string,
-            None => return None,
-        };
+        let type_string = type_info_to_string(pair.value())?;
         string.push_str(type_string.as_str());
         string.push_str(optional_token_to_string(pair.punctuation()).as_str());
     }
@@ -150,10 +129,7 @@ fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<St
             generics,
         } => {
             let (start, end) = arrows.tokens();
-            let generics_string = match punctuated_type_info_to_string(generics) {
-                Some(string) => string,
-                None => return None,
-            };
+            let generics_string = punctuated_type_info_to_string(generics)?;
             Some(format!(
                 "{}{}{}{}",
                 base.token(),
@@ -182,24 +158,15 @@ fn type_argument_to_string(type_argument: &TypeArgument) -> Option<String> {
         }
         None => String::new(),
     };
-    let type_string = match type_info_to_string(type_argument.type_info()) {
-        Some(string) => string,
-        None => return None,
-    };
+    let type_string = type_info_to_string(type_argument.type_info())?;
     Some(format!("{}{}", name_string, type_string))
 }
 
 /// Converts a TypeField to a String representation, excluding trivia.
 fn type_field_to_string(type_field: &TypeField) -> Option<String> {
     let access = optional_token_to_string(type_field.access());
-    let key = match type_field_key_to_string(type_field.key()) {
-        Some(string) => string,
-        None => return None,
-    };
-    let value = match type_info_to_string(type_field.value()) {
-        Some(string) => string,
-        None => return None,
-    };
+    let key = type_field_key_to_string(type_field.key())?;
+    let value = type_info_to_string(type_field.value())?;
     Some(format!(
         "{}{}{}{}",
         access,
@@ -250,21 +217,12 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             return_type,
         } => {
             let generics_string = match generics {
-                Some(generics) => match gen_decl_to_string(generics) {
-                    Some(string) => string,
-                    None => return None,
-                },
+                Some(generics) => gen_decl_to_string(generics)?,
                 None => String::new(),
             };
             let (start, end) = parentheses.tokens();
-            let arguments_string = match punctuated_type_argument_to_string(arguments) {
-                Some(string) => string,
-                None => return None,
-            };
-            let return_type_string = match type_info_to_string(return_type) {
-                Some(string) => string,
-                None => return None,
-            };
+            let arguments_string = punctuated_type_argument_to_string(arguments)?;
+            let return_type_string = type_info_to_string(return_type)?;
             Some(format!(
                 "{}{}{}{}{}{}",
                 generics_string,
@@ -281,10 +239,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             generics,
         } => {
             let (start, end) = arrows.tokens();
-            let generics_string = match punctuated_type_info_to_string(generics) {
-                Some(string) => string,
-                None => return None,
-            };
+            let generics_string = punctuated_type_info_to_string(generics)?;
             Some(format!(
                 "{}{}{}{}",
                 base.token(),
@@ -298,10 +253,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
         }
         TypeInfo::Intersection(intersection) => {
             let leading_string = optional_token_to_string(intersection.leading());
-            let types_string = match punctuated_type_info_to_string(intersection.types()) {
-                Some(string) => string,
-                None => return None,
-            };
+            let types_string = punctuated_type_info_to_string(intersection.types())?;
             Some(format!("{}{}", leading_string, types_string))
         }
         TypeInfo::Module {
@@ -309,10 +261,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             punctuation,
             type_info,
         } => {
-            let module_index_string = match indexed_type_info_to_string(type_info.as_ref()) {
-                Some(string) => string,
-                None => return None,
-            };
+            let module_index_string = indexed_type_info_to_string(type_info.as_ref())?;
             Some(format!(
                 "{}{}{}",
                 module.token(),
@@ -324,18 +273,12 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             base,
             question_mark,
         } => {
-            let base_string = match type_info_to_string(base.as_ref()) {
-                Some(string) => string,
-                None => return None,
-            };
+            let base_string = type_info_to_string(base.as_ref())?;
             Some(format!("{}{}", base_string, question_mark.token()))
         }
         TypeInfo::Table { braces, fields } => {
             let (start, end) = braces.tokens();
-            let fields_string = match punctuated_type_field_to_string(fields) {
-                Some(string) => string,
-                None => return None,
-            };
+            let fields_string = punctuated_type_field_to_string(fields)?;
             Some(format!("{}{}{}", start.token(), fields_string, end.token()))
         }
         TypeInfo::Typeof {
@@ -348,34 +291,25 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 "{}{}{}{}",
                 typeof_token.token(),
                 start.token(),
-                inner.to_string(),
+                inner,
                 end.token()
             ))
         }
         TypeInfo::Tuple { parentheses, types } => {
             let (start, end) = parentheses.tokens();
-            let types_string = match punctuated_type_info_to_string(types) {
-                Some(string) => string,
-                None => return None,
-            };
+            let types_string = punctuated_type_info_to_string(types)?;
             Some(format!("{}{}{}", start.token(), types_string, end.token()))
         }
         TypeInfo::Union(union) => {
             let leading_string = optional_token_to_string(union.leading());
-            let types_string = match punctuated_type_info_to_string(union.types()) {
-                Some(string) => string,
-                None => return None,
-            };
+            let types_string = punctuated_type_info_to_string(union.types())?;
             Some(format!("{}{}", leading_string, types_string))
         }
         TypeInfo::Variadic {
             ellipsis,
             type_info,
         } => {
-            let type_string = match type_info_to_string(type_info.as_ref()) {
-                Some(string) => string,
-                None => return None,
-            };
+            let type_string = type_info_to_string(type_info.as_ref())?;
             Some(format!("{}{}", ellipsis.token(), type_string))
         }
         TypeInfo::VariadicPack { ellipsis, name } => {
