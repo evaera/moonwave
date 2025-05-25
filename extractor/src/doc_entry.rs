@@ -8,7 +8,12 @@ use crate::{
     tags::{validate_tags, Tag},
 };
 use full_moon::{
-    ast::{self, luau::{TypeDeclaration, TypeInfo}, punctuated::Punctuated, Stmt},
+    ast::{
+        self,
+        luau::{TypeDeclaration, TypeInfo},
+        punctuated::Punctuated,
+        Stmt,
+    },
     node::Node,
 };
 
@@ -152,7 +157,7 @@ where
 fn parse_type_declaration(
     declaration: &TypeDeclaration,
     doc_comment: &DocComment,
-    within_tag: Option<&crate::tags::WithinTag<'_>>
+    within_tag: Option<&crate::tags::WithinTag<'_>>,
 ) -> Result<DocEntryKind, Diagnostic> {
     let name = declaration.type_name().token().to_string();
 
@@ -476,7 +481,11 @@ impl<'a> DocEntry<'a> {
                 })?),
                 all_tags,
             ),
-            DocEntryKind::Type { within, name , type_info} => (
+            DocEntryKind::Type {
+                within,
+                name,
+                type_info,
+            } => (
                 DocEntry::Type(TypeDocEntry::parse(
                     DocEntryParseArguments {
                         within: Some(within),

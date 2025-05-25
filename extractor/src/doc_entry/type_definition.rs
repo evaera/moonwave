@@ -4,9 +4,17 @@ use crate::{
     serde_util::is_false,
     tags::{CustomTag, ExternalTag, FieldTag, Tag},
 };
-use full_moon::{ast::{luau::{
-    GenericDeclaration, GenericDeclarationParameter, GenericParameterInfo, IndexedTypeInfo, TypeArgument, TypeField, TypeFieldKey, TypeInfo
-}, punctuated::Punctuated}, node::Node, tokenizer::{TokenReference, TokenType}};
+use full_moon::{
+    ast::{
+        luau::{
+            GenericDeclaration, GenericDeclarationParameter, GenericParameterInfo, IndexedTypeInfo,
+            TypeArgument, TypeField, TypeFieldKey, TypeInfo,
+        },
+        punctuated::Punctuated,
+    },
+    node::Node,
+    tokenizer::{TokenReference, TokenType},
+};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -30,15 +38,9 @@ impl<'a> From<FieldTag<'a>> for Field {
 
 fn gen_param_info_to_string(gen_param_info: &GenericParameterInfo) -> Option<String> {
     match gen_param_info {
-        GenericParameterInfo::Name(name) => {
-            Some(name.token().to_string())
-        }
+        GenericParameterInfo::Name(name) => Some(name.token().to_string()),
         GenericParameterInfo::Variadic { name, ellipsis } => {
-            Some(format!(
-                "{}{}",
-                name.token(),
-                ellipsis.token()
-            ))
+            Some(format!("{}{}", name.token(), ellipsis.token()))
         }
         _ => None,
     }
@@ -46,7 +48,7 @@ fn gen_param_info_to_string(gen_param_info: &GenericParameterInfo) -> Option<Str
 
 fn gen_decl_param_to_string(gen_decl_param: &GenericDeclarationParameter) -> Option<String> {
     let parameter_string = match gen_param_info_to_string(gen_decl_param.parameter()) {
-        Some(string ) => string,
+        Some(string) => string,
         None => return None,
     };
     let equals_string = optional_token_to_string(gen_decl_param.equals());
@@ -59,13 +61,13 @@ fn gen_decl_param_to_string(gen_decl_param: &GenericDeclarationParameter) -> Opt
     };
     Some(format!(
         "{}{}{}",
-        parameter_string,
-        equals_string,
-        type_string
+        parameter_string, equals_string, type_string
     ))
 }
 
-fn punctuated_generics_to_string(punctuated: &Punctuated<GenericDeclarationParameter>) -> Option<String> {
+fn punctuated_generics_to_string(
+    punctuated: &Punctuated<GenericDeclarationParameter>,
+) -> Option<String> {
     let mut string = String::new();
 
     for generic in punctuated {
@@ -83,7 +85,7 @@ fn gen_decl_to_string(gen_decl: &GenericDeclaration) -> Option<String> {
     let (start, end) = gen_decl.arrows().tokens();
     let generics_string = match punctuated_generics_to_string(gen_decl.generics()) {
         Some(string) => string,
-        None => return None
+        None => return None,
     };
     Some(format!(
         "{}{}{}",
@@ -141,10 +143,12 @@ fn punctuated_type_info_to_string(punctuated: &Punctuated<TypeInfo>) -> Option<S
 /// Converts an IndexedTypeInfo to a String representation, excluding trivia.
 fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<String> {
     match indexed_type_info {
-        IndexedTypeInfo::Basic(basic) => {
-            Some(basic.token().to_string())
-        }
-        IndexedTypeInfo::Generic { base, arrows, generics } => {
+        IndexedTypeInfo::Basic(basic) => Some(basic.token().to_string()),
+        IndexedTypeInfo::Generic {
+            base,
+            arrows,
+            generics,
+        } => {
             let (start, end) = arrows.tokens();
             let generics_string = match punctuated_type_info_to_string(generics) {
                 Some(string) => string,
@@ -158,7 +162,7 @@ fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<St
                 end.token()
             ))
         }
-        _ => None
+        _ => None,
     }
 }
 
@@ -174,23 +178,15 @@ fn optional_token_to_string(token: Option<&TokenReference>) -> String {
 fn type_argument_to_string(type_argument: &TypeArgument) -> Option<String> {
     let name_string = match type_argument.name() {
         Some((identifier, colon)) => {
-            format!(
-                "{}{}",
-                identifier.token(),
-                colon.token()
-            )
-        },
+            format!("{}{}", identifier.token(), colon.token())
+        }
         None => String::new(),
     };
     let type_string = match type_info_to_string(type_argument.type_info()) {
         Some(string) => string,
         None => return None,
     };
-    Some(format!(
-        "{}{}",
-        name_string,
-        type_string
-    ))
+    Some(format!("{}{}", name_string, type_string))
 }
 
 /// Converts a TypeField to a String representation, excluding trivia.
@@ -220,17 +216,19 @@ fn type_field_key_to_string(field_key: &TypeFieldKey) -> Option<String> {
             let (start, end) = brackets.tokens();
             Some(format!("{}{}{}", start.token(), inner, end.token()))
         }
-        TypeFieldKey::Name(token_reference) => {
-            Some(token_reference.token().to_string())
-        }
-        _ => None
+        TypeFieldKey::Name(token_reference) => Some(token_reference.token().to_string()),
+        _ => None,
     }
 }
 
 /// Converts a TypeInfo to a String representation, excluding trivia.
 fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
     match type_info {
-        TypeInfo::Array { braces, access, type_info } => {
+        TypeInfo::Array {
+            braces,
+            access,
+            type_info,
+        } => {
             let (start, end) = braces.tokens();
             let access_string = optional_token_to_string(access.as_ref());
             Some(format!(
@@ -241,22 +239,20 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 end.token()
             ))
         }
-        TypeInfo::Basic(basic) => {
-            Some(basic.token().to_string())
-        }
-        TypeInfo::String(string) => {
-            Some(string.token().to_string())
-        }
-        TypeInfo::Boolean(boolean) => {
-            Some(boolean.token().to_string())
-        }
-        TypeInfo::Callback { generics, parentheses, arguments, arrow, return_type } => {
+        TypeInfo::Basic(basic) => Some(basic.token().to_string()),
+        TypeInfo::String(string) => Some(string.token().to_string()),
+        TypeInfo::Boolean(boolean) => Some(boolean.token().to_string()),
+        TypeInfo::Callback {
+            generics,
+            parentheses,
+            arguments,
+            arrow,
+            return_type,
+        } => {
             let generics_string = match generics {
-                Some(generics) => {
-                    match gen_decl_to_string(generics) {
-                        Some(string) => string,
-                        None => return None,
-                    }
+                Some(generics) => match gen_decl_to_string(generics) {
+                    Some(string) => string,
+                    None => return None,
                 },
                 None => String::new(),
             };
@@ -279,7 +275,11 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 return_type_string
             ))
         }
-        TypeInfo::Generic { base, arrows, generics } => {
+        TypeInfo::Generic {
+            base,
+            arrows,
+            generics,
+        } => {
             let (start, end) = arrows.tokens();
             let generics_string = match punctuated_type_info_to_string(generics) {
                 Some(string) => string,
@@ -294,11 +294,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             ))
         }
         TypeInfo::GenericPack { name, ellipsis } => {
-            Some(format!(
-                "{}{}",
-                name.token(),
-                ellipsis.token()
-            ))
+            Some(format!("{}{}", name.token(), ellipsis.token()))
         }
         TypeInfo::Intersection(intersection) => {
             let leading_string = optional_token_to_string(intersection.leading());
@@ -306,13 +302,13 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 Some(string) => string,
                 None => return None,
             };
-            Some(format!(
-                "{}{}",
-                leading_string,
-                types_string
-            ))
+            Some(format!("{}{}", leading_string, types_string))
         }
-        TypeInfo::Module { module, punctuation, type_info } => {
+        TypeInfo::Module {
+            module,
+            punctuation,
+            type_info,
+        } => {
             let module_index_string = match indexed_type_info_to_string(type_info.as_ref()) {
                 Some(string) => string,
                 None => return None,
@@ -324,16 +320,15 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 module_index_string
             ))
         }
-        TypeInfo::Optional { base, question_mark } => {
+        TypeInfo::Optional {
+            base,
+            question_mark,
+        } => {
             let base_string = match type_info_to_string(base.as_ref()) {
                 Some(string) => string,
-                None => return None
+                None => return None,
             };
-            Some(format!(
-                "{}{}",
-                base_string,
-                question_mark.token()
-            ))
+            Some(format!("{}{}", base_string, question_mark.token()))
         }
         TypeInfo::Table { braces, fields } => {
             let (start, end) = braces.tokens();
@@ -341,14 +336,13 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 Some(string) => string,
                 None => return None,
             };
-            Some(format!(
-                "{}{}{}",
-                start.token(),
-                fields_string,
-                end.token()
-            ))
+            Some(format!("{}{}{}", start.token(), fields_string, end.token()))
         }
-        TypeInfo::Typeof { typeof_token, parentheses, inner } => {
+        TypeInfo::Typeof {
+            typeof_token,
+            parentheses,
+            inner,
+        } => {
             let (start, end) = parentheses.tokens();
             Some(format!(
                 "{}{}{}{}",
@@ -364,12 +358,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 Some(string) => string,
                 None => return None,
             };
-            Some(format!(
-                "{}{}{}",
-                start.token(),
-                types_string,
-                end.token()
-            ))
+            Some(format!("{}{}{}", start.token(), types_string, end.token()))
         }
         TypeInfo::Union(union) => {
             let leading_string = optional_token_to_string(union.leading());
@@ -377,31 +366,22 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 Some(string) => string,
                 None => return None,
             };
-            Some(format!(
-                "{}{}",
-                leading_string,
-                types_string
-            ))
+            Some(format!("{}{}", leading_string, types_string))
         }
-        TypeInfo::Variadic { ellipsis, type_info } => {
+        TypeInfo::Variadic {
+            ellipsis,
+            type_info,
+        } => {
             let type_string = match type_info_to_string(type_info.as_ref()) {
                 Some(string) => string,
-                None => return None
+                None => return None,
             };
-            Some(format!(
-                "{}{}",
-                ellipsis.token(),
-                type_string
-            ))
+            Some(format!("{}{}", ellipsis.token(), type_string))
         }
         TypeInfo::VariadicPack { ellipsis, name } => {
-            Some(format!(
-                "{}{}",
-                ellipsis.token(),
-                name.token()
-            ))
+            Some(format!("{}{}", ellipsis.token(), name.token()))
         }
-        _ => None
+        _ => None,
     }
 }
 
@@ -467,21 +447,21 @@ impl<'a> TypeDocEntry<'a> {
                 TypeInfo::Table { fields, .. } => {
                     for pair in fields.pairs() {
                         let field = pair.value();
-                        
+
                         let name = match type_field_key_to_string(field.key()) {
                             Some(name) => name,
                             None => continue,
                         };
-                        
+
                         let lua_type = match type_info_to_string(field.value()) {
                             Some(lua_type) => lua_type,
-                            None => continue
+                            None => continue,
                         };
 
                         let punctuated_trivia = if let Some(punctuated) = pair.punctuation() {
                             vec![
                                 punctuated.leading_trivia().collect::<Vec<_>>(),
-                                punctuated.trailing_trivia().collect::<Vec<_>>()
+                                punctuated.trailing_trivia().collect::<Vec<_>>(),
                             ]
                             .into_iter()
                             .flatten()
@@ -498,18 +478,15 @@ impl<'a> TypeDocEntry<'a> {
                             .find_map(|token| match token.token_type() {
                                 TokenType::SingleLineComment { comment } => {
                                     if comment.starts_with("-") {
-                                        let string = comment
-                                            .strip_prefix("-")
-                                            .unwrap()
-                                            .trim()
-                                            .to_string();
+                                        let string =
+                                            comment.strip_prefix("-").unwrap().trim().to_string();
 
                                         Some(string)
                                     } else {
                                         None
                                     }
                                 }
-                                _ => None
+                                _ => None,
                             })
                             .unwrap_or_else(String::new);
 
@@ -519,10 +496,12 @@ impl<'a> TypeDocEntry<'a> {
                             desc,
                         });
                     }
-                },
-                _ => doc_entry.lua_type = match type_info_to_string(&type_info) {
-                    Some(string) => Some(string),
-                    None => Some(type_info.to_string().trim().to_string()),
+                }
+                _ => {
+                    doc_entry.lua_type = match type_info_to_string(&type_info) {
+                        Some(string) => Some(string),
+                        None => Some(type_info.to_string().trim().to_string()),
+                    }
                 }
             }
         }
@@ -537,9 +516,11 @@ impl<'a> TypeDocEntry<'a> {
 
                 Tag::Field(field_tag) => {
                     if type_info_exists {
-                        if let Some(found) = doc_entry.fields.iter_mut().find(|existing_field| {
-                            field_tag.name.as_str() == existing_field.name
-                        }) {
+                        if let Some(found) = doc_entry
+                            .fields
+                            .iter_mut()
+                            .find(|existing_field| field_tag.name.as_str() == existing_field.name)
+                        {
                             if !field_tag.lua_type.is_empty() {
                                 found.lua_type = field_tag.lua_type.to_string();
                             }
@@ -558,12 +539,14 @@ impl<'a> TypeDocEntry<'a> {
                         }
                     } else {
                         if field_tag.lua_type.is_empty() {
-                            field_tag.source.diagnostic("Field type is required when missing type info");
+                            field_tag
+                                .source
+                                .diagnostic("Field type is required when missing type info");
                         }
 
                         doc_entry.fields.push(field_tag.into())
                     }
-                },
+                }
 
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
                 Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
