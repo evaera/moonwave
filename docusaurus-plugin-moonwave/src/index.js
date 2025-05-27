@@ -286,14 +286,11 @@ export default (context, options) => ({
             maxBuffer: 10 * 1024 * 1024,
           }
         )
-          .then(({ stdout, stderr }) => {
-            if (stderr.length > 0) {
-              return Promise.reject(stderr)
-            }
-
-            return stdout
-          })
           .then((raw) => JSON.parse(raw))
+          .catch(({ stderr }) => {
+            console.error(`\n${stderr}`)
+            return Promise.reject(`Moonwave: Failed to extract. Check the error above.`)
+          })
       )
     )
 
