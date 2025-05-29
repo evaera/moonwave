@@ -23,4 +23,8 @@ pub struct ExtractSubcommand {
     /// If unspecified, the input path is used.
     #[structopt(long = "base", short = "b")]
     pub base_path: Option<PathBuf>,
+
+    /// The Lua version to use when parsing the input files
+    #[structopt(long = "lua", short = "l", default_value = "all")]
+    pub lua_version: String,
 }

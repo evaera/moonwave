@@ -15,7 +15,7 @@ fn run(args: Args) -> anyhow::Result<()> {
                 None => path.clone(),
             };
 
-            generate_docs_from_path(&path, &base_path)
+            generate_docs_from_path(&path, &base_path, &subcommand.lua_version)
         }
     }
 }

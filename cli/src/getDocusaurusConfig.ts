@@ -14,6 +14,7 @@ export interface GenerateConfigParams {
   classOrder: ClassOrder
   apiCategories: string[]
   autoSectionPath?: string
+  luaVersion: string
 }
 
 export default function getDocusaurusConfig({
@@ -28,6 +29,7 @@ export default function getDocusaurusConfig({
   classOrder,
   apiCategories,
   autoSectionPath,
+  luaVersion,
 }: GenerateConfigParams) {
   const gitRepoUrl = config.gitRepoUrl
 
@@ -120,6 +122,7 @@ export default function getDocusaurusConfig({
           apiCategories,
           binaryPath,
           autoSectionPath,
+          luaVersion,
         },
       ],
       "docusaurus-lunr-search",

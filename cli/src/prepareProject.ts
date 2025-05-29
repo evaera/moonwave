@@ -49,6 +49,7 @@ export type Config = Partial<{
   classOrder: ClassOrder
   apiCategories: string[]
   autoSectionPath?: string
+  luaVersion: string
 
   // Docusaurus
   docusaurus: Partial<{
@@ -452,7 +453,9 @@ export function prepareProject(
     classOrder: config.classOrder ?? [],
     apiCategories: config.apiCategories ?? [],
     autoSectionPath: config.autoSectionPath,
+    luaVersion: config.luaVersion ?? "all",
   })
+  console.log("lua version", config.luaVersion)
 
   if (
     !fs.existsSync(path.join(tempDir, "./node_modules")) ||

@@ -54,7 +54,7 @@ struct OutputClass<'a> {
 
 type CodespanFilesPaths = (PathBuf, usize);
 
-pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::Result<()> {
+pub fn generate_docs_from_path(input_path: &Path, base_path: &Path, lua_version: &str) -> anyhow::Result<()> {
     let (codespan_files, files) = find_files(input_path)?;
 
     let mut errors: Vec<Error> = Vec::new();
@@ -73,7 +73,7 @@ pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::R
             .to_string()
             .replace(path::MAIN_SEPARATOR, "/");
 
-        match SourceFile::from_str(source, file_id, human_path) {
+        match SourceFile::from_str(source, file_id, human_path, lua_version) {
             Ok(source_file) => source_files.push(source_file),
             Err(error) => errors.push(error),
         }
