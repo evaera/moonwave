@@ -73,6 +73,10 @@ function parseSectionalClassOrder(content, classOrder, filteredContent) {
 
   classOrder.forEach((element) => {
     if (element.items && Array.isArray(element.items)) {
+      // Handle both direct classes and nested items
+      const directClasses = element.classes || []
+      const directClassItems = mapLinksByName(nameSet, directClasses)
+
       const childItems = processNestedItems(
         element.items,
         nameSet,
@@ -80,15 +84,21 @@ function parseSectionalClassOrder(content, classOrder, filteredContent) {
         listedNames
       )
 
-      // Create parent category with nested children
+      // Combine direct classes with nested items
+      const allItems = [...directClassItems, ...childItems]
+
       listedSidebar.push({
         type: "category",
         label: element.section,
         collapsible: true,
         collapsed: element.collapsed ?? true,
-        items: childItems,
+        items: allItems,
       })
+
+      // Add direct classes to listed names
+      listedNames.push(...directClasses)
     } else {
+      // Handle sections without nested items (existing logic)
       const namesWithTags = filteredContent
         .filter((luaClass) =>
           luaClass.tags ? luaClass.tags.includes(element.tag) : false
