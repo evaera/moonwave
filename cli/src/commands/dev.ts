@@ -21,40 +21,51 @@ export default async function devCommand(args: Args) {
       `Moonwave: Temporary build directory is located at ${tempDir}`
     )
 
-    chokidar
-      .watch(watchPaths, {
-        ignoreInitial: true,
-      })
-      .on("all", (event, changedPath) => {
-        if (
-          watchPaths.some((watchPath) => {
-            if (path.normalize(watchPath) === path.normalize(changedPath)) {
-              return true
-            }
-
-            const relative = path.relative(watchPath, changedPath)
-            return (
-              relative &&
-              !relative.startsWith("..") &&
-              !path.isAbsolute(relative)
-            )
-          })
-        ) {
-          if (event === "unlink" || event == "unlinkDir") {
-            const relativePath = path.relative(projectDir, changedPath)
-            const targetPath = path.join(tempDir, relativePath)
-
-            fs.removeSync(targetPath)
+    const onAll = (event: string, changedPath: string) => {
+      if (
+        watchPaths.some((watchPath) => {
+          if (path.normalize(watchPath) === path.normalize(changedPath)) {
+            return true
           }
 
-          prepareProject(process.cwd(), {
-            codePaths: args.code,
-            fresh: false,
-            skipRootCopy: true,
-            binaryPath,
-          })
+          const relative = path.relative(watchPath, changedPath)
+          return (
+            relative &&
+            !relative.startsWith("..") &&
+            !path.isAbsolute(relative)
+          )
+        })
+      ) {
+        if (event === "unlink" || event == "unlinkDir") {
+          const relativePath = path.relative(projectDir, changedPath)
+          const targetPath = path.join(tempDir, relativePath)
+
+          fs.removeSync(targetPath)
         }
+
+        prepareProject(process.cwd(), {
+          codePaths: args.code,
+          fresh: false,
+          skipRootCopy: true,
+          binaryPath,
+        })
+      }
+    }
+    
+    watchPaths.forEach((item) => {
+      chokidar
+        .watch(item, {
+          ignoreInitial: true
+        })
+        .on("all", onAll)
+    })
+    
+    chokidar
+      .watch(projectDir, {
+        ignoreInitial: true,
+        depth: 0
       })
+      .on("all", onAll)
 
     const exitCode = await new Promise((resolve) => {
       spawn(
