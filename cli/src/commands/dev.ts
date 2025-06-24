@@ -22,7 +22,7 @@ export default async function devCommand(args: Args) {
     )
 
     chokidar
-      .watch(projectDir, {
+      .watch(watchPaths, {
         ignoreInitial: true,
       })
       .on("all", (event, changedPath) => {
