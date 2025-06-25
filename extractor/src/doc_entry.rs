@@ -65,7 +65,7 @@ struct DocEntryParseArguments<'a> {
     source: &'a DocComment,
 }
 
-fn get_within_tag<'a>(tags: &'a [Tag], kind_tag: &Tag) -> Result<String, Diagnostic> {
+fn get_within_tag(tags: &[Tag], kind_tag: &Tag) -> Result<String, Diagnostic> {
     for tag in tags {
         if let Tag::Within(within_tag) = tag {
             return Ok(within_tag.name.as_str().to_owned());
@@ -368,8 +368,13 @@ impl<'a> DocEntry<'a> {
 
         let (tag_lines, desc_lines): (Vec<Span>, Vec<Span>) = span
             .lines()
-            .filter(|span| span.as_str() != "---")
-            .map(|span| span.strip_prefix(indentation).unwrap_or(span))
+            .map(|span| {
+                if span.as_str() == "---" {
+                    span.slice(3, span.len - 3) // essentially becomes a newline
+                } else {
+                    span.strip_prefix(indentation).unwrap_or(span)
+                }
+            })
             .partition(|line| line.starts_with(&['@', '.'][..]));
 
         let mut desc_lines = desc_lines

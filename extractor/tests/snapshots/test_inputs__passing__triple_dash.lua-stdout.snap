@@ -1,7 +1,6 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
-
 ---
 [
   {
@@ -9,50 +8,49 @@ expression: stdout
     "properties": [],
     "types": [
       {
-        "name": "hello",
+        "name": "comment",
         "desc": "some more text",
-        "lua_type": "x",
+        "lua_type": "string",
         "source": {
-          "line": 30,
+          "line": 28,
           "path": ""
         }
       }
     ],
-    "name": "b8f83",
+    "name": "MixedComments",
     "desc": "",
     "source": {
-      "line": 27,
+      "line": 25,
       "path": ""
     }
   },
   {
     "functions": [
       {
-        "name": "example",
+        "name": "extra_dash",
         "desc": "",
         "params": [
           {
-            "name": "eher",
-            "desc": "fhef",
-            "lua_type": "efe"
+            "name": "amount",
+            "desc": "How many more dashes to add.",
+            "lua_type": "number"
           }
         ],
         "returns": [],
         "function_type": "static",
         "source": {
-          "line": 33,
+          "line": 31,
           "path": ""
         }
       }
     ],
     "properties": [],
     "types": [],
-    "name": "triple",
-    "desc": "This description starts one line down,\n\t\tsome indented text\nAnd has a line in the middle, followed by trailing lines.\nDouble blank here\n```lua\nfunction test()\n\tprint(\"indentation\")\n\tdo\n\t\tprint(\"more indented\")\n\tend\nend\n```",
+    "name": "TripleDash",
+    "desc": "This description\n\t\tsome indented text\nHas a line in the middle, followed by trailing lines.\n\nDouble blank here\n\n```lua\nfunction test()\n\tprint(\"indentation\")\n\n\tdo\n\n\t\tprint(\"more indented\")\n\tend\nend\n```",
     "source": {
-      "line": 22,
+      "line": 20,
       "path": ""
     }
   }
 ]
-
