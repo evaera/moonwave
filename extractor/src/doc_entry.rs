@@ -65,7 +65,7 @@ struct DocEntryParseArguments<'a> {
     source: &'a DocComment,
 }
 
-fn get_within_tag<'a>(tags: &'a [Tag], kind_tag: &Tag) -> Result<String, Diagnostic> {
+fn get_within_tag(tags: &[Tag], kind_tag: &Tag) -> Result<String, Diagnostic> {
     for tag in tags {
         if let Tag::Within(within_tag) = tag {
             return Ok(within_tag.name.as_str().to_owned());
