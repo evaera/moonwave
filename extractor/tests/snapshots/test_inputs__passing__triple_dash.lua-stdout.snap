@@ -8,16 +8,16 @@ expression: stdout
     "properties": [],
     "types": [
       {
-        "name": "hello",
+        "name": "comment",
         "desc": "some more text",
-        "lua_type": "x",
+        "lua_type": "string",
         "source": {
           "line": 28,
           "path": ""
         }
       }
     ],
-    "name": "b8f83",
+    "name": "MixedComments",
     "desc": "",
     "source": {
       "line": 25,
@@ -27,13 +27,13 @@ expression: stdout
   {
     "functions": [
       {
-        "name": "example",
+        "name": "extra_dash",
         "desc": "",
         "params": [
           {
-            "name": "eher",
-            "desc": "fhef",
-            "lua_type": "efe"
+            "name": "amount",
+            "desc": "How many more dashes to add.",
+            "lua_type": "number"
           }
         ],
         "returns": [],
@@ -46,7 +46,7 @@ expression: stdout
     ],
     "properties": [],
     "types": [],
-    "name": "triple",
+    "name": "TripleDash",
     "desc": "This description\n\t\tsome indented text\nHas a line in the middle, followed by trailing lines.\n\nDouble blank here\n\n```lua\nfunction test()\n\tprint(\"indentation\")\n\n\tdo\n\n\t\tprint(\"more indented\")\n\tend\nend\n```",
     "source": {
       "line": 20,

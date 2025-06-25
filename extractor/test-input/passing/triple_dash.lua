@@ -16,16 +16,16 @@
 ---	```
 ---
 ---
----	@class triple
+---	@class TripleDash
 
 --- not present in output
 --[=[
-	@class b8f83
+	@class MixedComments
 ]=]
 --- some more text
---- @type hello x
---- @within b8f83
+--- @type comment string
+--- @within MixedComments
 
---- @within triple
---- @param eher efe -- fhef
-function example(eher) end
+--- @within TripleDash
+--- @param amount number -- How many more dashes to add.
+function extra_dash(amount) end
