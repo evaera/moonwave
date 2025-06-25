@@ -1,8 +1,6 @@
-----------------------------------------------------
-
----	This description starts one line down,
+---	This description
 ---			some indented text
----	And has a line in the middle, followed by trailing lines.
+---	Has a line in the middle, followed by trailing lines.
 ---
 ---	Double blank here
 ---

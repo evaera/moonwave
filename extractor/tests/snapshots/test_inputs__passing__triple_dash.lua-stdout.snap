@@ -1,7 +1,6 @@
 ---
 source: tests/test-inputs.rs
 expression: stdout
-
 ---
 [
   {
@@ -13,7 +12,7 @@ expression: stdout
         "desc": "some more text",
         "lua_type": "x",
         "source": {
-          "line": 30,
+          "line": 28,
           "path": ""
         }
       }
@@ -21,7 +20,7 @@ expression: stdout
     "name": "b8f83",
     "desc": "",
     "source": {
-      "line": 27,
+      "line": 25,
       "path": ""
     }
   },
@@ -40,7 +39,7 @@ expression: stdout
         "returns": [],
         "function_type": "static",
         "source": {
-          "line": 33,
+          "line": 31,
           "path": ""
         }
       }
@@ -48,11 +47,10 @@ expression: stdout
     "properties": [],
     "types": [],
     "name": "triple",
-    "desc": "This description starts one line down,\n\t\tsome indented text\nAnd has a line in the middle, followed by trailing lines.\nDouble blank here\n```lua\nfunction test()\n\tprint(\"indentation\")\n\tdo\n\t\tprint(\"more indented\")\n\tend\nend\n```",
+    "desc": "This description\n\t\tsome indented text\nHas a line in the middle, followed by trailing lines.\n\nDouble blank here\n\n```lua\nfunction test()\n\tprint(\"indentation\")\n\n\tdo\n\n\t\tprint(\"more indented\")\n\tend\nend\n```",
     "source": {
-      "line": 22,
+      "line": 20,
       "path": ""
     }
   }
 ]
-
