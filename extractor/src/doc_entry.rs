@@ -369,9 +369,8 @@ impl<'a> DocEntry<'a> {
         let (tag_lines, desc_lines): (Vec<Span>, Vec<Span>) = span
             .lines()
             .map(|span| {
-                let after = span.slice(3, span.len - 3);
-                if after.chars().all(char::is_whitespace) {
-                    after
+                if span.as_str() == "---" {
+                    span.slice(3, span.len - 3) // essentially becomes a newline
                 } else {
                     span.strip_prefix(indentation).unwrap_or(span)
                 }
