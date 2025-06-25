@@ -368,13 +368,18 @@ impl<'a> DocEntry<'a> {
 
         let (tag_lines, desc_lines): (Vec<Span>, Vec<Span>) = span
             .lines()
-            .filter(|span| span.as_str() != "---")
-            .map(|span| span.strip_prefix(indentation).unwrap_or(span))
+            .map(|span| {
+                let after = span.slice(3, span.len - 3);
+                if after.chars().all(char::is_whitespace) {
+                    after
+                } else {
+                    span.strip_prefix(indentation).unwrap_or(span)
+                }
+            })
             .partition(|line| line.starts_with(&['@', '.'][..]));
 
         let mut desc_lines = desc_lines
             .into_iter()
-            .skip_while(|line| line.is_empty())
             .map(|span| span.as_str())
             .collect::<Vec<_>>();
 
