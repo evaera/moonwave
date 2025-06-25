@@ -379,6 +379,7 @@ impl<'a> DocEntry<'a> {
 
         let mut desc_lines = desc_lines
             .into_iter()
+            .skip_while(|line| line.is_empty())
             .map(|span| span.as_str())
             .collect::<Vec<_>>();
 
