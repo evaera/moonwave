@@ -74,7 +74,6 @@ impl<'a> PropertyDocEntry<'a> {
             output_source: source.output_source.clone(),
         };
 
-        let mut unused_tags = Vec::new();
         let mut diagnostics = Vec::new();
 
         for tag in tags {
@@ -111,13 +110,7 @@ impl<'a> PropertyDocEntry<'a> {
                 Tag::Plugin(_) => {
                     doc_entry.realm.insert(Realm::Plugin);
                 }
-                _ => unused_tags.push(tag),
-            }
-        }
-
-        if !unused_tags.is_empty() {
-            for tag in unused_tags {
-                diagnostics.push(tag.diagnostic("This tag is unused by property doc entries."));
+                _ => diagnostics.push(tag.diagnostic("This tag is unused by property doc entries.")),
             }
         }
 

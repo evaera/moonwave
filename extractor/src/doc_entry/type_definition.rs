@@ -87,7 +87,6 @@ impl<'a> TypeDocEntry<'a> {
             output_source: source.output_source.clone(),
         };
 
-        let mut unused_tags = Vec::new();
         let mut diagnostics = Vec::new();
 
         for tag in tags {
@@ -116,13 +115,7 @@ impl<'a> TypeDocEntry<'a> {
                 Tag::Unreleased(_) => doc_entry.unreleased = true,
                 Tag::Ignore(_) => doc_entry.ignore = true,
 
-                _ => unused_tags.push(tag),
-            }
-        }
-
-        if !unused_tags.is_empty() {
-            for tag in unused_tags {
-                diagnostics.push(tag.diagnostic("This tag is unused by type doc entries."));
+                _ => diagnostics.push(tag.diagnostic("This tag is unused by type doc entries.")),
             }
         }
 

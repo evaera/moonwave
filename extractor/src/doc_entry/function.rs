@@ -188,8 +188,6 @@ impl<'a> FunctionDocEntry<'a> {
             output_source: source.output_source.clone(),
         };
 
-        let mut unused_tags = Vec::new();
-
         let source_exists = if let Some(function_source) = function_source {
             for param in function_source.params {
                 doc_entry.params.push(param);
@@ -272,7 +270,7 @@ impl<'a> FunctionDocEntry<'a> {
                 Tag::Plugin(_) => {
                     doc_entry.realm.insert(Realm::Plugin);
                 }
-                _ => unused_tags.push(tag),
+                _ => diagnostics.push(tag.diagnostic("This tag is unused by function doc entries.")),
             }
         }
 
@@ -282,12 +280,6 @@ impl<'a> FunctionDocEntry<'a> {
                     format!("Function parameter \"{}\" has no type. Document with @param or insert Luau type annotation", param.name),
                     source,
                 ))
-            }
-        }
-
-        if !unused_tags.is_empty() {
-            for tag in unused_tags {
-                diagnostics.push(tag.diagnostic("This tag is unused by function doc entries."));
             }
         }
 
