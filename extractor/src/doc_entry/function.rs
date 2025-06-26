@@ -226,13 +226,10 @@ impl<'a> FunctionDocEntry<'a> {
                                 found.name = format!("{}?", found.name);
                             }
                         } else {
-                            return Err(Diagnostics::from(vec![Diagnostic::from_span(
-                                format!(
-                                    "Param \"{}\" does not actually exist in function",
-                                    param.name
-                                ),
-                                param.name,
-                            )]));
+                            diagnostics.push(param.name.diagnostic(format!(
+                                "Param \"{}\" does not actually exist in function",
+                                param.name
+                            )));
                         }
                     } else {
                         doc_entry.params.push(param.into());
@@ -286,10 +283,6 @@ impl<'a> FunctionDocEntry<'a> {
                     source,
                 ))
             }
-        }
-
-        if !diagnostics.is_empty() {
-            return Err(Diagnostics::from(diagnostics));
         }
 
         if !unused_tags.is_empty() {
