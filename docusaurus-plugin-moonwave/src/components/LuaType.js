@@ -4,7 +4,7 @@ import { TypeLinksContext } from "./LuaClass.js"
 import styles from "./styles.module.css"
 import { Op, PrOp } from "./Syntax.js"
 
-const isPunc = (char) => !!char.match(/[\{\}\[\]()<>\-\|&]/)
+const isPunc = (char) => !!char.match(/[\{\}\[\]()<>\-\|&=]/)
 const isWhitespace = (char) => !!char.match(/\s/)
 const isAtom = (char) => !isWhitespace(char) && !isPunc(char)
 
@@ -90,6 +90,16 @@ function tokenize(code, isGroup) {
       tokens.push({
         type: "table",
         unseparatedTokens: tokenize(readBalanced("{", "}"), true),
+      })
+      next()
+      continue
+    }
+
+    if (peek() == "<") {
+      next()
+      tokens.push({
+        type: "genericList",
+        unseparatedTokens: tokenize(readBalanced("<", ">"), true),
       })
       next()
       continue
@@ -188,17 +198,28 @@ function separateGroups(token) {
   }
 }
 
-function Group({ tokenGroups, depth, left, right }) {
+function Group({ tokenGroups, depth, left, right, oneLine }) {
   if (tokenGroups.length > 1) {
     return (
       <>
         <Op depth={depth}>{left}</Op>
-        {tokenGroups.map((tokens, i) => (
-          <div className={styles.inset} key={i}>
-            <Tokens tokens={tokens} depth={depth} />
-            {i !== tokenGroups.length - 1 && <Op depth={depth}>,</Op>}
-          </div>
-        ))}
+        {tokenGroups.map((tokens, i) => {
+          if (oneLine) {
+            return (
+              <span key={i}>
+                <Tokens tokens={tokens} depth={depth} />
+                {i !== tokenGroups.length - 1 && <Op depth={depth}>,&nbsp;</Op>}
+              </span>
+            )
+          } else {
+            return (
+              <div className={styles.inset} key={i}>
+                <Tokens tokens={tokens} depth={depth} />
+                {i !== tokenGroups.length - 1 && <Op depth={depth}>,</Op>}
+              </div>
+            )
+          }
+        })}
         <Op depth={depth}>{right}</Op>
       </>
     )
@@ -223,6 +244,16 @@ function Token({ token, depth }) {
   switch (token.type) {
     case "root":
       return <Tokens tokens={token.tokens} depth={0} />
+    case "genericList":
+      return (
+        <Group
+          tokenGroups={token.separatedTokens}
+          depth={depth + 1}
+          left="<"
+          right=">"
+          oneLine={true}
+        />
+      )
     case "tuple":
       return (
         <Group
@@ -250,7 +281,11 @@ function Token({ token, depth }) {
     case "arrow":
       return <Op depth={depth + 1}>&nbsp;→&nbsp;</Op>
     case "punc":
-      return <Op>{token.punc}</Op>
+      if (token.punc == "=") {
+        return <Op>&nbsp;=&nbsp;</Op>
+      } else {
+        return <Op>{token.punc}</Op>
+      }
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
     case "intersection":
