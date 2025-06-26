@@ -71,6 +71,7 @@ impl<'a> ClassDocEntry<'a> {
         };
 
         let mut unused_tags = Vec::new();
+        let mut diagnostics = Vec::new();
 
         for tag in tags {
             match tag {
@@ -78,6 +79,15 @@ impl<'a> ClassDocEntry<'a> {
                 Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
                 Tag::Deprecated(deprecated_tag) => doc_entry.deprecated = Some(deprecated_tag),
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
+                Tag::Include(include_tag) => {
+                    match fs_err::read_to_string(include_tag.path.as_str()) {
+                        Ok(text) => {
+                            doc_entry.desc.push_str(&text);
+                            doc_entry.desc.push('\n');
+                        },
+                        Err(e) => diagnostics.push(include_tag.path.diagnostic(format!("Unable to read file. Reason: {}", e)))
+                    }
+                },
                 Tag::Index(index_tag) => doc_entry.__index = index_tag.name.to_string(),
 
                 Tag::Private(_) => doc_entry.private = true,
@@ -98,11 +108,12 @@ impl<'a> ClassDocEntry<'a> {
         }
 
         if !unused_tags.is_empty() {
-            let mut diagnostics = Vec::new();
             for tag in unused_tags {
                 diagnostics.push(tag.diagnostic("This tag is unused by class doc entries."));
             }
+        }
 
+        if !diagnostics.is_empty() {
             return Err(Diagnostics::from(diagnostics));
         }
 

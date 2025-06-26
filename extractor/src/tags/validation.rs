@@ -46,6 +46,7 @@ static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Param,
     TagType::Return,
     TagType::Custom,
+    TagType::Include,
     TagType::Field,
     TagType::Error,
     TagType::External,
