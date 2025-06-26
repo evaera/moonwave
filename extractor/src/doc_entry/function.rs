@@ -202,8 +202,8 @@ impl<'a> FunctionDocEntry<'a> {
             false
         };
 
-        let mut return_cleared = false;
         let mut diagnostics = Vec::new();
+        let mut return_cleared = false;
 
         for tag in tags {
             match tag {
