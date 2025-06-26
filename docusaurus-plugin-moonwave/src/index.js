@@ -354,7 +354,7 @@ export default (context, options) => ({
             )
 
             if (existingSection) {
-              // ensure not to duplicate classes
+              // avoid duplicating classes
               if (!existingSection.classes.includes(luaClass.name)) {
                 existingSection.classes.push(luaClass.name)
               }
