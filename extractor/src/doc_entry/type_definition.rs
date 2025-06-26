@@ -106,10 +106,14 @@ impl<'a> TypeDocEntry<'a> {
                         Ok(text) => {
                             doc_entry.desc.push_str(&text);
                             doc_entry.desc.push('\n');
-                        },
-                        Err(e) => diagnostics.push(include_tag.path.diagnostic(format!("Unable to read file. Reason: {}", e)))
+                        }
+                        Err(e) => diagnostics.push(
+                            include_tag
+                                .path
+                                .diagnostic(format!("Unable to read file. Reason: {}", e)),
+                        ),
                     }
-                },
+                }
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Unreleased(_) => doc_entry.unreleased = true,

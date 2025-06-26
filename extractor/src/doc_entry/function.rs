@@ -251,10 +251,14 @@ impl<'a> FunctionDocEntry<'a> {
                         Ok(text) => {
                             doc_entry.desc.push_str(&text);
                             doc_entry.desc.push('\n');
-                        },
-                        Err(e) => diagnostics.push(include_tag.path.diagnostic(format!("Unable to read file. Reason: {}", e)))
+                        }
+                        Err(e) => diagnostics.push(
+                            include_tag
+                                .path
+                                .diagnostic(format!("Unable to read file. Reason: {}", e)),
+                        ),
                     }
-                },
+                }
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Unreleased(_) => doc_entry.unreleased = true,
@@ -270,7 +274,9 @@ impl<'a> FunctionDocEntry<'a> {
                 Tag::Plugin(_) => {
                     doc_entry.realm.insert(Realm::Plugin);
                 }
-                _ => diagnostics.push(tag.diagnostic("This tag is unused by function doc entries.")),
+                _ => {
+                    diagnostics.push(tag.diagnostic("This tag is unused by function doc entries."))
+                }
             }
         }
 

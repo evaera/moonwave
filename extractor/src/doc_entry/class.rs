@@ -83,10 +83,14 @@ impl<'a> ClassDocEntry<'a> {
                         Ok(text) => {
                             doc_entry.desc.push_str(&text);
                             doc_entry.desc.push('\n');
-                        },
-                        Err(e) => diagnostics.push(include_tag.path.diagnostic(format!("Unable to read file. Reason: {}", e)))
+                        }
+                        Err(e) => diagnostics.push(
+                            include_tag
+                                .path
+                                .diagnostic(format!("Unable to read file. Reason: {}", e)),
+                        ),
                     }
-                },
+                }
                 Tag::Index(index_tag) => doc_entry.__index = index_tag.name.to_string(),
 
                 Tag::Private(_) => doc_entry.private = true,
