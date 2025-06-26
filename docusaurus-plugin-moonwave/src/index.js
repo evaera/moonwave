@@ -354,7 +354,10 @@ export default (context, options) => ({
             )
 
             if (existingSection) {
-              existingSection.classes.push(luaClass.name)
+              // ensure not to duplicate classes
+              if (!existingSection.classes.includes(luaClass.name)) {
+                existingSection.classes.push(luaClass.name)
+              }
             } else {
               classOrder.push({
                 section: title,
