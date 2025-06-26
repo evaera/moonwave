@@ -134,6 +134,11 @@ function tokenize(code, isGroup) {
         continue
       }
 
+      if (punc == "=") {
+        tokens.push({ type: "equals" })
+        continue
+      }
+
       tokens.push({
         type: "punc",
         punc,
@@ -280,12 +285,10 @@ function Token({ token, depth }) {
       )
     case "arrow":
       return <Op depth={depth + 1}>&nbsp;→&nbsp;</Op>
+    case "equals":
+      return <Op>&nbsp;=&nbsp;</Op>
     case "punc":
-      if (token.punc == "=") {
-        return <Op>&nbsp;=&nbsp;</Op>
-      } else {
-        return <Op>{token.punc}</Op>
-      }
+      return <Op>{token.punc}</Op>
     case "union":
       return <Op>&nbsp;|&nbsp;</Op>
     case "intersection":
