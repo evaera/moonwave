@@ -146,6 +146,41 @@ where
     Ok(())
 }
 
+fn get_function_source(doc_comment: &DocComment, stmt: Option<&Stmt>) -> Result<Option<FunctionSource>, Diagnostic> {
+    match stmt {
+        Some(Stmt::LocalFunction(function)) => Ok(Some(function.body().clone().into())),
+        Some(Stmt::FunctionDeclaration(function)) => Ok(Some(function.body().clone().into())),
+        Some(Stmt::LocalAssignment(assignment)) => {
+            let expressions = assignment.expressions();
+            let variables = assignment.names();
+
+            assert_token_sequence_is_single(variables, doc_comment, "variable")?;
+            assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
+
+            match expressions.first().unwrap().value() {
+                ast::Expression::Function(function_box) => Ok(Some((&function_box).1.clone().into())),
+                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+            }
+        }
+        Some(Stmt::Assignment(assignment)) => {
+            let expressions = assignment.expressions();
+            let variables = assignment.variables();
+
+            assert_token_sequence_is_single(variables, doc_comment, "variable")?;
+            assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
+
+            match expressions.into_iter().next().unwrap() {
+                ast::Expression::Function(function_box) => Ok(Some((&function_box).1.clone().into())),
+                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+            }
+        }
+        None => Ok(None),
+
+        _ => Err(doc_comment
+            .diagnostic("A function doc comment must preceed some sort of function declaration or must stand alone.")),
+    }
+}
+
 fn determine_kind(
     doc_comment: &DocComment,
     stmt: Option<&Stmt>,
@@ -153,8 +188,20 @@ fn determine_kind(
 ) -> Result<DocEntryKind, Diagnostic> {
     let explicit_kind = get_explicit_kind(tags)?;
 
-    if let Some(kind) = explicit_kind {
-        return Ok(kind);
+    match explicit_kind {
+        Some(DocEntryKind::Function { within, name, function_type, .. }) => {
+            let function_source = get_function_source(doc_comment, stmt)?;
+            return Ok(DocEntryKind::Function {
+                within,
+                name,
+                function_type,
+                function_source,
+            })
+        }
+        Some(other) => {
+            return Ok(other)
+        }
+        None => ()
     }
 
     let within_tag = tags
