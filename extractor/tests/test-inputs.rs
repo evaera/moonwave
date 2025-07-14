@@ -47,6 +47,11 @@ fn class_with_index() -> anyhow::Result<()> {
 }
 
 #[test]
+fn explicit_function_type() -> anyhow::Result<()> {
+    run_moonwave("passing/explicit_function_type.lua", 0)
+}
+
+#[test]
 fn external_type() -> anyhow::Result<()> {
     run_moonwave("passing/external_types.lua", 0)
 }
