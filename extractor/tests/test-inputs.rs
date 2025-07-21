@@ -47,6 +47,11 @@ fn class_with_index() -> anyhow::Result<()> {
 }
 
 #[test]
+fn explicit_function_type() -> anyhow::Result<()> {
+    run_moonwave("passing/explicit_function_type.lua", 0)
+}
+
+#[test]
 fn external_type() -> anyhow::Result<()> {
     run_moonwave("passing/external_types.lua", 0)
 }
@@ -118,6 +123,11 @@ fn unknown_tags() -> anyhow::Result<()> {
 #[test]
 fn duplicate_names() -> anyhow::Result<()> {
     run_moonwave("failing/duplicate_names.lua", 1)
+}
+
+#[test]
+fn failing_explicit_function_type() -> anyhow::Result<()> {
+    run_moonwave("failing/explicit_function_type.lua", 1)
 }
 
 fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {

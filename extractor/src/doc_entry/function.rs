@@ -157,6 +157,7 @@ impl<'a> FunctionDocEntry<'a> {
     pub(super) fn parse(
         args: DocEntryParseArguments<'a>,
         function_type: FunctionType,
+        function_type_conflict: bool,
         function_source: Option<FunctionSource>,
     ) -> Result<Self, Diagnostics> {
         let DocEntryParseArguments {
@@ -171,7 +172,7 @@ impl<'a> FunctionDocEntry<'a> {
             name,
             desc,
             source,
-            function_type,
+            function_type: function_type.clone(),
             since: None,
             deprecated: None,
             within: within.unwrap(),
@@ -269,6 +270,26 @@ impl<'a> FunctionDocEntry<'a> {
         }
 
         let mut diagnostics = Vec::new();
+
+        if function_type_conflict {
+            match function_type {
+                FunctionType::Static => {
+                    // detected = method
+                    // TODO: Would be better to add the diagnostic on the `@function` span.
+                    diagnostics.push(Diagnostic::from_doc_comment(
+                        "Can not specify a method function as a static function since the first parameter does not have a type.",
+                        source))
+                }
+                FunctionType::Method => {
+                    // detected = static
+                    if !doc_entry.params.is_empty() {
+                        doc_entry.params.remove(0);
+                    }
+                    // Method with 0 params is fine.
+                }
+            }
+        }
+
         for param in doc_entry.params.iter() {
             if param.lua_type.is_empty() {
                 diagnostics.push(Diagnostic::from_doc_comment(

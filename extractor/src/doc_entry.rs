@@ -31,6 +31,7 @@ enum DocEntryKind {
         within: String,
         name: String,
         function_type: FunctionType,
+        function_type_conflict: bool, // whether the explicit type is different
         function_source: Option<FunctionSource>,
     },
     Property {
@@ -87,6 +88,7 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                 return Ok(Some(DocEntryKind::Function {
                     name: function_tag.name.as_str().to_owned(),
                     function_type: function_tag.function_type.clone(),
+                    function_type_conflict: false,
                     within: get_within_tag(tags, tag)?,
                     function_source: None,
                 }));
@@ -146,6 +148,73 @@ where
     Ok(())
 }
 
+fn get_function_source(
+    doc_comment: &DocComment,
+    stmt: Option<&Stmt>,
+) -> Result<Option<(FunctionSource, FunctionType)>, Diagnostic> {
+    match stmt {
+        Some(Stmt::LocalFunction(function)) => {
+            let function_source = function.body().clone().into();
+            let function_type = FunctionType::Static;
+            let result = (function_source, function_type);
+            Ok(Some(result))
+        },
+        Some(Stmt::FunctionDeclaration(function)) => {
+            let function_body = function.body().clone().into();
+            match function.name().method_name() {
+                Some(..) => {
+                    let function_type = FunctionType::Method;
+                    let result = (function_body, function_type);
+                    Ok(Some(result))
+                }
+                None => {
+                    let function_type = FunctionType::Static;
+                    let result = (function_body, function_type);
+                    Ok(Some(result))
+                }
+            }
+        },
+        Some(Stmt::LocalAssignment(assignment)) => {
+            let expressions = assignment.expressions();
+            let variables = assignment.names();
+
+            assert_token_sequence_is_single(variables, doc_comment, "variable")?;
+            assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
+
+            match expressions.first().unwrap().value() {
+                ast::Expression::Function(function_box) => {
+                    let function_body = function_box.1.clone().into();
+                    let function_type = FunctionType::Static;
+                    let result = (function_body, function_type);
+                    Ok(Some(result))
+                },
+                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+            }
+        }
+        Some(Stmt::Assignment(assignment)) => {
+            let expressions = assignment.expressions();
+            let variables = assignment.variables();
+
+            assert_token_sequence_is_single(variables, doc_comment, "variable")?;
+            assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
+
+            match expressions.into_iter().next().unwrap() {
+                ast::Expression::Function(function_box) => {
+                    let function_body = function_box.1.clone().into();
+                    let function_type = FunctionType::Static;
+                    let result = (function_body, function_type);
+                    Ok(Some(result))
+                },
+                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+            }
+        }
+        None => Ok(None),
+
+        _ => Err(doc_comment
+            .diagnostic("A function doc comment must preceed some sort of function declaration or must stand alone.")),
+    }
+}
+
 fn determine_kind(
     doc_comment: &DocComment,
     stmt: Option<&Stmt>,
@@ -153,8 +222,36 @@ fn determine_kind(
 ) -> Result<DocEntryKind, Diagnostic> {
     let explicit_kind = get_explicit_kind(tags)?;
 
-    if let Some(kind) = explicit_kind {
-        return Ok(kind);
+    match explicit_kind {
+        Some(DocEntryKind::Function {
+            within,
+            name,
+            function_type: function_type_explicit,
+            ..
+        }) => {
+            let option = get_function_source(doc_comment, stmt)?;
+            if let Some((function_source, function_type_detected)) = option {
+                let d1 = std::mem::discriminant(&function_type_explicit);
+                let d2 = std::mem::discriminant(&function_type_detected);
+                let function_type_conflict = d1 != d2;
+                return Ok(DocEntryKind::Function {
+                    within,
+                    name,
+                    function_type: function_type_explicit,
+                    function_type_conflict,
+                    function_source: Some(function_source),
+                });
+            }
+            return Ok(DocEntryKind::Function {
+                within,
+                name,
+                function_type: function_type_explicit,
+                function_type_conflict: false,
+                function_source: None,
+            });
+        }
+        Some(other) => return Ok(other),
+        None => (),
     }
 
     let within_tag = tags
@@ -182,6 +279,7 @@ fn determine_kind(
                 name,
                 within,
                 function_type: FunctionType::Static,
+                function_type_conflict: false,
                 function_source: Some(function.body().clone().into()),
             })
         }
@@ -197,6 +295,7 @@ fn determine_kind(
                     name: method_name.to_string(),
                     within,
                     function_type: FunctionType::Method,
+                    function_type_conflict: false,
                     function_source: Some(function.body().clone().into()),
                 })
             }
@@ -221,6 +320,7 @@ fn determine_kind(
                     name: function_name,
                     within,
                     function_type: FunctionType::Static,
+                    function_type_conflict: false,
                     function_source: Some(function.body().clone().into()),
                 })
             }
@@ -248,6 +348,7 @@ fn determine_kind(
                         name,
                         within,
                         function_type: FunctionType::Static,
+                        function_type_conflict: false,
                         function_source: Some(function_body.clone().into()),
                     })
                 }
@@ -301,6 +402,7 @@ fn determine_kind(
                         name: name.unwrap(),
                         within,
                         function_type: FunctionType::Static,
+                        function_type_conflict: false,
                         function_source: Some(function_body.clone().into()),
                     })
                 }
@@ -420,6 +522,7 @@ impl<'a> DocEntry<'a> {
                 within,
                 name,
                 function_type,
+                function_type_conflict,
                 function_source,
             } => (
                 DocEntry::Function(FunctionDocEntry::parse(
@@ -431,6 +534,7 @@ impl<'a> DocEntry<'a> {
                         source: doc_comment,
                     },
                     function_type,
+                    function_type_conflict,
                     function_source,
                 )?),
                 all_tags,

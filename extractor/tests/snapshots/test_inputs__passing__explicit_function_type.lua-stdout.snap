@@ -1,0 +1,118 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [
+      {
+        "name": "log_message",
+        "desc": "",
+        "params": [
+          {
+            "name": "message",
+            "desc": "will be prefixed with \"[ECAndMaybeS]: \"",
+            "lua_type": "string"
+          }
+        ],
+        "returns": [],
+        "function_type": "static",
+        "source": {
+          "line": 11,
+          "path": ""
+        }
+      },
+      {
+        "name": "entity",
+        "desc": "",
+        "params": [
+          {
+            "name": "size",
+            "desc": "size of entity in bytes",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "entity id",
+            "lua_type": "number"
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 22,
+          "path": ""
+        }
+      },
+      {
+        "name": "get_status",
+        "desc": "",
+        "params": [
+          {
+            "name": "entity",
+            "desc": "entity id from [entity](ECAndMaybeS#entity)",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [],
+        "function_type": "method",
+        "source": {
+          "line": 30,
+          "path": ""
+        }
+      },
+      {
+        "name": "entity_total",
+        "desc": "",
+        "params": [
+          {
+            "name": "components",
+            "desc": "whether components should be counted",
+            "lua_type": "boolean"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "total amount of entities",
+            "lua_type": "number"
+          }
+        ],
+        "function_type": "static",
+        "source": {
+          "line": 38,
+          "path": ""
+        }
+      },
+      {
+        "name": "query",
+        "desc": "",
+        "params": [
+          {
+            "name": "...",
+            "desc": "components",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "data",
+            "lua_type": "...any"
+          }
+        ],
+        "function_type": "method",
+        "source": {
+          "line": 46,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [],
+    "types": [],
+    "name": "ECAndMaybeS",
+    "desc": "",
+    "source": {
+      "line": 2,
+      "path": ""
+    }
+  }
+]
