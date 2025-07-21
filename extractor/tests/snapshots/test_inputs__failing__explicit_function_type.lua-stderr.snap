@@ -1,0 +1,13 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: Can not specify a method function as a static function since the first parameter does not have a type.
+  ┌─ test-input/failing/explicit_function_type.lua:5:1
+  │  
+5 │ ╭ --- @function run_benchmark
+6 │ │ --- @within ECButNoS
+7 │ │ --- @param percentile -- Defaults to 50.
+  │ ╰────────────────────────────────────────^ Can not specify a method function as a static function since the first parameter does not have a type.
+
+error: aborting due to diagnostic error
