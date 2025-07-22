@@ -118,6 +118,15 @@ expression: stdout
           "line": 40,
           "path": ""
         }
+      },
+      {
+        "name": "timestamp",
+        "desc": "",
+        "lua_type": "number",
+        "source": {
+          "line": 45,
+          "path": ""
+        }
       }
     ],
     "types": [],

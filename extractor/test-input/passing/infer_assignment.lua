@@ -40,3 +40,8 @@ InferAssignment.announce_message_async = nil :: (message: string) -> boolean
 InferAssignment.version = nil :: string
 
 -- Other TypeAssertion variants could be added but they all (hopefully) follow the exact same logic.
+
+--- @within InferAssignment
+local timestamp = 1753211834
+
+-- Other local assignment values would be added but they all (hopefully) follow the exact same logic.
