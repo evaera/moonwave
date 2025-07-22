@@ -1,52 +1,42 @@
 --- @class InferAssignment
 local InferAssignment = {}
 
--- TableConstructor
---- @within InferAssignment
+--- TableConstructor
 InferAssignment.world = {
 	gravity = 9.8,
 	time = "relative"
 }
 
--- Number
---- @within InferAssignment
+--- Number
 InferAssignment.year = 2025
 
--- InterpolatedString
---- @within InferAssignment
+--- InterpolatedString
 InferAssignment.copyright = `Copyright (c) {InferAssignment.year}`
 
--- Function
---- @within InferAssignment
+--- Function
 InferAssignment.on_year_change = function(year: number): ()
 	InferAssignment.year = year
 	InferAssignment.copyright = `Copyright (c) {InferAssignment.year}`
 end
 
--- String
---- @within InferAssignment
+--- String
 InferAssignment.name = "InferAssignment"
 
--- Symbol > True
---- @within InferAssignment
+--- Symbol > True
 InferAssignment.enabled = true
 
--- Symbol > False
---- @within InferAssignment
+--- Symbol > False
 InferAssignment.DEBUG = false
 
--- Symbol > Nil
---- @within InferAssignment
+--- Symbol > Nil
 InferAssignment.currently_spectating = nil
 
--- TypeAssertion > Callback + parameter name
---- @within InferAssignment
+--- TypeAssertion > Callback + parameter name
 --- @return boolean -- whether it was successful
 --- @yields
 InferAssignment.announce_message_async = nil :: (message: string) -> boolean
 
--- TypeAssertion > string
---- @within InferAssignment
+--- TypeAssertion > string
 InferAssignment.version = nil :: string
 
 -- Other TypeAssertion variants could be added but they all (hopefully) follow the exact same logic.

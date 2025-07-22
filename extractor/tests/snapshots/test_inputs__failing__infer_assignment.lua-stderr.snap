@@ -3,52 +3,53 @@ source: tests/test-inputs.rs
 expression: stderr
 ---
 error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
-  ┌─ test-input/failing/infer_assignment.lua:5:1
+  ┌─ test-input/failing/infer_assignment.lua:4:1
   │
-5 │ --- @within InferAssignment
-  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+4 │ --- BinaryOperator
+  │ ^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
 error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
-   ┌─ test-input/failing/infer_assignment.lua:9:1
-   │  
- 9 │ ╭ --- @within InferAssignment
-10 │ │ --- Get it? Inside is an em dash, which can also be used for parenthetical clauses. A parenthetical symbol surrounded by parentheses 😹
-   │ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+  ┌─ test-input/failing/infer_assignment.lua:7:1
+  │  
+7 │ ╭ --- Parentheses
+8 │ │ --- Get it? Inside is an em dash, which can also be used for parenthetical clauses. A parenthetical symbol surrounded by parentheses 😹
+  │ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+   ┌─ test-input/failing/infer_assignment.lua:11:1
+   │
+11 │ --- UnaryOperator
+   │ ^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
 error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
    ┌─ test-input/failing/infer_assignment.lua:14:1
    │
-14 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+14 │ --- FunctionCall
+   │ ^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
 error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
-   ┌─ test-input/failing/infer_assignment.lua:18:1
+   ┌─ test-input/failing/infer_assignment.lua:17:1
    │
-18 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+17 │ --- IfExpression
+   │ ^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
 error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
-   ┌─ test-input/failing/infer_assignment.lua:22:1
+   ┌─ test-input/failing/infer_assignment.lua:20:1
+   │  
+20 │ ╭ --- Symbol > Ellipsis
+21 │ │ --- `...` is populated with program arguments in the demo Luau runtime.
+   │ ╰───────────────────────────────────────────────────────────────────────^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Type assertion must contain names for all parameters; type #1 is missing a name.
+   ┌─ test-input/failing/infer_assignment.lua:24:1
    │
-22 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+24 │ --- TypeAssertion > Callback + missing parameter name
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Type assertion must contain names for all parameters; type #1 is missing a name.
 
 error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
    ┌─ test-input/failing/infer_assignment.lua:27:1
    │
-27 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
-
-error: Type assertion must contain names for all parameters; type #1 is missing a name.
-   ┌─ test-input/failing/infer_assignment.lua:31:1
-   │
-31 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Type assertion must contain names for all parameters; type #1 is missing a name.
-
-error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
-   ┌─ test-input/failing/infer_assignment.lua:35:1
-   │
-35 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+27 │ --- Var
+   │ ^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
 error: aborting due to diagnostic error

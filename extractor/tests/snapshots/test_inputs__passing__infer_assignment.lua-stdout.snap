@@ -7,7 +7,7 @@ expression: stdout
     "functions": [
       {
         "name": "on_year_change",
-        "desc": "",
+        "desc": "Function",
         "params": [
           {
             "name": "year",
@@ -18,13 +18,13 @@ expression: stdout
         "returns": [],
         "function_type": "static",
         "source": {
-          "line": 21,
+          "line": 17,
           "path": ""
         }
       },
       {
         "name": "announce_message_async",
-        "desc": "",
+        "desc": "TypeAssertion > Callback + parameter name",
         "params": [
           {
             "name": "message",
@@ -41,7 +41,7 @@ expression: stdout
         "function_type": "static",
         "yields": true,
         "source": {
-          "line": 46,
+          "line": 37,
           "path": ""
         }
       }
@@ -49,73 +49,73 @@ expression: stdout
     "properties": [
       {
         "name": "world",
-        "desc": "",
+        "desc": "TableConstructor",
         "lua_type": "{\n\tgravity = 9.8,\n\ttime = \"relative\"\n}\n",
         "source": {
-          "line": 6,
+          "line": 5,
           "path": ""
         }
       },
       {
         "name": "year",
-        "desc": "",
+        "desc": "Number",
         "lua_type": "number",
         "source": {
-          "line": 13,
+          "line": 11,
           "path": ""
         }
       },
       {
         "name": "copyright",
-        "desc": "",
+        "desc": "InterpolatedString",
         "lua_type": "string",
         "source": {
-          "line": 17,
+          "line": 14,
           "path": ""
         }
       },
       {
         "name": "name",
-        "desc": "",
+        "desc": "String",
         "lua_type": "string",
         "source": {
-          "line": 28,
+          "line": 23,
           "path": ""
         }
       },
       {
         "name": "enabled",
-        "desc": "",
+        "desc": "Symbol > True",
         "lua_type": "boolean",
+        "source": {
+          "line": 26,
+          "path": ""
+        }
+      },
+      {
+        "name": "DEBUG",
+        "desc": "Symbol > False",
+        "lua_type": "boolean",
+        "source": {
+          "line": 29,
+          "path": ""
+        }
+      },
+      {
+        "name": "currently_spectating",
+        "desc": "Symbol > Nil",
+        "lua_type": "nil",
         "source": {
           "line": 32,
           "path": ""
         }
       },
       {
-        "name": "DEBUG",
-        "desc": "",
-        "lua_type": "boolean",
-        "source": {
-          "line": 36,
-          "path": ""
-        }
-      },
-      {
-        "name": "currently_spectating",
-        "desc": "",
-        "lua_type": "nil",
-        "source": {
-          "line": 40,
-          "path": ""
-        }
-      },
-      {
         "name": "version",
-        "desc": "",
+        "desc": "TypeAssertion > string",
         "lua_type": "string\n",
         "source": {
-          "line": 50,
+          "line": 40,
           "path": ""
         }
       }

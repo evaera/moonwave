@@ -1,36 +1,28 @@
 --- @class InferAssignment
 local InferAssignment = {}
 
--- BinaryOperator
---- @within InferAssignment
+--- BinaryOperator
 InferAssignment.book1984 = 2 + 2
 
--- Parentheses
---- @within InferAssignment
+--- Parentheses
 --- Get it? Inside is an em dash, which can also be used for parenthetical clauses. A parenthetical symbol surrounded by parentheses 😹
 InferAssignment.parenthetical = ("—")
 
--- UnaryOperator
---- @within InferAssignment
+--- UnaryOperator
 InferAssignment.book4891 = -InferAssignment.book1984
 
--- FunctionCall
---- @within InferAssignment
+--- FunctionCall
 InferAssignment.null = string.char(0)
 
--- IfExpression
---- @within InferAssignment
+--- IfExpression
 InferAssignment.uh_oh = if InferAssignment.book1984 == 5 then "gg" else "yippee!"
 
--- Symbol > Ellipsis
--- `...` is populated with program arguments in the demo Luau runtime.
---- @within InferAssignment
+--- Symbol > Ellipsis
+--- `...` is populated with program arguments in the demo Luau runtime.
 InferAssignment.program_argument = ...
 
--- TypeAssertion > Callback + missing parameter name
---- @within InferAssignment
+--- TypeAssertion > Callback + missing parameter name
 InferAssignment.get_book_name_by_id = nil :: (number) -> string
 
--- Var
---- @within InferAssignment
+--- Var
 InferAssignment.uh_oh_part_2 = math.sqrt(-1)
