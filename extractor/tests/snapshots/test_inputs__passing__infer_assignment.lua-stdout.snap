@@ -136,5 +136,26 @@ expression: stdout
       "line": 2,
       "path": ""
     }
+  },
+  {
+    "functions": [],
+    "properties": [
+      {
+        "name": "version",
+        "desc": "This will be a Crazy update.",
+        "lua_type": "string",
+        "source": {
+          "line": 53,
+          "path": ""
+        }
+      }
+    ],
+    "types": [],
+    "name": "InferAssignment.upcoming",
+    "desc": "",
+    "source": {
+      "line": 50,
+      "path": ""
+    }
   }
 ]

@@ -45,3 +45,9 @@ InferAssignment.version = nil :: string
 local timestamp = 1753211834
 
 -- Other local assignment values would be added but they all (hopefully) follow the exact same logic.
+
+--- @class InferAssignment.upcoming
+InferAssignment.upcoming = {}
+
+--- This will be a Crazy update.
+InferAssignment.upcoming.version = "1.0.0"
