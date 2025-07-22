@@ -107,7 +107,7 @@ impl TryFrom<&TypeInfo> for FunctionSource {
                     });
                 }
 
-                let returns = get_return_types(&return_type);
+                let returns = get_return_types(return_type);
 
                 Ok(FunctionSource { params, returns })
             }
