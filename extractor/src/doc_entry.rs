@@ -307,6 +307,31 @@ fn determine_kind(
                         function_source: Some(function_body.clone().into()),
                     })
                 }
+                ast::Expression::TypeAssertion { type_assertion, .. } => {
+                    let type_info = type_assertion.cast_to();
+                    match type_info {
+                        ast::luau::TypeInfo::Callback { .. } => {
+                            Ok(DocEntryKind::Function {
+                                name,
+                                within,
+                                function_type: FunctionType::Static,
+                                function_source: match type_info.try_into() {
+                                    Ok(function_source) => Some(function_source),
+                                    Err(index) => return Err(doc_comment.diagnostic(format!(
+                                        "Type assertion must contain names for all parameters; type #{} is missing a name.",
+                                        index + 1
+                                    )))}
+                            })
+                        }
+                        other => {
+                            Ok(DocEntryKind::Property {
+                                name,
+                                within,
+                                lua_type: Some(other.to_string()),
+                            })
+                        }
+                    }
+                }
                 _ => {
                     let lua_type = match expression {
                         ast::Expression::InterpolatedString(_) => "string",
@@ -323,7 +348,7 @@ fn determine_kind(
                             }
                             _ => unreachable!(),
                         }
-                        _ => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, or `nil`."))
+                        _ => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion."))
                     };
 
                     Ok(DocEntryKind::Property {
