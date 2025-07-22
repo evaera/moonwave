@@ -47,7 +47,10 @@ pub struct PropertyDocEntry<'a> {
 }
 
 impl<'a> PropertyDocEntry<'a> {
-    pub(super) fn parse(args: DocEntryParseArguments<'a>) -> Result<Self, Diagnostics> {
+    pub(super) fn parse(
+        args: DocEntryParseArguments<'a>,
+        lua_type: Option<String>,
+    ) -> Result<Self, Diagnostics> {
         let DocEntryParseArguments {
             name,
             desc,
@@ -60,7 +63,7 @@ impl<'a> PropertyDocEntry<'a> {
             name,
             desc,
             source,
-            lua_type: String::new(),
+            lua_type: lua_type.unwrap_or_default(),
             since: None,
             deprecated: None,
             within: within.unwrap(),

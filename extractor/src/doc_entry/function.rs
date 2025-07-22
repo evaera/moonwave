@@ -7,7 +7,10 @@ use crate::{
     serde_util::is_false,
     tags::{CustomTag, DeprecatedTag, ErrorTag, ExternalTag, ParamTag, ReturnTag, Tag},
 };
-use full_moon::ast::{luau::TypeInfo::Tuple, FunctionBody};
+use full_moon::ast::{
+    luau::TypeInfo::{self, Tuple},
+    FunctionBody,
+};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -24,6 +27,22 @@ pub enum FunctionType {
 pub struct FunctionSource {
     params: Vec<FunctionParam>,
     returns: Vec<FunctionReturn>,
+}
+
+fn get_return_types(info: &TypeInfo) -> Vec<FunctionReturn> {
+    match info {
+        Tuple { types, .. } => types
+            .into_iter()
+            .map(|ty| FunctionReturn {
+                lua_type: ty.to_string(),
+                desc: String::new(),
+            })
+            .collect::<Vec<_>>(),
+        _ => vec![FunctionReturn {
+            lua_type: info.to_string(),
+            desc: String::new(),
+        }],
+    }
 }
 
 impl From<FunctionBody> for FunctionSource {
@@ -58,27 +77,42 @@ impl From<FunctionBody> for FunctionSource {
         }
 
         let returns = match func.return_type() {
-            Some(return_type) => {
-                let info = return_type.type_info();
-
-                match info {
-                    Tuple { types, .. } => types
-                        .into_iter()
-                        .map(|ty| FunctionReturn {
-                            lua_type: ty.to_string(),
-                            desc: String::new(),
-                        })
-                        .collect::<Vec<_>>(),
-                    _ => vec![FunctionReturn {
-                        lua_type: info.to_string(),
-                        desc: String::new(),
-                    }],
-                }
-            }
+            Some(return_type) => get_return_types(return_type.type_info()),
             None => Vec::new(),
         };
 
         FunctionSource { params, returns }
+    }
+}
+
+impl TryFrom<&TypeInfo> for FunctionSource {
+    type Error = usize;
+    fn try_from(type_info: &TypeInfo) -> Result<Self, usize> {
+        match type_info {
+            TypeInfo::Callback {
+                arguments,
+                return_type,
+                ..
+            } => {
+                let mut params = Vec::new();
+
+                for (index, argument) in arguments.iter().enumerate() {
+                    params.push(FunctionParam {
+                        name: match argument.name() {
+                            Some((name, ..)) => name.to_string(),
+                            None => return Err(index),
+                        },
+                        desc: "".to_string(),
+                        lua_type: argument.type_info().to_string(),
+                    });
+                }
+
+                let returns = get_return_types(return_type);
+
+                Ok(FunctionSource { params, returns })
+            }
+            _ => unreachable!(),
+        }
     }
 }
 
