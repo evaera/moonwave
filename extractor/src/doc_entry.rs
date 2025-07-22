@@ -2,11 +2,15 @@ use serde::Serialize;
 use std::convert::TryFrom;
 
 use crate::{
-    diagnostic::{Diagnostic, Diagnostics}, doc_comment::DocComment, span::Span, tags::{validate_tags, Tag}
+    diagnostic::{Diagnostic, Diagnostics},
+    doc_comment::DocComment,
+    span::Span,
+    tags::{validate_tags, Tag},
 };
 use full_moon::{
     ast::{self, punctuated::Punctuated, Stmt},
-    node::Node, tokenizer,
+    node::Node,
+    tokenizer,
 };
 
 mod class;
@@ -277,9 +281,7 @@ fn determine_kind(
                                 brackets: _,
                                 expression: ast::Expression::String(token_reference),
                             } => Some(token_reference.token().to_string()),
-                            ast::Index::Dot { dot: _, name } => {
-                                Some(name.token().to_string())
-                            }
+                            ast::Index::Dot { dot: _, name } => Some(name.token().to_string()),
                             _ => None,
                         },
                         _ => None,
@@ -293,7 +295,7 @@ fn determine_kind(
                     "Explicitly specify a kind tag, like @function, @prop, or @class.",
                 ));
             }
-            
+
             let name = name.unwrap();
 
             match expression {
@@ -354,7 +356,7 @@ fn determine_kind(
                     Ok(DocEntryKind::Property {
                         name,
                         within,
-                        lua_type: Some(lua_type.to_owned())
+                        lua_type: Some(lua_type.to_owned()),
                     })
                 }
             }
@@ -487,7 +489,11 @@ impl<'a> DocEntry<'a> {
                 )?),
                 all_tags,
             ),
-            DocEntryKind::Property { within, name , lua_type} => (
+            DocEntryKind::Property {
+                within,
+                name,
+                lua_type,
+            } => (
                 DocEntry::Property(PropertyDocEntry::parse(
                     DocEntryParseArguments {
                         within: Some(within),
@@ -496,7 +502,7 @@ impl<'a> DocEntry<'a> {
                         tags,
                         source: doc_comment,
                     },
-                    lua_type
+                    lua_type,
                 )?),
                 all_tags,
             ),

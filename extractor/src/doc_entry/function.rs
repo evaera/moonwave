@@ -7,7 +7,10 @@ use crate::{
     serde_util::is_false,
     tags::{CustomTag, DeprecatedTag, ErrorTag, ExternalTag, ParamTag, ReturnTag, Tag},
 };
-use full_moon::ast::{luau::TypeInfo::{self, Tuple}, FunctionBody};
+use full_moon::ast::{
+    luau::TypeInfo::{self, Tuple},
+    FunctionBody,
+};
 use serde::Serialize;
 
 use super::DocEntryParseArguments;
@@ -86,7 +89,11 @@ impl TryFrom<&TypeInfo> for FunctionSource {
     type Error = usize;
     fn try_from(type_info: &TypeInfo) -> Result<Self, usize> {
         match type_info {
-            TypeInfo::Callback { arguments, return_type, .. } => {
+            TypeInfo::Callback {
+                arguments,
+                return_type,
+                ..
+            } => {
                 let mut params = Vec::new();
 
                 for (index, argument) in arguments.iter().enumerate() {
@@ -102,9 +109,9 @@ impl TryFrom<&TypeInfo> for FunctionSource {
 
                 let returns = get_return_types(&return_type);
 
-                Ok(FunctionSource {params, returns })
-            },
-            _ => unreachable!()
+                Ok(FunctionSource { params, returns })
+            }
+            _ => unreachable!(),
         }
     }
 }
