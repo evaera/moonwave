@@ -2,14 +2,11 @@ use serde::Serialize;
 use std::convert::TryFrom;
 
 use crate::{
-    diagnostic::{Diagnostic, Diagnostics},
-    doc_comment::DocComment,
-    span::Span,
-    tags::{validate_tags, Tag},
+    diagnostic::{Diagnostic, Diagnostics}, doc_comment::DocComment, span::Span, tags::{validate_tags, Tag}
 };
 use full_moon::{
     ast::{self, punctuated::Punctuated, Stmt},
-    node::Node,
+    node::Node, tokenizer,
 };
 
 mod class;
@@ -36,6 +33,7 @@ enum DocEntryKind {
     Property {
         within: String,
         name: String,
+        lua_type: Option<String>,
     },
     Type {
         within: String,
@@ -95,6 +93,7 @@ fn get_explicit_kind(tags: &[Tag]) -> Result<Option<DocEntryKind>, Diagnostic> {
                 return Ok(Some(DocEntryKind::Property {
                     name: property_tag.name.as_str().to_owned(),
                     within: get_within_tag(tags, tag)?,
+                    lua_type: None,
                 }))
             }
             Tag::Type(type_tag) => {
@@ -261,50 +260,78 @@ fn determine_kind(
             assert_token_sequence_is_single(variables, doc_comment, "variable")?;
             assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
 
-            match expressions.into_iter().next().unwrap() {
+            let expression = expressions.into_iter().next().unwrap();
+
+            let within = if let Some(within) = within_tag {
+                within.name.as_str().to_owned()
+            } else {
+                return Err(doc_comment.diagnostic("Function requires @within tag"));
+            };
+
+            let name = match variables.into_iter().next().unwrap() {
+                ast::Var::Name(token) => Some(token.token().to_string()),
+                ast::Var::Expression(var_expression) => {
+                    match var_expression.suffixes().next().unwrap() {
+                        ast::Suffix::Index(index) => match index {
+                            ast::Index::Brackets {
+                                brackets: _,
+                                expression: ast::Expression::String(token_reference),
+                            } => Some(token_reference.token().to_string()),
+                            ast::Index::Dot { dot: _, name } => {
+                                Some(name.token().to_string())
+                            }
+                            _ => None,
+                        },
+                        _ => None,
+                    }
+                }
+                _ => None,
+            };
+
+            if name.is_none() {
+                return Err(doc_comment.diagnostic(
+                    "Explicitly specify a kind tag, like @function, @prop, or @class.",
+                ));
+            }
+            
+            let name = name.unwrap();
+
+            match expression {
                 ast::Expression::Function(function_box) => {
                     let function_body = &function_box.1;
 
-                    let within = if let Some(within) = within_tag {
-                        within.name.as_str().to_owned()
-                    } else {
-                        return Err(doc_comment.diagnostic("Function requires @within tag"));
-                    };
-
-                    let name = match variables.into_iter().next().unwrap() {
-                        ast::Var::Name(token) => Some(token.token().to_string()),
-                        ast::Var::Expression(var_expression) => {
-                            match var_expression.suffixes().next().unwrap() {
-                                ast::Suffix::Index(index) => match index {
-                                    ast::Index::Brackets {
-                                        brackets: _,
-                                        expression: ast::Expression::String(token_reference),
-                                    } => Some(token_reference.token().to_string()),
-                                    ast::Index::Dot { dot: _, name } => {
-                                        Some(name.token().to_string())
-                                    }
-                                    _ => None,
-                                },
-                                _ => None,
-                            }
-                        }
-                        _ => None,
-                    };
-
-                    if name.is_none() {
-                        return Err(doc_comment.diagnostic(
-                            "Explicitly specify a kind tag, like @function, @prop, or @class.",
-                        ));
-                    }
-
                     Ok(DocEntryKind::Function {
-                        name: name.unwrap(),
+                        name,
                         within,
                         function_type: FunctionType::Static,
                         function_source: Some(function_body.clone().into()),
                     })
                 }
-                _ => Err(doc_comment.diagnostic("Expression must be a function")),
+                _ => {
+                    let lua_type = match expression {
+                        ast::Expression::InterpolatedString(_) => "string",
+                        ast::Expression::TableConstructor(table) => &table.to_string(),
+                        ast::Expression::Number(_) => "number",
+                        ast::Expression::String(_) => "string",
+                        ast::Expression::Symbol(symbol) => match symbol.token().token_type() {
+                            tokenizer::TokenType::Symbol { symbol } => match symbol {
+                                tokenizer::Symbol::True => "boolean",
+                                tokenizer::Symbol::False => "boolean",
+                                tokenizer::Symbol::Nil => "nil",
+                                tokenizer::Symbol::Ellipsis => return Err(doc_comment.diagnostic("Ellipsis has no type; use a `@prop` tag.")),
+                                _ => unreachable!(),
+                            }
+                            _ => unreachable!(),
+                        }
+                        _ => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, or `nil`."))
+                    };
+
+                    Ok(DocEntryKind::Property {
+                        name,
+                        within,
+                        lua_type: Some(lua_type.to_owned())
+                    })
+                }
             }
         }
 
@@ -435,14 +462,17 @@ impl<'a> DocEntry<'a> {
                 )?),
                 all_tags,
             ),
-            DocEntryKind::Property { within, name } => (
-                DocEntry::Property(PropertyDocEntry::parse(DocEntryParseArguments {
-                    within: Some(within),
-                    name,
-                    desc,
-                    tags,
-                    source: doc_comment,
-                })?),
+            DocEntryKind::Property { within, name , lua_type} => (
+                DocEntry::Property(PropertyDocEntry::parse(
+                    DocEntryParseArguments {
+                        within: Some(within),
+                        name,
+                        desc,
+                        tags,
+                        source: doc_comment,
+                    },
+                    lua_type
+                )?),
                 all_tags,
             ),
             DocEntryKind::Type { within, name } => (
