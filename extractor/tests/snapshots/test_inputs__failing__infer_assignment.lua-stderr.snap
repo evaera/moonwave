@@ -33,11 +33,11 @@ error: Expression must be a function, a string, a table, a number, `true`, `fals
 22 │ --- @within InferAssignment
    │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
-error: Ellipsis has no type; use a `@prop` tag.
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
    ┌─ test-input/failing/infer_assignment.lua:27:1
    │
 27 │ --- @within InferAssignment
-   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Ellipsis has no type; use a `@prop` tag.
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
 
 error: Type assertion must contain names for all parameters; type #1 is missing a name.
    ┌─ test-input/failing/infer_assignment.lua:31:1

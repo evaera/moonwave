@@ -336,27 +336,32 @@ fn determine_kind(
                 }
                 _ => {
                     let lua_type = match expression {
-                        ast::Expression::InterpolatedString(_) => "string",
-                        ast::Expression::TableConstructor(table) => &table.to_string(),
-                        ast::Expression::Number(_) => "number",
-                        ast::Expression::String(_) => "string",
+                        ast::Expression::InterpolatedString(_) => Some("string".to_string()),
+                        ast::Expression::TableConstructor(table) => Some(table.to_string()),
+                        ast::Expression::Number(_) => Some("number".to_string()),
+                        ast::Expression::String(_) => Some("string".to_string()),
                         ast::Expression::Symbol(symbol) => match symbol.token().token_type() {
                             tokenizer::TokenType::Symbol { symbol } => match symbol {
-                                tokenizer::Symbol::True => "boolean",
-                                tokenizer::Symbol::False => "boolean",
-                                tokenizer::Symbol::Nil => "nil",
-                                tokenizer::Symbol::Ellipsis => return Err(doc_comment.diagnostic("Ellipsis has no type; use a `@prop` tag.")),
+                                tokenizer::Symbol::True => Some("boolean".to_string()),
+                                tokenizer::Symbol::False => Some("boolean".to_string()),
+                                tokenizer::Symbol::Nil => Some("nil".to_string()),
+                                tokenizer::Symbol::Ellipsis => None,
                                 _ => unreachable!(),
-                            }
+                            },
                             _ => unreachable!(),
-                        }
-                        _ => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion."))
+                        },
+                        _ => None,
+                    };
+
+                    let lua_type = match lua_type {
+                        Some(lua_type) => Some(lua_type.to_owned()),
+                        None => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion."))
                     };
 
                     Ok(DocEntryKind::Property {
                         name,
                         within,
-                        lua_type: Some(lua_type.to_owned()),
+                        lua_type,
                     })
                 }
             }
