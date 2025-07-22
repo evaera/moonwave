@@ -1,0 +1,54 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+---
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+  ┌─ test-input/failing/infer_assignment.lua:5:1
+  │
+5 │ --- @within InferAssignment
+  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+   ┌─ test-input/failing/infer_assignment.lua:9:1
+   │  
+ 9 │ ╭ --- @within InferAssignment
+10 │ │ --- Get it? Inside is an em dash, which can also be used for parenthetical clauses. A parenthetical symbol surrounded by parentheses 😹
+   │ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+   ┌─ test-input/failing/infer_assignment.lua:14:1
+   │
+14 │ --- @within InferAssignment
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+   ┌─ test-input/failing/infer_assignment.lua:18:1
+   │
+18 │ --- @within InferAssignment
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+   ┌─ test-input/failing/infer_assignment.lua:22:1
+   │
+22 │ --- @within InferAssignment
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: Ellipsis has no type; use a `@prop` tag.
+   ┌─ test-input/failing/infer_assignment.lua:27:1
+   │
+27 │ --- @within InferAssignment
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Ellipsis has no type; use a `@prop` tag.
+
+error: Type assertion must contain names for all parameters; type #1 is missing a name.
+   ┌─ test-input/failing/infer_assignment.lua:31:1
+   │
+31 │ --- @within InferAssignment
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Type assertion must contain names for all parameters; type #1 is missing a name.
+
+error: Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+   ┌─ test-input/failing/infer_assignment.lua:35:1
+   │
+35 │ --- @within InferAssignment
+   │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion.
+
+error: aborting due to diagnostic error

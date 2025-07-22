@@ -1,0 +1,131 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [
+      {
+        "name": "on_year_change",
+        "desc": "",
+        "params": [
+          {
+            "name": "year",
+            "desc": "",
+            "lua_type": "number"
+          }
+        ],
+        "returns": [],
+        "function_type": "static",
+        "source": {
+          "line": 21,
+          "path": ""
+        }
+      },
+      {
+        "name": "announce_message_async",
+        "desc": "",
+        "params": [
+          {
+            "name": "message",
+            "desc": "",
+            "lua_type": "string"
+          }
+        ],
+        "returns": [
+          {
+            "desc": "whether it was successful",
+            "lua_type": "boolean"
+          }
+        ],
+        "function_type": "static",
+        "yields": true,
+        "source": {
+          "line": 46,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [
+      {
+        "name": "world",
+        "desc": "",
+        "lua_type": "{\n\tgravity = 9.8,\n\ttime = \"relative\"\n}\n",
+        "source": {
+          "line": 6,
+          "path": ""
+        }
+      },
+      {
+        "name": "year",
+        "desc": "",
+        "lua_type": "number",
+        "source": {
+          "line": 13,
+          "path": ""
+        }
+      },
+      {
+        "name": "copyright",
+        "desc": "",
+        "lua_type": "string",
+        "source": {
+          "line": 17,
+          "path": ""
+        }
+      },
+      {
+        "name": "name",
+        "desc": "",
+        "lua_type": "string",
+        "source": {
+          "line": 28,
+          "path": ""
+        }
+      },
+      {
+        "name": "enabled",
+        "desc": "",
+        "lua_type": "boolean",
+        "source": {
+          "line": 32,
+          "path": ""
+        }
+      },
+      {
+        "name": "DEBUG",
+        "desc": "",
+        "lua_type": "boolean",
+        "source": {
+          "line": 36,
+          "path": ""
+        }
+      },
+      {
+        "name": "currently_spectating",
+        "desc": "",
+        "lua_type": "nil",
+        "source": {
+          "line": 40,
+          "path": ""
+        }
+      },
+      {
+        "name": "version",
+        "desc": "",
+        "lua_type": "string\n",
+        "source": {
+          "line": 50,
+          "path": ""
+        }
+      }
+    ],
+    "types": [],
+    "name": "InferAssignment",
+    "desc": "",
+    "source": {
+      "line": 2,
+      "path": ""
+    }
+  }
+]

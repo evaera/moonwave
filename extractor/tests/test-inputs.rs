@@ -27,6 +27,11 @@ fn indentation() -> anyhow::Result<()> {
 }
 
 #[test]
+fn infer_assignment() -> anyhow::Result<()> {
+    run_moonwave("passing/infer_assignment.lua", 0)
+}
+
+#[test]
 fn triple_dash() -> anyhow::Result<()> {
     run_moonwave("passing/triple_dash.lua", 0)
 }
@@ -103,6 +108,11 @@ fn missing_starting_newline() -> anyhow::Result<()> {
 #[test]
 fn failing_function_no_within() -> anyhow::Result<()> {
     run_moonwave("failing/function_no_within.lua", 1)
+}
+
+#[test]
+fn failing_infer_assignment() -> anyhow::Result<()> {
+    run_moonwave("failing/infer_assignment.lua", 1)
 }
 
 #[test]
