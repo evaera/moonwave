@@ -149,6 +149,76 @@ where
     Ok(())
 }
 
+fn determine_kind_assignment(name: String, within: String, expression: &ast::Expression, doc_comment: &DocComment) -> Result<DocEntryKind, Diagnostic> {
+    match expression {
+        ast::Expression::Function(function_box) => {
+            let function_body = &function_box.1;
+
+            Ok(DocEntryKind::Function {
+                name,
+                within,
+                function_type: FunctionType::Static,
+                function_source: Some(function_body.clone().into()),
+            })
+        }
+        ast::Expression::TypeAssertion { type_assertion, .. } => {
+            let type_info = type_assertion.cast_to();
+            match type_info {
+                ast::luau::TypeInfo::Callback { .. } => {
+                    Ok(DocEntryKind::Function {
+                        name,
+                        within,
+                        function_type: FunctionType::Static,
+                        function_source: match type_info.try_into() {
+                            Ok(function_source) => Some(function_source),
+                            Err(index) => return Err(doc_comment.diagnostic(format!(
+                                "Type assertion must contain names for all parameters; type #{} is missing a name.",
+                                index + 1
+                            )))}
+                    })
+                }
+                other => {
+                    Ok(DocEntryKind::Property {
+                        name,
+                        within,
+                        lua_type: Some(other.to_string()),
+                    })
+                }
+            }
+        }
+        _ => {
+            let lua_type = match expression {
+                ast::Expression::InterpolatedString(_) => Some("string".to_string()),
+                ast::Expression::TableConstructor(table) => Some(table.to_string()),
+                ast::Expression::Number(_) => Some("number".to_string()),
+                ast::Expression::String(_) => Some("string".to_string()),
+                ast::Expression::Symbol(symbol) => match symbol.token().token_type() {
+                    tokenizer::TokenType::Symbol { symbol } => match symbol {
+                        tokenizer::Symbol::True => Some("boolean".to_string()),
+                        tokenizer::Symbol::False => Some("boolean".to_string()),
+                        tokenizer::Symbol::Nil => Some("nil".to_string()),
+                        tokenizer::Symbol::Ellipsis => None,
+                        _ => unreachable!(),
+                    },
+                    _ => unreachable!(),
+                },
+                _ => None,
+            };
+
+            let lua_type = match lua_type {
+                Some(lua_type) => Some(lua_type.to_owned()),
+                None => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion."))
+            };
+
+            Ok(DocEntryKind::Property {
+                name,
+                within,
+                lua_type,
+            })
+        }
+    }
+}
+
 fn determine_kind(
     doc_comment: &DocComment,
     stmt: Option<&Stmt>,
@@ -235,27 +305,17 @@ fn determine_kind(
             assert_token_sequence_is_single(variables, doc_comment, "variable")?;
             assert_token_sequence_is_single(expressions, doc_comment, "expression")?;
 
-            match expressions.first().unwrap().value() {
-                ast::Expression::Function(function_box) => {
-                    let function_body = &function_box.1;
+            let expression = expressions.into_iter().next().unwrap();
 
-                    let within = if let Some(within) = within_tag {
-                        within.name.as_str().to_owned()
-                    } else {
-                        return Err(doc_comment.diagnostic("Function requires @within tag"));
-                    };
+            let name = variables.first().unwrap().value().token().to_string();
 
-                    let name = variables.first().unwrap().value().token().to_string();
+            let within = if let Some(within) = within_tag {
+                within.name.as_str().to_owned()
+            } else {
+                return Err(doc_comment.diagnostic("Local assignment requires @within tag."));
+            };
 
-                    Ok(DocEntryKind::Function {
-                        name,
-                        within,
-                        function_type: FunctionType::Static,
-                        function_source: Some(function_body.clone().into()),
-                    })
-                }
-                _ => Err(doc_comment.diagnostic("Expression must be a function")),
-            }
+            determine_kind_assignment(name, within, expression, doc_comment)
         }
         Some(Stmt::Assignment(assignment)) => {
             let expressions = assignment.expressions();
@@ -302,7 +362,7 @@ fn determine_kind(
             } else if !parts.is_empty() {
                 parts.join(".")
             } else {
-                return Err(doc_comment.diagnostic("Assignment requires @within tag."));
+                return Err(doc_comment.diagnostic("Assignment requires @within tag or a qualified name."));
             };
 
             let name = match name {
@@ -312,73 +372,7 @@ fn determine_kind(
                 ))
             };
 
-            match expression {
-                ast::Expression::Function(function_box) => {
-                    let function_body = &function_box.1;
-
-                    Ok(DocEntryKind::Function {
-                        name,
-                        within,
-                        function_type: FunctionType::Static,
-                        function_source: Some(function_body.clone().into()),
-                    })
-                }
-                ast::Expression::TypeAssertion { type_assertion, .. } => {
-                    let type_info = type_assertion.cast_to();
-                    match type_info {
-                        ast::luau::TypeInfo::Callback { .. } => {
-                            Ok(DocEntryKind::Function {
-                                name,
-                                within,
-                                function_type: FunctionType::Static,
-                                function_source: match type_info.try_into() {
-                                    Ok(function_source) => Some(function_source),
-                                    Err(index) => return Err(doc_comment.diagnostic(format!(
-                                        "Type assertion must contain names for all parameters; type #{} is missing a name.",
-                                        index + 1
-                                    )))}
-                            })
-                        }
-                        other => {
-                            Ok(DocEntryKind::Property {
-                                name,
-                                within,
-                                lua_type: Some(other.to_string()),
-                            })
-                        }
-                    }
-                }
-                _ => {
-                    let lua_type = match expression {
-                        ast::Expression::InterpolatedString(_) => Some("string".to_string()),
-                        ast::Expression::TableConstructor(table) => Some(table.to_string()),
-                        ast::Expression::Number(_) => Some("number".to_string()),
-                        ast::Expression::String(_) => Some("string".to_string()),
-                        ast::Expression::Symbol(symbol) => match symbol.token().token_type() {
-                            tokenizer::TokenType::Symbol { symbol } => match symbol {
-                                tokenizer::Symbol::True => Some("boolean".to_string()),
-                                tokenizer::Symbol::False => Some("boolean".to_string()),
-                                tokenizer::Symbol::Nil => Some("nil".to_string()),
-                                tokenizer::Symbol::Ellipsis => None,
-                                _ => unreachable!(),
-                            },
-                            _ => unreachable!(),
-                        },
-                        _ => None,
-                    };
-
-                    let lua_type = match lua_type {
-                        Some(lua_type) => Some(lua_type.to_owned()),
-                        None => return Err(doc_comment.diagnostic("Expression must be a function, a string, a table, a number, `true`, `false`, `nil`, or a type assertion."))
-                    };
-
-                    Ok(DocEntryKind::Property {
-                        name,
-                        within,
-                        lua_type,
-                    })
-                }
-            }
+            determine_kind_assignment(name, within, expression, doc_comment)
         }
 
         _ => Err(doc_comment
