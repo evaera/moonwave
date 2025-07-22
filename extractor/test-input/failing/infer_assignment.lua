@@ -20,7 +20,7 @@ InferAssignment.null = string.char(0)
 
 -- IfExpression
 --- @within InferAssignment
-InferAssignment.uh_oh = InferAssignment.book1984 == 5
+InferAssignment.uh_oh = if InferAssignment.book1984 == 5 then "gg" else "yippee!"
 
 -- Symbol > Ellipsis
 -- `...` is populated with program arguments in the demo Luau runtime.
