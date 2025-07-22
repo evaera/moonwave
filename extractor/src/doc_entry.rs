@@ -149,7 +149,12 @@ where
     Ok(())
 }
 
-fn determine_kind_assignment(name: String, within: String, expression: &ast::Expression, doc_comment: &DocComment) -> Result<DocEntryKind, Diagnostic> {
+fn determine_kind_assignment(
+    name: String,
+    within: String,
+    expression: &ast::Expression,
+    doc_comment: &DocComment,
+) -> Result<DocEntryKind, Diagnostic> {
     match expression {
         ast::Expression::Function(function_box) => {
             let function_body = &function_box.1;
@@ -343,10 +348,12 @@ fn determine_kind(
                                     expression: ast::Expression::String(string),
                                     ..
                                 } => parts.push(string.token().to_string()),
-                                ast::Index::Dot { name, .. } => parts.push(name.token().to_string()),
-                                _ => ()
-                            }
-                            _ => ()
+                                ast::Index::Dot { name, .. } => {
+                                    parts.push(name.token().to_string())
+                                }
+                                _ => (),
+                            },
+                            _ => (),
                         }
                     }
 
@@ -354,7 +361,7 @@ fn determine_kind(
                 }
                 _ => Vec::new(),
             };
-            
+
             let name = parts.pop();
 
             let within = if let Some(within) = within_tag {
@@ -362,14 +369,18 @@ fn determine_kind(
             } else if !parts.is_empty() {
                 parts.join(".")
             } else {
-                return Err(doc_comment.diagnostic("Assignment requires @within tag or a qualified name."));
+                return Err(
+                    doc_comment.diagnostic("Assignment requires @within tag or a qualified name.")
+                );
             };
 
             let name = match name {
                 Some(name) => name,
-                None => return Err(doc_comment.diagnostic(
-                    "Explicitly specify a kind tag, like @function, @prop, or @class.",
-                ))
+                None => {
+                    return Err(doc_comment.diagnostic(
+                        "Explicitly specify a kind tag, like @function, @prop, or @class.",
+                    ))
+                }
             };
 
             determine_kind_assignment(name, within, expression, doc_comment)
