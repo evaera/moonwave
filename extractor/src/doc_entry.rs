@@ -266,37 +266,51 @@ fn determine_kind(
 
             let expression = expressions.into_iter().next().unwrap();
 
+            let mut parts = match variables.into_iter().next().unwrap() {
+                ast::Var::Name(token) => vec![token.token().to_string()],
+                ast::Var::Expression(var_expression) => {
+                    let mut parts = Vec::new();
+
+                    match var_expression.prefix() {
+                        ast::Prefix::Name(token) => parts.push(token.token().to_string()),
+                        _ => (),
+                    };
+
+                    for suffix in var_expression.suffixes() {
+                        match suffix {
+                            ast::Suffix::Index(index) => match index {
+                                ast::Index::Brackets {
+                                    expression: ast::Expression::String(string),
+                                    ..
+                                } => parts.push(string.token().to_string()),
+                                ast::Index::Dot { name, .. } => parts.push(name.token().to_string()),
+                                _ => ()
+                            }
+                            _ => ()
+                        }
+                    }
+
+                    parts
+                }
+                _ => Vec::new(),
+            };
+            
+            let name = parts.pop();
+
             let within = if let Some(within) = within_tag {
                 within.name.as_str().to_owned()
+            } else if !parts.is_empty() {
+                parts.join(".")
             } else {
-                return Err(doc_comment.diagnostic("Function requires @within tag"));
+                return Err(doc_comment.diagnostic("Assignment requires @within tag."));
             };
 
-            let name = match variables.into_iter().next().unwrap() {
-                ast::Var::Name(token) => Some(token.token().to_string()),
-                ast::Var::Expression(var_expression) => {
-                    match var_expression.suffixes().next().unwrap() {
-                        ast::Suffix::Index(index) => match index {
-                            ast::Index::Brackets {
-                                brackets: _,
-                                expression: ast::Expression::String(token_reference),
-                            } => Some(token_reference.token().to_string()),
-                            ast::Index::Dot { dot: _, name } => Some(name.token().to_string()),
-                            _ => None,
-                        },
-                        _ => None,
-                    }
-                }
-                _ => None,
-            };
-
-            if name.is_none() {
-                return Err(doc_comment.diagnostic(
+            let name = match name {
+                Some(name) => name,
+                None => return Err(doc_comment.diagnostic(
                     "Explicitly specify a kind tag, like @function, @prop, or @class.",
-                ));
-            }
-
-            let name = name.unwrap();
+                ))
+            };
 
             match expression {
                 ast::Expression::Function(function_box) => {
