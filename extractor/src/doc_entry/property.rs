@@ -63,7 +63,7 @@ impl<'a> PropertyDocEntry<'a> {
             name,
             desc,
             source,
-            lua_type: lua_type.unwrap_or_else(String::new),
+            lua_type: lua_type.unwrap_or_default(),
             since: None,
             deprecated: None,
             within: within.unwrap(),
