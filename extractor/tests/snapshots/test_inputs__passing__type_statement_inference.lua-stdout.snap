@@ -12,8 +12,8 @@ expression: stdout
         "desc": "Tables get converted to interfaces.",
         "fields": [
           {
-            "name": "id",
-            "lua_type": "number",
+            "name": "\tid",
+            "lua_type": "number\n",
             "desc": ""
           }
         ],
@@ -25,7 +25,7 @@ expression: stdout
       {
         "name": "pet",
         "desc": "Everything else uses a basic string representation.",
-        "lua_type": "\"cat\"|\"dog\"",
+        "lua_type": "\"cat\" | \"dog\"\n",
         "source": {
           "line": 12,
           "path": ""
@@ -34,7 +34,7 @@ expression: stdout
       {
         "name": "petData",
         "desc": "Anything not strictly a table (union, intersection, et cetera) is not marked as an interface.",
-        "lua_type": "baseData&{pet:pet}",
+        "lua_type": "baseData & {\n\tpet: pet\n}\n",
         "source": {
           "line": 16,
           "path": ""
@@ -43,7 +43,7 @@ expression: stdout
       {
         "name": "response",
         "desc": "Exported types work the same as non exported.",
-        "lua_type": "petData?",
+        "lua_type": "petData?\n",
         "source": {
           "line": 22,
           "path": ""
@@ -54,13 +54,13 @@ expression: stdout
         "desc": "Exported interfaces work the same as non exported.",
         "fields": [
           {
-            "name": "method",
+            "name": "\tmethod",
             "lua_type": "\"GET\"",
             "desc": ""
           },
           {
-            "name": "body",
-            "lua_type": "petData?",
+            "name": "\tbody",
+            "lua_type": "petData?\n",
             "desc": ""
           }
         ],
@@ -103,18 +103,18 @@ expression: stdout
         "desc": "Trivia is used to add field descriptions.",
         "fields": [
           {
-            "name": "entries",
+            "name": "\tentries",
             "lua_type": "{petData}",
             "desc": "Maximum size of 100."
           },
           {
-            "name": "size",
+            "name": "\n\t\n\tsize",
             "lua_type": "number",
             "desc": "Current size of `entries`."
           },
           {
-            "name": "lastAdded",
-            "lua_type": "number",
+            "name": "\n\tlastAdded",
+            "lua_type": "number \n",
             "desc": "Unix timestamp."
           }
         ],
@@ -128,8 +128,8 @@ expression: stdout
         "desc": "Extra test for leading unpunctuated trivia.",
         "fields": [
           {
-            "name": "lastSizeChanged",
-            "lua_type": "number",
+            "name": "\t\n\tlastSizeChanged",
+            "lua_type": "number\n",
             "desc": "Unix timestamp. Changes for insertions and deletions."
           }
         ],
@@ -143,13 +143,13 @@ expression: stdout
         "desc": "`@field` can overwrite information on existing fields.",
         "fields": [
           {
-            "name": "get",
+            "name": "\tget",
             "lua_type": "(id: number) -> responseFull",
             "desc": "Cached in [petStorage]."
           },
           {
-            "name": "set",
-            "lua_type": "(id:number,data:petData)->()",
+            "name": "\tset",
+            "lua_type": "(id: number, data: petData) -> () \n",
             "desc": "`id` must match `data.id`"
           }
         ],
