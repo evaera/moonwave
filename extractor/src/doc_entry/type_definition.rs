@@ -307,7 +307,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 "{}{}{}{}",
                 token_reference_to_string(typeof_token),
                 token_reference_to_string(start),
-                inner,
+                inner, // can contain comment trivia
                 token_reference_to_string(end)
             ))
         }
