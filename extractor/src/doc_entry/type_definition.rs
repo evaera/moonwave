@@ -41,10 +41,7 @@ fn token_reference_to_string(token_reference: &TokenReference) -> String {
 
     let leading = token_reference
         .leading_trivia()
-        .filter(|x| match x.token_kind() {
-            tokenizer::TokenKind::Whitespace => true,
-            _ => false,
-        })
+        .filter(|x| matches!(x.token_kind(), tokenizer::TokenKind::Whitespace))
         .map(|t| t.to_string())
         .collect::<String>();
 
@@ -54,10 +51,7 @@ fn token_reference_to_string(token_reference: &TokenReference) -> String {
 
     let trailing = token_reference
         .trailing_trivia()
-        .filter(|x| match x.token_kind() {
-            tokenizer::TokenKind::Whitespace => true,
-            _ => false,
-        })
+        .filter(|x| matches!(x.token_kind(), tokenizer::TokenKind::Whitespace))
         .map(|t| t.to_string())
         .collect::<String>();
 
