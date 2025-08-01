@@ -81,6 +81,16 @@ fn anomymous_function_assignment() -> anyhow::Result<()> {
 }
 
 #[test]
+fn type_statement_inference() -> anyhow::Result<()> {
+    run_moonwave("passing/type_statement_inference.lua", 0)
+}
+
+#[test]
+fn missing_fields() -> anyhow::Result<()> {
+    run_moonwave("failing/missing_fields.lua", 1)
+}
+
+#[test]
 fn failing_anomymous_function_assignment() -> anyhow::Result<()> {
     run_moonwave("failing/anonymous_function_assignment.lua", 1)
 }
