@@ -79,15 +79,13 @@ fn gen_param_info_to_string(gen_param_info: &GenericParameterInfo) -> Option<Str
 }
 
 fn gen_decl_param_to_string(gen_decl_param: &GenericDeclarationParameter) -> Option<String> {
-    let parameter_string = gen_param_info_to_string(gen_decl_param.parameter())?;
-    let equals_string = optional_token_to_string(gen_decl_param.equals());
     let type_string = match gen_decl_param.default_type() {
         Some(parameter) => type_info_to_string(parameter)?,
         None => String::new(),
     };
     Some(format!(
         "{}{}{}",
-        parameter_string, equals_string, type_string
+        gen_param_info_to_string(gen_decl_param.parameter())?, optional_token_to_string(gen_decl_param.equals()), type_string
     ))
 }
 
@@ -106,11 +104,10 @@ fn punctuated_generics_to_string(
 
 fn gen_decl_to_string(gen_decl: &GenericDeclaration) -> Option<String> {
     let (start, end) = gen_decl.arrows().tokens();
-    let generics_string = punctuated_generics_to_string(gen_decl.generics())?;
     Some(format!(
         "{}{}{}",
         token_reference_to_string(start),
-        generics_string,
+        punctuated_generics_to_string(gen_decl.generics())?,
         token_reference_to_string(end)
     ))
 }
@@ -161,12 +158,11 @@ fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<St
             generics,
         } => {
             let (start, end) = arrows.tokens();
-            let generics_string = punctuated_type_info_to_string(generics)?;
             Some(format!(
                 "{}{}{}{}",
                 token_reference_to_string(base),
                 token_reference_to_string(start),
-                generics_string,
+                punctuated_type_info_to_string(generics)?,
                 token_reference_to_string(end)
             ))
         }
@@ -190,21 +186,18 @@ fn type_argument_to_string(type_argument: &TypeArgument) -> Option<String> {
         }
         None => String::new(),
     };
-    let type_string = type_info_to_string(type_argument.type_info())?;
-    Some(format!("{}{}", name_string, type_string))
+
+    Some(format!("{}{}", name_string, type_info_to_string(type_argument.type_info())?))
 }
 
 /// Converts a TypeField to a String representation, excluding trivia.
 fn type_field_to_string(type_field: &TypeField) -> Option<String> {
-    let access = optional_token_to_string(type_field.access());
-    let key = type_field_key_to_string(type_field.key())?;
-    let value = type_info_to_string(type_field.value())?;
     Some(format!(
         "{}{}{}{}",
-        access,
-        key,
+        optional_token_to_string(type_field.access()),
+        type_field_key_to_string(type_field.key())?,
         token_reference_to_string(type_field.colon_token()),
-        value
+        type_info_to_string(type_field.value())?
     ))
 }
 
@@ -229,11 +222,10 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             type_info,
         } => {
             let (start, end) = braces.tokens();
-            let access_string = optional_token_to_string(access.as_ref());
             Some(format!(
                 "{}{}{}{}",
                 token_reference_to_string(start),
-                access_string,
+                optional_token_to_string(access.as_ref()),
                 type_info,
                 token_reference_to_string(end)
             ))
@@ -253,16 +245,14 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 None => String::new(),
             };
             let (start, end) = parentheses.tokens();
-            let arguments_string = punctuated_type_argument_to_string(arguments)?;
-            let return_type_string = type_info_to_string(return_type)?;
             Some(format!(
                 "{}{}{}{}{}{}",
                 generics_string,
                 token_reference_to_string(start),
-                arguments_string,
+                punctuated_type_argument_to_string(arguments)?,
                 token_reference_to_string(end),
                 token_reference_to_string(arrow),
-                return_type_string
+                type_info_to_string(return_type)?
             ))
         }
         TypeInfo::Generic {
@@ -271,12 +261,11 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             generics,
         } => {
             let (start, end) = arrows.tokens();
-            let generics_string = punctuated_type_info_to_string(generics)?;
             Some(format!(
                 "{}{}{}{}",
                 token_reference_to_string(base),
                 token_reference_to_string(start),
-                generics_string,
+                punctuated_type_info_to_string(generics)?,
                 token_reference_to_string(end)
             ))
         }
@@ -284,34 +273,29 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             Some(format!("{}{}", token_reference_to_string(name), token_reference_to_string(ellipsis)))
         }
         TypeInfo::Intersection(intersection) => {
-            let leading_string = optional_token_to_string(intersection.leading());
-            let types_string = punctuated_type_info_to_string(intersection.types())?;
-            Some(format!("{}{}", leading_string, types_string))
+            Some(format!("{}{}", optional_token_to_string(intersection.leading()), punctuated_type_info_to_string(intersection.types())?))
         }
         TypeInfo::Module {
             module,
             punctuation,
             type_info,
         } => {
-            let module_index_string = indexed_type_info_to_string(type_info.as_ref())?;
             Some(format!(
                 "{}{}{}",
                 token_reference_to_string(module),
                 token_reference_to_string(punctuation),
-                module_index_string
+                indexed_type_info_to_string(type_info.as_ref())?
             ))
         }
         TypeInfo::Optional {
             base,
             question_mark,
         } => {
-            let base_string = type_info_to_string(base.as_ref())?;
-            Some(format!("{}{}", base_string, token_reference_to_string(question_mark)))
+            Some(format!("{}{}", type_info_to_string(base.as_ref())?, token_reference_to_string(question_mark)))
         }
         TypeInfo::Table { braces, fields } => {
             let (start, end) = braces.tokens();
-            let fields_string = punctuated_type_field_to_string(fields)?;
-            Some(format!("{}{}{}", token_reference_to_string(start), fields_string, token_reference_to_string(end)))
+            Some(format!("{}{}{}", token_reference_to_string(start), punctuated_type_field_to_string(fields)?, token_reference_to_string(end)))
         }
         TypeInfo::Typeof {
             typeof_token,
@@ -329,20 +313,16 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
         }
         TypeInfo::Tuple { parentheses, types } => {
             let (start, end) = parentheses.tokens();
-            let types_string = punctuated_type_info_to_string(types)?;
-            Some(format!("{}{}{}", token_reference_to_string(start), types_string, token_reference_to_string(end)))
+            Some(format!("{}{}{}", token_reference_to_string(start), punctuated_type_info_to_string(types)?, token_reference_to_string(end)))
         }
         TypeInfo::Union(union) => {
-            let leading_string = optional_token_to_string(union.leading());
-            let types_string = punctuated_type_info_to_string(union.types())?;
-            Some(format!("{}{}", leading_string, types_string))
+            Some(format!("{}{}", optional_token_to_string(union.leading()), punctuated_type_info_to_string(union.types())?))
         }
         TypeInfo::Variadic {
             ellipsis,
             type_info,
         } => {
-            let type_string = type_info_to_string(type_info.as_ref())?;
-            Some(format!("{}{}", token_reference_to_string(ellipsis), type_string))
+            Some(format!("{}{}", token_reference_to_string(ellipsis), type_info_to_string(type_info.as_ref())?))
         }
         TypeInfo::VariadicPack { ellipsis, name } => {
             Some(format!("{}{}", token_reference_to_string(ellipsis), token_reference_to_string(name)))
