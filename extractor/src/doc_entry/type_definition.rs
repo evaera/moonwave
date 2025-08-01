@@ -206,7 +206,7 @@ fn type_field_key_to_string(field_key: &TypeFieldKey) -> Option<String> {
     match field_key {
         TypeFieldKey::IndexSignature { brackets, inner } => {
             let (start, end) = brackets.tokens();
-            Some(format!("{}{}{}", token_reference_to_string(start), inner, token_reference_to_string(end)))
+            Some(format!("{}{}{}", token_reference_to_string(start), type_info_to_string(inner)?, token_reference_to_string(end)))
         }
         TypeFieldKey::Name(token_reference) => Some(token_reference_to_string(token_reference)),
         _ => None,
@@ -226,7 +226,7 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
                 "{}{}{}{}",
                 token_reference_to_string(start),
                 optional_token_to_string(access.as_ref()),
-                type_info,
+                type_info_to_string(type_info)?,
                 token_reference_to_string(end)
             ))
         }
