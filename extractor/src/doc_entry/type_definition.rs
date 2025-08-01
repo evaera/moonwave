@@ -13,7 +13,7 @@ use full_moon::{
         punctuated::Punctuated,
     },
     node::Node,
-    tokenizer::{TokenReference, TokenType},
+    tokenizer::{self, TokenReference, TokenType},
 };
 use serde::Serialize;
 
@@ -36,11 +36,43 @@ impl<'a> From<FieldTag<'a>> for Field {
     }
 }
 
+fn token_reference_to_string(token_reference: &TokenReference) -> String {
+    let mut string = String::new();
+    
+    let leading = token_reference.leading_trivia()
+        .filter(|x| match x.token_kind() {
+            tokenizer::TokenKind::Whitespace => {
+                true
+            },
+            _ => false,
+        })
+        .map(|t| t.to_string())
+        .collect::<String>();
+    
+    string.push_str(leading.as_str());
+
+    string.push_str(&token_reference.token().to_string());
+
+    let trailing = token_reference.trailing_trivia()
+        .filter(|x| match x.token_kind() {
+            tokenizer::TokenKind::Whitespace => {
+                true
+            },
+            _ => false,
+        })
+        .map(|t| t.to_string())
+        .collect::<String>();
+    
+    string.push_str(trailing.as_str());
+
+    string
+}
+
 fn gen_param_info_to_string(gen_param_info: &GenericParameterInfo) -> Option<String> {
     match gen_param_info {
-        GenericParameterInfo::Name(name) => Some(name.token().to_string()),
+        GenericParameterInfo::Name(name) => Some(token_reference_to_string(name)),
         GenericParameterInfo::Variadic { name, ellipsis } => {
-            Some(format!("{}{}", name.token(), ellipsis.token()))
+            Some(format!("{}{}", token_reference_to_string(name), token_reference_to_string(ellipsis)))
         }
         _ => None,
     }
@@ -77,9 +109,9 @@ fn gen_decl_to_string(gen_decl: &GenericDeclaration) -> Option<String> {
     let generics_string = punctuated_generics_to_string(gen_decl.generics())?;
     Some(format!(
         "{}{}{}",
-        start.token(),
+        token_reference_to_string(start),
         generics_string,
-        end.token()
+        token_reference_to_string(end)
     ))
 }
 
@@ -122,7 +154,7 @@ fn punctuated_type_info_to_string(punctuated: &Punctuated<TypeInfo>) -> Option<S
 /// Converts an IndexedTypeInfo to a String representation, excluding trivia.
 fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<String> {
     match indexed_type_info {
-        IndexedTypeInfo::Basic(basic) => Some(basic.token().to_string()),
+        IndexedTypeInfo::Basic(basic) => Some(token_reference_to_string(basic)),
         IndexedTypeInfo::Generic {
             base,
             arrows,
@@ -132,10 +164,10 @@ fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<St
             let generics_string = punctuated_type_info_to_string(generics)?;
             Some(format!(
                 "{}{}{}{}",
-                base.token(),
-                start.token(),
+                token_reference_to_string(base),
+                token_reference_to_string(start),
                 generics_string,
-                end.token()
+                token_reference_to_string(end)
             ))
         }
         _ => None,
@@ -145,7 +177,7 @@ fn indexed_type_info_to_string(indexed_type_info: &IndexedTypeInfo) -> Option<St
 /// Converts an optional TokenReference to a String representation, excluding trivia.
 fn optional_token_to_string(token: Option<&TokenReference>) -> String {
     match token {
-        Some(token) => token.token().to_string(),
+        Some(token) => token_reference_to_string(token),
         None => String::new(),
     }
 }
@@ -154,7 +186,7 @@ fn optional_token_to_string(token: Option<&TokenReference>) -> String {
 fn type_argument_to_string(type_argument: &TypeArgument) -> Option<String> {
     let name_string = match type_argument.name() {
         Some((identifier, colon)) => {
-            format!("{}{}", identifier.token(), colon.token())
+            format!("{}{}", token_reference_to_string(identifier), token_reference_to_string(colon))
         }
         None => String::new(),
     };
@@ -171,7 +203,7 @@ fn type_field_to_string(type_field: &TypeField) -> Option<String> {
         "{}{}{}{}",
         access,
         key,
-        type_field.colon_token().token(),
+        token_reference_to_string(type_field.colon_token()),
         value
     ))
 }
@@ -181,9 +213,9 @@ fn type_field_key_to_string(field_key: &TypeFieldKey) -> Option<String> {
     match field_key {
         TypeFieldKey::IndexSignature { brackets, inner } => {
             let (start, end) = brackets.tokens();
-            Some(format!("{}{}{}", start.token(), inner, end.token()))
+            Some(format!("{}{}{}", token_reference_to_string(start), inner, token_reference_to_string(end)))
         }
-        TypeFieldKey::Name(token_reference) => Some(token_reference.token().to_string()),
+        TypeFieldKey::Name(token_reference) => Some(token_reference_to_string(token_reference)),
         _ => None,
     }
 }
@@ -200,15 +232,15 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             let access_string = optional_token_to_string(access.as_ref());
             Some(format!(
                 "{}{}{}{}",
-                start.token(),
+                token_reference_to_string(start),
                 access_string,
                 type_info,
-                end.token()
+                token_reference_to_string(end)
             ))
         }
-        TypeInfo::Basic(basic) => Some(basic.token().to_string()),
-        TypeInfo::String(string) => Some(string.token().to_string()),
-        TypeInfo::Boolean(boolean) => Some(boolean.token().to_string()),
+        TypeInfo::Basic(basic) => Some(token_reference_to_string(basic)),
+        TypeInfo::String(string) => Some(token_reference_to_string(string)),
+        TypeInfo::Boolean(boolean) => Some(token_reference_to_string(boolean)),
         TypeInfo::Callback {
             generics,
             parentheses,
@@ -226,10 +258,10 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             Some(format!(
                 "{}{}{}{}{}{}",
                 generics_string,
-                start.token(),
+                token_reference_to_string(start),
                 arguments_string,
-                end.token(),
-                arrow.token(),
+                token_reference_to_string(end),
+                token_reference_to_string(arrow),
                 return_type_string
             ))
         }
@@ -242,14 +274,14 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             let generics_string = punctuated_type_info_to_string(generics)?;
             Some(format!(
                 "{}{}{}{}",
-                base.token(),
-                start.token(),
+                token_reference_to_string(base),
+                token_reference_to_string(start),
                 generics_string,
-                end.token()
+                token_reference_to_string(end)
             ))
         }
         TypeInfo::GenericPack { name, ellipsis } => {
-            Some(format!("{}{}", name.token(), ellipsis.token()))
+            Some(format!("{}{}", token_reference_to_string(name), token_reference_to_string(ellipsis)))
         }
         TypeInfo::Intersection(intersection) => {
             let leading_string = optional_token_to_string(intersection.leading());
@@ -264,8 +296,8 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             let module_index_string = indexed_type_info_to_string(type_info.as_ref())?;
             Some(format!(
                 "{}{}{}",
-                module.token(),
-                punctuation.token(),
+                token_reference_to_string(module),
+                token_reference_to_string(punctuation),
                 module_index_string
             ))
         }
@@ -274,12 +306,12 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             question_mark,
         } => {
             let base_string = type_info_to_string(base.as_ref())?;
-            Some(format!("{}{}", base_string, question_mark.token()))
+            Some(format!("{}{}", base_string, token_reference_to_string(question_mark)))
         }
         TypeInfo::Table { braces, fields } => {
             let (start, end) = braces.tokens();
             let fields_string = punctuated_type_field_to_string(fields)?;
-            Some(format!("{}{}{}", start.token(), fields_string, end.token()))
+            Some(format!("{}{}{}", token_reference_to_string(start), fields_string, token_reference_to_string(end)))
         }
         TypeInfo::Typeof {
             typeof_token,
@@ -289,16 +321,16 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             let (start, end) = parentheses.tokens();
             Some(format!(
                 "{}{}{}{}",
-                typeof_token.token(),
-                start.token(),
+                token_reference_to_string(typeof_token),
+                token_reference_to_string(start),
                 inner,
-                end.token()
+                token_reference_to_string(end)
             ))
         }
         TypeInfo::Tuple { parentheses, types } => {
             let (start, end) = parentheses.tokens();
             let types_string = punctuated_type_info_to_string(types)?;
-            Some(format!("{}{}{}", start.token(), types_string, end.token()))
+            Some(format!("{}{}{}", token_reference_to_string(start), types_string, token_reference_to_string(end)))
         }
         TypeInfo::Union(union) => {
             let leading_string = optional_token_to_string(union.leading());
@@ -310,10 +342,10 @@ fn type_info_to_string(type_info: &TypeInfo) -> Option<String> {
             type_info,
         } => {
             let type_string = type_info_to_string(type_info.as_ref())?;
-            Some(format!("{}{}", ellipsis.token(), type_string))
+            Some(format!("{}{}", token_reference_to_string(ellipsis), type_string))
         }
         TypeInfo::VariadicPack { ellipsis, name } => {
-            Some(format!("{}{}", ellipsis.token(), name.token()))
+            Some(format!("{}{}", token_reference_to_string(ellipsis), token_reference_to_string(name)))
         }
         _ => None,
     }
@@ -453,7 +485,7 @@ impl<'a> TypeDocEntry<'a> {
                         if let Some(found) = doc_entry
                             .fields
                             .iter_mut()
-                            .find(|existing_field| field_tag.name.as_str() == existing_field.name)
+                            .find(|existing_field| field_tag.name.as_str() == existing_field.name.trim())
                         {
                             if !field_tag.lua_type.is_empty() {
                                 found.lua_type = field_tag.lua_type.to_string();
