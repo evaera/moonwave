@@ -69,34 +69,62 @@ function parseSectionalClassOrder(content, classOrder, filteredContent) {
   filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
 
   const listedNames = []
-
   const listedSidebar = []
+
   classOrder.forEach((element) => {
-    const namesWithTags = filteredContent
-      .filter((luaClass) =>
-        luaClass.tags ? luaClass.tags.includes(element.tag) : false
+    if (element.items && Array.isArray(element.items)) {
+      // Handle both direct classes and nested items
+      const directClasses = element.classes || []
+      const directClassItems = mapLinksByName(nameSet, directClasses)
+
+      const childItems = processNestedItems(
+        element.items,
+        nameSet,
+        filteredContent,
+        listedNames
       )
-      .map((luaClass) => luaClass.name)
-    const namesIncludedInClasses = element.classes || []
 
-    const tagsItems = mapLinksByName(nameSet, namesWithTags)
-    const classesItems = mapLinksByName(nameSet, namesIncludedInClasses)
+      // Combine direct classes with nested items
+      const allItems = [...directClassItems, ...childItems]
 
-    if (element.section) {
       listedSidebar.push({
         type: "category",
         label: element.section,
         collapsible: true,
         collapsed: element.collapsed ?? true,
-        items: [...classesItems, ...tagsItems],
+        items: allItems,
       })
-    } else {
-      const toPush = [...classesItems, ...tagsItems]
-      listedSidebar.push(...toPush)
-    }
 
-    const toPush = [...namesWithTags, ...namesIncludedInClasses]
-    listedNames.push(...toPush)
+      // Add direct classes to listed names
+      listedNames.push(...directClasses)
+    } else {
+      // Handle sections without nested items (existing logic)
+      const namesWithTags = filteredContent
+        .filter((luaClass) =>
+          luaClass.tags ? luaClass.tags.includes(element.tag) : false
+        )
+        .map((luaClass) => luaClass.name)
+      const namesIncludedInClasses = element.classes || []
+
+      const tagsItems = mapLinksByName(nameSet, namesWithTags)
+      const classesItems = mapLinksByName(nameSet, namesIncludedInClasses)
+
+      if (element.section) {
+        listedSidebar.push({
+          type: "category",
+          label: element.section,
+          collapsible: true,
+          collapsed: element.collapsed ?? true,
+          items: [...classesItems, ...tagsItems],
+        })
+      } else {
+        const toPush = [...classesItems, ...tagsItems]
+        listedSidebar.push(...toPush)
+      }
+
+      const toPush = [...namesWithTags, ...namesIncludedInClasses]
+      listedNames.push(...toPush)
+    }
   })
 
   const unlistedSidebar = content
@@ -130,6 +158,65 @@ function parseClassOrder(content, classOrder, filteredContent) {
     // Handles cases where classOrder is assigned via TOML tables
     return parseSectionalClassOrder(content, classOrder, filteredContent)
   }
+}
+
+function processNestedItems(items, nameSet, filteredContent, listedNames) {
+  const result = []
+
+  items.forEach((item) => {
+    // If item has a nested section
+    if (item.section) {
+      const childItems = []
+
+      // Handle classes directly under this section
+      if (item.classes && Array.isArray(item.classes)) {
+        const classesItems = mapLinksByName(nameSet, item.classes)
+        childItems.push(...classesItems)
+        listedNames.push(...item.classes)
+      }
+
+      // Handle tagged classes
+      if (item.tag) {
+        const namesWithTags = filteredContent
+          .filter((luaClass) =>
+            luaClass.tags ? luaClass.tags.includes(item.tag) : false
+          )
+          .map((luaClass) => luaClass.name)
+
+        const tagsItems = mapLinksByName(nameSet, namesWithTags)
+        childItems.push(...tagsItems)
+        listedNames.push(...namesWithTags)
+      }
+
+      // Handle further nested items recursively
+      if (item.items && Array.isArray(item.items)) {
+        const nestedItems = processNestedItems(
+          item.items,
+          nameSet,
+          filteredContent,
+          listedNames
+        )
+        childItems.push(...nestedItems)
+      }
+
+      // Add this section to the result
+      result.push({
+        type: "category",
+        label: item.section,
+        collapsible: true,
+        collapsed: item.collapsed ?? true,
+        items: childItems,
+      })
+    }
+    // If item just has classes (no section)
+    else if (item.classes && Array.isArray(item.classes)) {
+      const classesItems = mapLinksByName(nameSet, item.classes)
+      result.push(...classesItems)
+      listedNames.push(...item.classes)
+    }
+  })
+
+  return result
 }
 
 function parseApiCategories(luaClass, apiCategories) {
@@ -257,6 +344,54 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
   }
 
   return typeLinks
+}
+
+function validateNestedItems(items, path) {
+  items.forEach((item, index) => {
+    const currentPath = `${path}[${index}]`
+
+    // Validate section name
+    if (item.section && typeof item.section !== "string") {
+      throw new Error(
+        `Moonwave plugin: expected ${currentPath}.section to be a string.`
+      )
+    }
+
+    // Validate classes array
+    if (item.classes !== undefined) {
+      if (!Array.isArray(item.classes)) {
+        throw new Error(
+          `Moonwave plugin: expected ${currentPath}.classes to be an array.`
+        )
+      }
+
+      item.classes.forEach((className, classIndex) => {
+        if (typeof className !== "string") {
+          throw new Error(
+            `Moonwave plugin: expected ${currentPath}.classes[${classIndex}] to be a string.`
+          )
+        }
+      })
+    }
+
+    // Validate tag
+    if (item.tag !== undefined && typeof item.tag !== "string") {
+      throw new Error(
+        `Moonwave plugin: expected ${currentPath}.tag to be a string.`
+      )
+    }
+
+    // Recursively validate nested items
+    if (item.items !== undefined) {
+      if (!Array.isArray(item.items)) {
+        throw new Error(
+          `Moonwave plugin: expected ${currentPath}.items to be an array.`
+        )
+      }
+
+      validateNestedItems(item.items, `${currentPath}.items`)
+    }
+  })
 }
 
 export default (context, options) => ({
@@ -459,6 +594,15 @@ export function validateOptions({ options }) {
     throw new Error(
       "Moonwave plugin: expected option `projectDir` to be a string."
     )
+  }
+
+  if (options.classOrder && Array.isArray(options.classOrder)) {
+    options.classOrder.forEach((section, index) => {
+      // If there are nested items
+      if (section.items && Array.isArray(section.items)) {
+        validateNestedItems(section.items, `classOrder[${index}].items`)
+      }
+    })
   }
 
   if (!Array.isArray(options.code)) {
