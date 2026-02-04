@@ -22,7 +22,7 @@ opt-level = 1
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-full_moon = "1.2.0"
+full_moon = { version = "2.0.0", features = ["roblox", "lua54"]}
 walkdir = "2.5.0"
 anyhow = "1.0.86"
 codespan-reporting = "0.11.1"

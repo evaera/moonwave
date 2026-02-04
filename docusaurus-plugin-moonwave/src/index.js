@@ -408,6 +408,8 @@ export default (context, options) => ({
   async loadContent() {
     const basePath = options.projectDir || resolve(process.cwd(), "..")
 
+    const luaVersion = options.luaVersion || "all"
+
     const binaryPath = options.binaryPath ?? "moonwave-extractor"
 
     const api = await Promise.all(
@@ -416,7 +418,7 @@ export default (context, options) => ({
           `"${binaryPath}" extract "${root.replace(
             /\\/g,
             "/"
-          )}" --base "${basePath}"`,
+          )}" --base "${basePath}" --lua "${luaVersion}"`,
           {
             maxBuffer: 10 * 1024 * 1024,
           }

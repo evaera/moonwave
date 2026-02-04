@@ -16,8 +16,16 @@ pub struct SourceFile {
 }
 
 impl<'a> SourceFile {
-    pub fn from_str(source: &'a str, file_id: usize, relative_path: String) -> Result<Self, Error> {
-        let ast = full_moon::parse(source).map_err(|e| {
+    pub fn from_str(source: &'a str, file_id: usize, relative_path: String, lua_version: &str) -> Result<Self, Error> {
+        let lua = match lua_version {
+            "all" => full_moon::LuaVersion::new(),
+            "luau" => full_moon::LuaVersion::luau(),
+            "lua54" => full_moon::LuaVersion::lua54(),
+            _ => full_moon::LuaVersion::new(),
+        };
+
+
+        let ast = full_moon::parse_fallible(source, lua).into_result().map_err(|e| {
             Error::FullMoonError(
                 e.iter()
                     .map(|e| (relative_path.clone(), e.to_owned()))

@@ -8,7 +8,7 @@ use crate::{
     tags::{validate_tags, Tag},
 };
 use full_moon::{
-    ast::{self, punctuated::Punctuated, Stmt},
+    ast::{self, punctuated::Punctuated, Stmt, FunctionBody},
     node::Node,
 };
 
@@ -259,7 +259,7 @@ fn determine_kind(
 
             match expressions.first().unwrap().value() {
                 ast::Expression::Function(function_box) => {
-                    let function_body = &function_box.1;
+                    let function_body = &function_box.body();
 
                     let within = if let Some(within) = within_tag {
                         within.name.as_str().to_owned()
@@ -273,7 +273,7 @@ fn determine_kind(
                         name,
                         within,
                         function_type: FunctionType::Static,
-                        function_source: Some(function_body.clone().into()),
+                        function_source: Some(<FunctionBody as Clone>::clone(&(*function_body)).into()),
                     })
                 }
                 _ => Err(doc_comment.diagnostic("Expression must be a function")),
@@ -288,7 +288,7 @@ fn determine_kind(
 
             match expressions.into_iter().next().unwrap() {
                 ast::Expression::Function(function_box) => {
-                    let function_body = &function_box.1;
+                    let function_body = &function_box.body();
 
                     let within = if let Some(within) = within_tag {
                         within.name.as_str().to_owned()
@@ -326,7 +326,7 @@ fn determine_kind(
                         name: name.unwrap(),
                         within,
                         function_type: FunctionType::Static,
-                        function_source: Some(function_body.clone().into()),
+                        function_source: Some(<FunctionBody as Clone>::clone(&(*function_body)).into()),
                     })
                 }
                 _ => Err(doc_comment.diagnostic("Expression must be a function")),
