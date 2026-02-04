@@ -428,6 +428,10 @@ export default (context, options) => ({
 
             return stdout
           })
+          .catch(({ stderr }) => {
+            console.error(`\n${stderr}`)
+            return Promise.reject(`Moonwave: Failed to extract. Check the error above.`)
+          })
           .then((raw) => JSON.parse(raw))
       )
     )
