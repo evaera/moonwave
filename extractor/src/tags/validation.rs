@@ -37,10 +37,7 @@ static MUTUALLY_EXCLUSIVE: &[(TagType, TagType)] = &[
     (TagType::Function, TagType::ReadOnly),
 ];
 
-static DEPENDENT_TAGS: &[(TagType, TagType)] = &[
-    (TagType::Property, TagType::Within),
-    (TagType::Type, TagType::Within),
-];
+static DEPENDENT_TAGS: &[(TagType, TagType)] = &[]; // Was used in the past
 
 static ALLOW_MULTIPLE: &[TagType] = &[
     TagType::Param,

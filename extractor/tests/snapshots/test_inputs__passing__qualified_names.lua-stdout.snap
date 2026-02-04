@@ -1,0 +1,87 @@
+---
+source: tests/test-inputs.rs
+expression: stdout
+---
+[
+  {
+    "functions": [],
+    "properties": [
+      {
+        "name": "QualifiedNames.differentClass",
+        "desc": "",
+        "lua_type": "number",
+        "source": {
+          "line": 19,
+          "path": ""
+        }
+      }
+    ],
+    "types": [],
+    "name": "ExplicitWithin",
+    "desc": "",
+    "source": {
+      "line": 16,
+      "path": ""
+    }
+  },
+  {
+    "functions": [
+      {
+        "name": "function",
+        "desc": "",
+        "params": [],
+        "returns": [],
+        "function_type": "static",
+        "source": {
+          "line": 4,
+          "path": ""
+        }
+      }
+    ],
+    "properties": [
+      {
+        "name": "prop",
+        "desc": "",
+        "lua_type": "number",
+        "source": {
+          "line": 6,
+          "path": ""
+        }
+      },
+      {
+        "name": "lots.of.dots",
+        "desc": "",
+        "lua_type": "number",
+        "source": {
+          "line": 8,
+          "path": ""
+        }
+      }
+    ],
+    "types": [
+      {
+        "name": "type",
+        "desc": "",
+        "lua_type": "number",
+        "source": {
+          "line": 10,
+          "path": ""
+        }
+      },
+      {
+        "name": "interface",
+        "desc": "",
+        "source": {
+          "line": 12,
+          "path": ""
+        }
+      }
+    ],
+    "name": "QualifiedNames",
+    "desc": "",
+    "source": {
+      "line": 2,
+      "path": ""
+    }
+  }
+]
