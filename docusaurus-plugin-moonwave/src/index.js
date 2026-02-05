@@ -475,10 +475,11 @@ export default (context, options) => ({
           if (nextDirMatch) {
             const nextDir = nextDirMatch[1]
 
-            // convert kebab-case, camelCase, PascalCase to Title Case
+            // convert kebab-case, snake_case, camelCase, PascalCase to Title Case
             const title = nextDir
               .replace(/(?<!-)([A-Z])/g, " $1")
               .replace("-", " ")
+              .replace("_", " ")
               .split(/\s+/)
               .filter((str) => str.length > 0)
               .map(capitalize)
