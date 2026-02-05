@@ -216,9 +216,29 @@ image = "https://url"
 title = "Feature 2"
 description = "This is a second feature"
 image = "https://url"
+
+# This is the default button. Adding any buttons will remove it, so this code adds it back.
+[[home.buttons]]
+text = "Get Started →"
+href = "/docs/intro"
+size = "lg"
+
+[[home.buttons]]
+text = "Download"
+href = "https://url"
+colour = "info"
+outline = true
+size = "lg"
+
+[[home.buttons]]
+text = "Helpdesk"
+href = "https://url"
+className = "button disabled button--lg button--success"
 ```
 
 Optionally, you can include `includeReadme = true`, which will append your project's README to the end of the home page.
+
+See https://infima.dev/docs/components/button for all button styling options.
 
 If your project's README contains content that you don't want included in your home page, you can place HTML comments in your project's README to remove any content before/after the comment.
 
