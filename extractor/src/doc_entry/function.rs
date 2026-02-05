@@ -188,8 +188,6 @@ impl<'a> FunctionDocEntry<'a> {
             output_source: source.output_source.clone(),
         };
 
-        let mut unused_tags = Vec::new();
-
         let source_exists = if let Some(function_source) = function_source {
             for param in function_source.params {
                 doc_entry.params.push(param);
@@ -204,7 +202,9 @@ impl<'a> FunctionDocEntry<'a> {
             false
         };
 
+        let mut diagnostics = Vec::new();
         let mut return_cleared = false;
+
         for tag in tags {
             match tag {
                 Tag::Param(param) => {
@@ -224,13 +224,10 @@ impl<'a> FunctionDocEntry<'a> {
                                 found.name = format!("{}?", found.name);
                             }
                         } else {
-                            return Err(Diagnostics::from(vec![Diagnostic::from_span(
-                                format!(
-                                    "Param \"{}\" does not actually exist in function",
-                                    param.name
-                                ),
-                                param.name,
-                            )]));
+                            diagnostics.push(param.name.diagnostic(format!(
+                                "Param \"{}\" does not actually exist in function",
+                                param.name
+                            )));
                         }
                     } else {
                         doc_entry.params.push(param.into());
@@ -249,6 +246,19 @@ impl<'a> FunctionDocEntry<'a> {
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
                 Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
                 Tag::Error(error_tag) => doc_entry.errors.push(error_tag),
+                Tag::Include(include_tag) => {
+                    match fs_err::read_to_string(include_tag.path.as_str()) {
+                        Ok(text) => {
+                            doc_entry.desc.push_str(&text);
+                            doc_entry.desc.push('\n');
+                        }
+                        Err(e) => diagnostics.push(
+                            include_tag
+                                .path
+                                .diagnostic(format!("Unable to read file. Reason: {}", e)),
+                        ),
+                    }
+                }
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Unreleased(_) => doc_entry.unreleased = true,
@@ -264,11 +274,12 @@ impl<'a> FunctionDocEntry<'a> {
                 Tag::Plugin(_) => {
                     doc_entry.realm.insert(Realm::Plugin);
                 }
-                _ => unused_tags.push(tag),
+                _ => {
+                    diagnostics.push(tag.diagnostic("This tag is unused by function doc entries."))
+                }
             }
         }
 
-        let mut diagnostics = Vec::new();
         for param in doc_entry.params.iter() {
             if param.lua_type.is_empty() {
                 diagnostics.push(Diagnostic::from_doc_comment(
@@ -279,15 +290,6 @@ impl<'a> FunctionDocEntry<'a> {
         }
 
         if !diagnostics.is_empty() {
-            return Err(Diagnostics::from(diagnostics));
-        }
-
-        if !unused_tags.is_empty() {
-            let mut diagnostics = Vec::new();
-            for tag in unused_tags {
-                diagnostics.push(tag.diagnostic("This tag is unused by function doc entries."));
-            }
-
             return Err(Diagnostics::from(diagnostics));
         }
 

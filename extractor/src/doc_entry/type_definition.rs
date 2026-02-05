@@ -87,7 +87,7 @@ impl<'a> TypeDocEntry<'a> {
             output_source: source.output_source.clone(),
         };
 
-        let mut unused_tags = Vec::new();
+        let mut diagnostics = Vec::new();
 
         for tag in tags {
             match tag {
@@ -101,21 +101,29 @@ impl<'a> TypeDocEntry<'a> {
                 Tag::Since(since_tag) => doc_entry.since = Some(since_tag.version.to_string()),
                 Tag::Custom(custom_tag) => doc_entry.tags.push(custom_tag),
                 Tag::External(external_tag) => doc_entry.external_types.push(external_tag),
+                Tag::Include(include_tag) => {
+                    match fs_err::read_to_string(include_tag.path.as_str()) {
+                        Ok(text) => {
+                            doc_entry.desc.push_str(&text);
+                            doc_entry.desc.push('\n');
+                        }
+                        Err(e) => diagnostics.push(
+                            include_tag
+                                .path
+                                .diagnostic(format!("Unable to read file. Reason: {}", e)),
+                        ),
+                    }
+                }
 
                 Tag::Private(_) => doc_entry.private = true,
                 Tag::Unreleased(_) => doc_entry.unreleased = true,
                 Tag::Ignore(_) => doc_entry.ignore = true,
 
-                _ => unused_tags.push(tag),
+                _ => diagnostics.push(tag.diagnostic("This tag is unused by type doc entries.")),
             }
         }
 
-        if !unused_tags.is_empty() {
-            let mut diagnostics = Vec::new();
-            for tag in unused_tags {
-                diagnostics.push(tag.diagnostic("This tag is unused by type doc entries."));
-            }
-
+        if !diagnostics.is_empty() {
             return Err(Diagnostics::from(diagnostics));
         }
 
