@@ -1,5 +1,13 @@
 use std::path::PathBuf;
 
+use codespan_reporting::{
+    diagnostic::Diagnostic as CodeSpanDiagnostic,
+    term::{
+        self,
+        termcolor::{ColorChoice, StandardStream},
+    },
+};
+use libmoonwave::{error::Error, CodespanFiles};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -23,4 +31,29 @@ pub struct ExtractSubcommand {
     /// If unspecified, the input path is used.
     #[structopt(long = "base", short = "b")]
     pub base_path: Option<PathBuf>,
+}
+
+pub fn report_errors(errors: Vec<Error>, codespan_files: &CodespanFiles) {
+    let writer = StandardStream::stderr(ColorChoice::Auto);
+    let config = codespan_reporting::term::Config {
+        end_context_lines: usize::MAX,
+        ..Default::default()
+    };
+
+    for error in errors {
+        match error {
+            Error::ParseErrors(diagnostics) => {
+                for diagnostic in diagnostics.into_iter() {
+                    term::emit(
+                        &mut writer.lock(),
+                        &config,
+                        codespan_files,
+                        &CodeSpanDiagnostic::from(diagnostic),
+                    )
+                    .unwrap()
+                }
+            }
+            err => eprintln!("{err}"),
+        }
+    }
 }
