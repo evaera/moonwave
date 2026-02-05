@@ -42,9 +42,9 @@ const dataTypes = [
   "Vector3int16",
 ]
 
-export async function generateRobloxTypes() {
+export async function generateRobloxTypes(apiDumpUrl) {
   const req = await fetch(
-    "https://raw.githubusercontent.com/CloneTrooper1019/Roblox-Client-Watch/roblox/API-Dump.json"
+    apiDumpUrl ?? "https://raw.githubusercontent.com/CloneTrooper1019/Roblox-Client-Watch/roblox/API-Dump.json"
   )
 
   const api = await req.json()

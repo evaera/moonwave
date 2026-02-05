@@ -298,7 +298,7 @@ function parseApiCategories(luaClass, apiCategories) {
   return [...tocData]
 }
 
-async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
+async function generateTypeLinks(nameSet, luaClasses, baseUrl, apiDumpUrl) {
   const classNames = {}
   nameSet.forEach((name) => (classNames[name] = `${baseUrl}api/${name}`))
 
@@ -334,7 +334,7 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
       })
   })
 
-  const robloxTypes = await generateRobloxTypes()
+  const robloxTypes = await generateRobloxTypes(apiDumpUrl)
 
   const typeLinks = {
     ...robloxTypes, // The Roblox types go first, as they can be overwritten if the user has created their own classes and types with identical names
@@ -527,7 +527,8 @@ export default (context, options) => ({
     const typeLinksData = await generateTypeLinks(
       nameSet,
       filteredContent,
-      baseUrl
+      baseUrl,
+      options.apiDumpUrl
     )
     const typeLinks = await createData(
       "typeLinks.json",
