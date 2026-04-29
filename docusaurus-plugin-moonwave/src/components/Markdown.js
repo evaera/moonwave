@@ -75,7 +75,7 @@ const autoLinkReferences = (typeLinks, baseUrl) => (node) => {
 // Backwards compatibility for Docusaurus V2 Admonitions
 function convertAdmonitions(content) {
   const blocksToConvert =
-    /:::(\w+)(?:[ \t]+([^\[\]{}\n]+))?\n((?:[ \t]*\n?(?:(?!:::).)*\n?)+):::/gm
+    /:::(\w+)(?:[ \t]+([^\[\]{}\n]+))?\n((?:(?!:::).\n?)*):::/gm
 
   return content.replace(blocksToConvert, (_, name, label, innerContent) => {
     label = label ? `[${label}]` : ""
