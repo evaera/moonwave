@@ -37,7 +37,6 @@ export default function getDocusaurusConfig({
 
   return {
     onBrokenLinks: "throw",
-    onBrokenMarkdownLinks: "warn",
     url: `https://${config.docusaurus?.organizationName}.github.io`,
 
     markdown: {
