@@ -259,7 +259,7 @@ fn determine_kind(
 
             match expressions.first().unwrap().value() {
                 ast::Expression::Function(function_box) => {
-                    let function_body = &function_box.1;
+                    let function_body = function_box.body();
 
                     let within = if let Some(within) = within_tag {
                         within.name.as_str().to_owned()
@@ -288,7 +288,7 @@ fn determine_kind(
 
             match expressions.into_iter().next().unwrap() {
                 ast::Expression::Function(function_box) => {
-                    let function_body = &function_box.1;
+                    let function_body = function_box.body();
 
                     let within = if let Some(within) = within_tag {
                         within.name.as_str().to_owned()
