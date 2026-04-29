@@ -40,6 +40,12 @@ export default function getDocusaurusConfig({
     onBrokenMarkdownLinks: "warn",
     url: `https://${config.docusaurus?.organizationName}.github.io`,
 
+    markdown: {
+      hooks: {
+        onBrokenMarkdownLinks: "warn",
+      },
+    },
+
     ...config.docusaurus,
 
     customFields: {
