@@ -6,15 +6,7 @@ use std::{
 
 use fs_err as fs;
 
-use anyhow::bail;
-use codespan_reporting::{
-    diagnostic::Diagnostic as CodeSpanDiagnostic,
-    files::SimpleFiles,
-    term::{
-        self,
-        termcolor::{ColorChoice, StandardStream},
-    },
-};
+use codespan_reporting::files::SimpleFiles;
 
 use diagnostic::{Diagnostic, Diagnostics};
 use doc_comment::DocComment;
@@ -25,7 +17,6 @@ use serde::Serialize;
 use tags::{validate_global_tags, Tag};
 use walkdir::{self, WalkDir};
 
-mod cli;
 mod diagnostic;
 mod doc_comment;
 mod doc_entry;
@@ -36,14 +27,12 @@ pub mod source_file;
 mod span;
 mod tags;
 
-pub use cli::*;
-
 use error::Error;
 use source_file::SourceFile;
 
 /// The class struct that is used in the main output, which owns its members
 #[derive(Debug, Serialize)]
-struct OutputClass<'a> {
+pub struct OutputClass<'a> {
     functions: Vec<FunctionDocEntry<'a>>,
     properties: Vec<PropertyDocEntry<'a>>,
     types: Vec<TypeDocEntry<'a>>,
@@ -53,19 +42,22 @@ struct OutputClass<'a> {
 }
 
 type CodespanFilesPaths = (PathBuf, usize);
+pub type CodespanFiles = SimpleFiles<String, String>;
 
-pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::Result<()> {
-    let (codespan_files, files) = find_files(input_path)?;
-
+pub fn parse_source_files_at_path(
+    codespan_files: &CodespanFiles,
+    files: &[CodespanFilesPaths],
+    base_path: &Path,
+) -> Result<Vec<SourceFile>, Vec<Error>> {
     let mut errors: Vec<Error> = Vec::new();
     let mut source_files: Vec<SourceFile> = Vec::new();
 
     for (file_path, file_id) in files {
-        let source = codespan_files.get(file_id).unwrap().source();
+        let source = codespan_files.get(*file_id).unwrap().source();
 
-        let human_path = match diff_paths(&file_path, base_path) {
+        let human_path = match diff_paths(file_path, base_path) {
             Some(relative_path) => relative_path,
-            None => file_path,
+            None => file_path.clone(),
         };
 
         let human_path = human_path
@@ -73,11 +65,23 @@ pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::R
             .to_string()
             .replace(path::MAIN_SEPARATOR, "/");
 
-        match SourceFile::from_str(source, file_id, human_path) {
+        match SourceFile::from_str(source, *file_id, human_path) {
             Ok(source_file) => source_files.push(source_file),
             Err(error) => errors.push(error),
         }
     }
+
+    if errors.is_empty() {
+        Ok(source_files)
+    } else {
+        Err(errors)
+    }
+}
+
+pub fn generate_docs_from_sources(
+    source_files: &[SourceFile],
+) -> Result<Vec<OutputClass<'_>>, Vec<Error>> {
+    let mut errors: Vec<Error> = Vec::new();
 
     let (results, source_file_errors): (Vec<_>, Vec<_>) = source_files
         .iter()
@@ -96,27 +100,13 @@ pub fn generate_docs_from_path(input_path: &Path, base_path: &Path) -> anyhow::R
     }
 
     match into_classes(entries) {
-        Ok(classes) => {
-            if errors.is_empty() {
-                println!("{}", serde_json::to_string_pretty(&classes)?);
-            }
+        Ok(classes) if errors.is_empty() => Ok(classes),
+        Err(diagnostics) => {
+            errors.push(Error::ParseErrors(diagnostics));
+            Err(errors)
         }
-        Err(diagnostics) => errors.push(Error::ParseErrors(diagnostics)),
+        _ => Err(errors),
     }
-
-    if !errors.is_empty() {
-        let count_errors = errors.len();
-
-        report_errors(errors, &codespan_files);
-
-        if count_errors == 1 {
-            bail!("aborting due to diagnostic error");
-        } else {
-            bail!("aborting due to {} diagnostic errors", count_errors);
-        }
-    }
-
-    Ok(())
 }
 
 fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, Diagnostics> {
@@ -187,9 +177,7 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
     }
 }
 
-fn find_files(
-    path: &Path,
-) -> Result<(SimpleFiles<String, String>, Vec<CodespanFilesPaths>), io::Error> {
+pub fn find_files(path: &Path) -> Result<(CodespanFiles, Vec<CodespanFilesPaths>), io::Error> {
     let mut codespan_files = SimpleFiles::new();
     let mut files: Vec<CodespanFilesPaths> = Vec::new();
 
@@ -218,37 +206,4 @@ fn find_files(
     }
 
     Ok((codespan_files, files))
-}
-
-fn report_errors(errors: Vec<Error>, codespan_files: &SimpleFiles<String, String>) {
-    let writer = StandardStream::stderr(ColorChoice::Auto);
-    let config = codespan_reporting::term::Config {
-        end_context_lines: usize::MAX,
-        ..Default::default()
-    };
-
-    for error in errors {
-        match error {
-            Error::ParseErrors(diagnostics) => {
-                for diagnostic in diagnostics.into_iter() {
-                    term::emit(
-                        &mut writer.lock(),
-                        &config,
-                        codespan_files,
-                        &CodeSpanDiagnostic::from(diagnostic),
-                    )
-                    .unwrap()
-                }
-            }
-            Error::FullMoonError(errors) => {
-                let text = errors
-                    .iter()
-                    .map(|(s, e)| format!("Full-Moon: {}\n    in {}", e, s))
-                    .collect::<Vec<String>>()
-                    .join("\n");
-
-                eprintln!("{}", text)
-            }
-        }
-    }
 }
