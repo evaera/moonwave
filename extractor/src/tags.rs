@@ -8,6 +8,7 @@ mod error;
 mod external;
 mod field;
 mod function;
+mod include;
 mod index;
 mod interface;
 mod marker;
@@ -25,6 +26,7 @@ pub use error::ErrorTag;
 pub use external::ExternalTag;
 pub use field::FieldTag;
 pub use function::FunctionTag;
+pub use include::IncludeTag;
 pub use index::IndexTag;
 pub use interface::InterfaceTag;
 pub use marker::{
@@ -96,6 +98,7 @@ define_tags! {
     Since(SinceTag),
     Custom(CustomTag),
     Error(ErrorTag),
+    Include(IncludeTag),
     Index(IndexTag),
     External(ExternalTag),
 
@@ -139,6 +142,7 @@ impl<'a> TryFrom<Span<'a>> for Tag<'a> {
             "@param" => ParamTag::parse(tag_text()?).map(Tag::Param),
             "@return" => ReturnTag::parse(tag_text()?).map(Tag::Return),
             "@within" => WithinTag::parse(tag_text()?).map(Tag::Within),
+            "@include" => IncludeTag::parse(tag_text()?).map(Tag::Include),
             "@__index" => IndexTag::parse(tag_text()?).map(Tag::Index),
             "@type" => TypeTag::parse(tag_text()?).map(Tag::Type),
             "@interface" => InterfaceTag::parse(tag_text()?).map(Tag::Interface),
