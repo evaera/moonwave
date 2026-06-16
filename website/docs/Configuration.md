@@ -17,6 +17,7 @@ Options annotated with the comment `# From Git` mean that property is automatica
 ```toml
 title = "MyProjectName"  # From Git
 gitRepoUrl = "https://github.com/evaera/moonwave" # From Git
+apiDumpUrl = "http://localhost:8080/" # Works offline
 
 gitSourceBranch = "master"
 changelog = true
