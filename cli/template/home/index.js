@@ -7,21 +7,21 @@ import styles from "./index.module.css"
 
 const FEATURES = /***features***/
 
-  function Feature({ image, title, description }) {
-    return (
-      <div className={clsx("col col--4")}>
-        {image && (
-          <div className="text--center">
-            <img className={styles.featureSvg} alt={title} src={image} />
-          </div>
-        )}
-        <div className="text--center padding-horiz--md">
-          <h3>{title}</h3>
-          <p>{description}</p>
+function Feature({ image, title, description }) {
+  return (
+    <div className={clsx("col col--4")}>
+      {image && (
+        <div className="text--center">
+          <img className={styles.featureSvg} alt={title} src={image} />
         </div>
+      )}
+      <div className="text--center padding-horiz--md">
+        <h3>{title}</h3>
+        <p>{description}</p>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
 export function HomepageFeatures() {
   if (!FEATURES) return null
@@ -36,6 +36,31 @@ export function HomepageFeatures() {
         </div>
       </div>
     </section>
+  )
+}
+
+const BUTTONS = /***buttons***/
+
+function Button({ text, to, href, className, colour, outline, active, disabled, size, block }) {
+  return (
+    <Link
+      className={className ??
+        "button"
+        + (outline ? " button--outline" : "")
+        + (active ? " button--active" : "")
+        + (disabled ? " disabled" : "")
+        + (size ? " button--" + size : "")
+        + (block ? " button--block" : "")
+        + (colour ? " button--" + colour : " button--secondary")
+      }
+      to={to}
+      href={href}
+      style={{
+        margin: "5px"
+      }}
+    >
+      {text}
+    </Link>
   )
 }
 
@@ -58,12 +83,9 @@ function HomepageHeader() {
         <h1 className={titleClassName}>{siteConfig.title}</h1>
         <p className={taglineClassName}>{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro"
-          >
-            Get Started →
-          </Link>
+          {BUTTONS.map((props, idx) => (
+            <Button key={idx} {...props} />
+          ))}
         </div>
       </div>
     </header>

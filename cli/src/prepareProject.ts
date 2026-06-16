@@ -79,6 +79,19 @@ export type Config = Partial<{
       description: string
       image: string
     }[]
+
+    buttons: Partial<{
+      text: string
+      to: string
+      href: string
+      className: string
+      colour: "primary" | "secondary" | "success" | "info" | "warning" | "danger" | "link"
+      outline: boolean
+      active: boolean
+      disabled: boolean
+      size: "sm" | "lg"
+      block: boolean
+    }>[]
   }>
 
   footer: Partial<{
@@ -198,11 +211,20 @@ function makeHomePage(projectDir: string, tempDir: string, config: Config) {
         return feature
       })
 
+      const buttons = config.home?.buttons ?? [
+        {
+          text: "Get Started →",
+          href: "/docs/intro",
+          size: "lg"
+        }
+      ]
+
       let indexSource = fs
         .readFileSync(path.join(TEMPLATE_PATH, "home", "index.js"), {
           encoding: "utf-8",
         })
         .replace("/***features***/", JSON.stringify(features ?? null))
+        .replace("/***buttons***/", JSON.stringify(buttons))
 
       const readmePath = path.join(
         projectDir,
