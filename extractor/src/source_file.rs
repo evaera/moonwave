@@ -63,8 +63,14 @@ impl<'a> SourceFile {
                         self.last_line = token.start_position().line();
 
                         if let Some(comment) = comment.strip_prefix('-') {
-                            if comment.trim().chars().all(|char| char == '-') {
-                                // Comment is all -------
+                            let trimmed = comment.trim();
+                            if trimmed.chars().all(|char| char == '-')
+                                && (trimmed.is_empty()
+                                    || !comment.starts_with(char::is_whitespace))
+                            {
+                                // Comment is all ------- (but `--- ---` is kept, since
+                                // that's a markdown line of dashes, e.g. mermaid
+                                // frontmatter delimiters)
                                 return;
                             }
 

@@ -210,6 +210,9 @@ dark = "forest"
 Anything that [`mermaid.initialize`](https://mermaid.js.org/config/schema-docs/config.html) accepts can be passed via `[mermaid.options]`, such as custom colors, fonts, or per-diagram-type layout settings:
 
 ```toml
+[mermaid.theme]
+light = "base" # themeVariables color overrides require the "base" theme
+
 [mermaid.options]
 fontFamily = "Inter, sans-serif"
 
@@ -220,15 +223,24 @@ primaryColor = "#00a2ff"
 curve = "linear"
 ```
 
-To restyle a single diagram instead, use an [init directive](https://mermaid.js.org/config/directives.html) inside the code block itself:
+:::info
+Mermaid's named themes (`default`, `neutral`, `forest`, `dark`) set most colors explicitly, so color overrides in `themeVariables` only take effect when the active theme is `"base"`. Non-color options like `fontFamily` and `flowchart` work with any theme.
+:::
+
+To restyle a single diagram instead, add a [frontmatter config](https://mermaid.js.org/config/configuration.html#frontmatter-config) block at the top of the diagram itself:
 
 ````md
 ```mermaid
-%%{init: {'theme': 'forest'}}%%
+---
+config:
+  theme: forest
+---
 graph TD;
     A-->B;
 ```
 ````
+
+The older [`%%{init:}%%` directive](https://mermaid.js.org/config/directives.html) syntax also works, but is deprecated by Mermaid in favor of frontmatter config.
 
 ## Custom home page
 
