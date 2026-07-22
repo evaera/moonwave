@@ -40,10 +40,13 @@ export default function getDocusaurusConfig({
     url: `https://${config.docusaurus?.organizationName}.github.io`,
 
     markdown: {
+      mermaid: true,
       hooks: {
         onBrokenMarkdownLinks: "warn",
       },
     },
+
+    themes: ["@docusaurus/theme-mermaid"],
 
     ...config.docusaurus,
 
