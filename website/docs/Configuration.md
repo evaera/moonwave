@@ -197,6 +197,51 @@ apiCategories = [
 ]
 ```
 
+## Mermaid diagram appearance
+
+[Mermaid diagrams](/docs/Docs#mermaid-diagrams) automatically switch between light and dark themes along with the rest of your website. You can customize their appearance site-wide with the `[mermaid]` section:
+
+```toml
+[mermaid.theme]
+light = "neutral" # default | neutral | forest | base | dark
+dark = "forest"
+```
+
+Anything that [`mermaid.initialize`](https://mermaid.js.org/config/schema-docs/config.html) accepts can be passed via `[mermaid.options]`, such as custom colors, fonts, or per-diagram-type layout settings:
+
+```toml
+[mermaid.theme]
+light = "base" # themeVariables color overrides require the "base" theme
+
+[mermaid.options]
+fontFamily = "Inter, sans-serif"
+
+[mermaid.options.themeVariables]
+primaryColor = "#00a2ff"
+
+[mermaid.options.flowchart]
+curve = "linear"
+```
+
+:::info
+Mermaid's named themes (`default`, `neutral`, `forest`, `dark`) set most colors explicitly, so color overrides in `themeVariables` only take effect when the active theme is `"base"`. Non-color options like `fontFamily` and `flowchart` work with any theme.
+:::
+
+To restyle a single diagram instead, add a [frontmatter config](https://mermaid.js.org/config/configuration.html#frontmatter-config) block at the top of the diagram itself:
+
+````md
+```mermaid
+---
+config:
+  theme: forest
+---
+graph TD;
+    A-->B;
+```
+````
+
+The older [`%%{init:}%%` directive](https://mermaid.js.org/config/directives.html) syntax also works, but is deprecated by Mermaid in favor of frontmatter config.
+
 ## Custom home page
 
 By default your project's README is used as the homepage. To use a custom homepage, simply set `enabled` to `true` in the `[home]` section:

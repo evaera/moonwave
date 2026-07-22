@@ -40,6 +40,20 @@ You can customize the name and position of the category by creating a `_category
 
 Optionally, you can also include the booleans `collapsible` to choose if the section may be collapsed and `collapsed` to choose if it should be by default.
 
+### Mermaid diagrams
+
+You can embed [Mermaid](https://mermaid.js.org/) diagrams in your Markdown docs, blog posts, and even in your doc comments by using a `mermaid` code block:
+
+````md
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+````
+
 ## Blog
 
 Just like before, create a new folder called `blog`. Now you can create Markdown files with the name: `YEAR-MM-DD-title-goes-here.md`.
