@@ -115,6 +115,8 @@ export default function getDocusaurusConfig({
       colorMode: {
         respectPrefersColorScheme: true,
       },
+
+      ...(config.mermaid ? { mermaid: config.mermaid } : {}),
     },
     plugins: [
       [

@@ -89,6 +89,11 @@ export type Config = Partial<{
       items: { label: string; to: string }[]
     }[]
   }>
+
+  mermaid: Partial<{
+    theme: Partial<{ light: string; dark: string }>
+    options: Record<string, unknown>
+  }>
 }>
 
 function getGitRepoUrl(): string | undefined {

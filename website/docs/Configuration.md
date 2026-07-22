@@ -197,6 +197,39 @@ apiCategories = [
 ]
 ```
 
+## Mermaid diagram appearance
+
+[Mermaid diagrams](/docs/Docs#mermaid-diagrams) automatically switch between light and dark themes along with the rest of your website. You can customize their appearance site-wide with the `[mermaid]` section:
+
+```toml
+[mermaid.theme]
+light = "neutral" # default | neutral | forest | base | dark
+dark = "forest"
+```
+
+Anything that [`mermaid.initialize`](https://mermaid.js.org/config/schema-docs/config.html) accepts can be passed via `[mermaid.options]`, such as custom colors, fonts, or per-diagram-type layout settings:
+
+```toml
+[mermaid.options]
+fontFamily = "Inter, sans-serif"
+
+[mermaid.options.themeVariables]
+primaryColor = "#00a2ff"
+
+[mermaid.options.flowchart]
+curve = "linear"
+```
+
+To restyle a single diagram instead, use an [init directive](https://mermaid.js.org/config/directives.html) inside the code block itself:
+
+````md
+```mermaid
+%%{init: {'theme': 'forest'}}%%
+graph TD;
+    A-->B;
+```
+````
+
 ## Custom home page
 
 By default your project's README is used as the homepage. To use a custom homepage, simply set `enabled` to `true` in the `[home]` section:
