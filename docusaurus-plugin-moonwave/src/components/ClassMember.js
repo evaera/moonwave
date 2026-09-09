@@ -8,6 +8,7 @@ import Tag from "./Tag.js"
 
 export default function ClassMember({
   name,
+  anchor,
   desc,
   children,
   tags = [],
@@ -25,7 +26,7 @@ export default function ClassMember({
   return (
     <>
       <div className={styles.divider} />
-      <Heading as="h3" id={name}>
+      <Heading as="h3" id={anchor}>
         {name === "__iter" ? (
           <span
             style={{

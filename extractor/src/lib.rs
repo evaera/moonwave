@@ -180,11 +180,64 @@ fn into_classes<'a>(entries: Vec<DocEntry<'a>>) -> Result<Vec<OutputClass<'a>>, 
         };
     }
 
+    for class in map.values() {
+        diagnostics.extend(validate_unique_member_names(class));
+    }
+
     if diagnostics.is_empty() {
         Ok(map.into_iter().map(|(_, value)| value).collect())
     } else {
         Err(Diagnostics::from(diagnostics))
     }
+}
+
+/// Member names double as page anchors, so duplicates would render as headings with the same id.
+fn validate_unique_member_names(class: &OutputClass) -> Vec<Diagnostic> {
+    if class.class.ignore {
+        return Vec::new();
+    }
+
+    let members = class
+        .types
+        .iter()
+        .map(|entry| (&entry.name, entry.ignore, entry.source))
+        .chain(
+            class
+                .properties
+                .iter()
+                .map(|entry| (&entry.name, entry.ignore, entry.source)),
+        )
+        .chain(
+            class
+                .functions
+                .iter()
+                .map(|entry| (&entry.name, entry.ignore, entry.source)),
+        );
+
+    let mut occurrences: BTreeMap<&String, Vec<&DocComment>> = BTreeMap::new();
+
+    for (name, ignore, source) in members {
+        if !ignore {
+            occurrences.entry(name).or_default().push(source);
+        }
+    }
+
+    occurrences
+        .into_iter()
+        .filter(|(_, sources)| sources.len() > 1)
+        .map(|(name, sources)| {
+            let mut diagnostic = sources[0].diagnostic(format!(
+                "The class \"{}\" cannot have multiple members named \"{}\"",
+                class.class.name, name
+            ));
+
+            for source in &sources[1..] {
+                diagnostic.attach_diagnostic(source.diagnostic("Appears here"));
+            }
+
+            diagnostic
+        })
+        .collect()
 }
 
 fn find_files(

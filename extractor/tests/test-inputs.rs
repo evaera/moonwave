@@ -125,6 +125,11 @@ fn duplicate_names() -> anyhow::Result<()> {
     run_moonwave("failing/duplicate_names.lua", 1)
 }
 
+#[test]
+fn duplicate_member_names() -> anyhow::Result<()> {
+    run_moonwave("failing/duplicate_member_names.lua", 1)
+}
+
 fn run_moonwave(file_name: &str, expected_status: i32) -> anyhow::Result<()> {
     let path = Path::new("test-input").join(file_name);
 

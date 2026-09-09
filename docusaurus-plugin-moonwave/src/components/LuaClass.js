@@ -148,7 +148,7 @@ export default function LuaClass({
 
     outer: for (const { name: sectionName } of SECTIONS) {
       for (const member of rawLuaClass[sectionName]) {
-        if (member.name === hash) {
+        if (member.anchor === hash) {
           setShowPrivate(true)
           break outer
         }
