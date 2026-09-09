@@ -102,10 +102,10 @@ export default function LuaFunction({
           <Heading as="h3">Types</Heading>
 
           {extraTypes.map((type) => (
-            <>
-              <Heading as="h3" id={type.name} />
-              <LuaTypeDef key={type.name} {...type} />
-            </>
+            <React.Fragment key={type.anchor}>
+              <Heading as="h3" id={type.anchor} />
+              <LuaTypeDef {...type} />
+            </React.Fragment>
           ))}
         </>
       )}

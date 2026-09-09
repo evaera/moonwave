@@ -1,0 +1,44 @@
+---
+source: tests/test-inputs.rs
+expression: stderr
+snapshot_kind: text
+---
+error: The class "Duplicates" cannot have multiple members named "collide"
+   ┌─ test-input/failing/duplicate_member_names.lua:37:6
+   │    
+32 │     --[=[
+   │   ╭─────'
+33 │   │     @within Duplicates
+34 │   │     @function collide
+35 │   │ ]=]
+   │   ╰' Appears here
+36 │     
+37 │     --[=[
+   │ ╭───────^
+38 │ │       @within Duplicates
+39 │ │       @type collide string
+40 │ │   ]=]
+   │ ╰──^ The class "Duplicates" cannot have multiple members named "collide"
+
+error: The class "Duplicates" cannot have multiple members named "value"
+   ┌─ test-input/failing/duplicate_member_names.lua:5:6
+   │    
+ 5 │     --[=[
+   │ ╭───────^
+ 6 │ │       @within Duplicates
+ 7 │ │       @prop value string
+ 8 │ │   
+ 9 │ │       The first declaration of this property.
+10 │ │   ]=]
+   │ ╰──^ The class "Duplicates" cannot have multiple members named "value"
+11 │     
+12 │     --[=[
+   │   ╭─────'
+13 │   │     @within Duplicates
+14 │   │     @prop value string
+15 │   │ 
+16 │   │     Members of a class cannot share a name, as the name is used as the page anchor.
+17 │   │ ]=]
+   │   ╰' Appears here
+
+error: aborting due to diagnostic error

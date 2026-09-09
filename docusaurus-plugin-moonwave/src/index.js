@@ -27,6 +27,48 @@ const mapLinksByName = (nameSet, items) =>
     }
   })
 
+const SECTIONS = ["types", "properties", "functions"]
+
+const createIdAllocator = (reservedIds) => {
+  const takenIds = new Set(reservedIds)
+  const nextSuffixes = new Map()
+
+  return (name) => {
+    let suffix = nextSuffixes.get(name) ?? 0
+    let id = suffix === 0 ? name : `${name}-${suffix}`
+
+    while (takenIds.has(id)) {
+      suffix += 1
+      id = `${name}-${suffix}`
+    }
+
+    nextSuffixes.set(name, suffix)
+    takenIds.add(id)
+
+    return id
+  }
+}
+
+// Anchors have to stay unique because they are the page ids that the table of contents links to
+function assignMemberAnchors(luaClass, apiCategories) {
+  const members = SECTIONS.flatMap((section) =>
+    luaClass[section].filter((member) => !member.ignore)
+  )
+
+  const sectionIds = SECTIONS.filter((section) =>
+    luaClass[section].some((member) => !member.ignore)
+  )
+  const categoryIds = apiCategories.filter((category) =>
+    members.some((member) => member.tags?.includes(category))
+  )
+
+  const allocateId = createIdAllocator([...sectionIds, ...categoryIds])
+
+  for (const member of members) {
+    member.anchor = allocateId(member.name)
+  }
+}
+
 function flattenTOC(toc) {
   const flat = []
 
@@ -223,7 +265,6 @@ function parseApiCategories(luaClass, apiCategories) {
   const tocData = []
 
   // Loop through each member type of a LuaClass and check if it has any tagged children. If the tags match any tag provided by the user with the apiCategories config option, add it to it's own subheading in the table of contents
-  const SECTIONS = ["types", "properties", "functions"]
   SECTIONS.forEach((section) => {
     const tagSet = new Set(
       luaClass[section]
@@ -254,7 +295,7 @@ function parseApiCategories(luaClass, apiCategories) {
                 member.name === "__call"
                   ? luaClass.name + "()"
                   : getFunctionCallOperator(member.function_type) + member.name,
-              id: member.name,
+              id: member.anchor,
               children: [],
               level: 4,
               private: member.private,
@@ -278,7 +319,7 @@ function parseApiCategories(luaClass, apiCategories) {
           member.name === "__call"
             ? luaClass.name + "()"
             : getFunctionCallOperator(member.function_type) + member.name,
-        id: member.name,
+        id: member.anchor,
         children: [],
         level: 3,
         private: member.private,
@@ -306,12 +347,13 @@ async function generateTypeLinks(nameSet, luaClasses, baseUrl) {
   luaClasses
     .filter((luaClass) => luaClass.types.length > 0)
     .forEach((luaClass) =>
-      luaClass.types.forEach(
-        (type) =>
-          (classTypesNames[
-            type.name
-          ] = `${baseUrl}api/${luaClass.name}#${type.name}`)
-      )
+      luaClass.types
+        .filter((type) => !type.ignore)
+        .forEach(
+          (type) =>
+            (classTypesNames[type.name] =
+              `${baseUrl}api/${luaClass.name}#${type.anchor}`)
+        )
     )
 
   const externalTypeNames = {}
@@ -455,6 +497,12 @@ export default (context, options) => ({
     const nameSet = new Set()
     filteredContent.forEach((luaClass) => nameSet.add(luaClass.name))
 
+    const apiCategories = options.apiCategories
+
+    filteredContent.forEach((luaClass) =>
+      assignMemberAnchors(luaClass, apiCategories)
+    )
+
     const classOrder = options.classOrder
 
     if (options.autoSectionPath) {
@@ -520,7 +568,6 @@ export default (context, options) => ({
       JSON.stringify(allLuaClassNamesOrdered)
     )
 
-    const apiCategories = options.apiCategories
     const baseUrl = context.baseUrl
     const pluginOptions = await createData(
       "options.json",
