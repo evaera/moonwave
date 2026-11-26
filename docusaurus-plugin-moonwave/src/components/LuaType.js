@@ -136,6 +136,16 @@ function tokenize(code, isGroup) {
     )
 
     if (atom) {
+      // Luau property modifiers, e.g. `{ read field: any }`. They're only
+      // treated as modifiers when followed by a field name or an indexer.
+      if (
+        (atom === "read" || atom === "write") &&
+        /^\s+([^\s:]+:|\[)/.test(code.slice(position))
+      ) {
+        tokens.push({ type: "modifier", modifier: atom })
+        continue
+      }
+
       if (atom.endsWith(":")) {
         tokens.push({ type: "identifier", identifier: atom.slice(0, -1) })
         continue
@@ -247,6 +257,8 @@ function Token({ token, depth }) {
           <code>{token.identifier}:&nbsp;</code>
         </>
       )
+    case "modifier":
+      return <code>{token.modifier}&nbsp;</code>
     case "arrow":
       return <Op depth={depth + 1}>&nbsp;→&nbsp;</Op>
     case "punc":
