@@ -185,6 +185,17 @@
   padding: 0;
 }
 
+/* a heading for one apiCategories group, set apart from the member headings */
+.member h3.apiCategory {
+  margin-top: 2.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .member code.op {
   color: var(--op-color);
 }

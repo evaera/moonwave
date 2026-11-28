@@ -13,6 +13,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import { apiCategoryId, groupByApiCategory } from "../apiCategories.js"
 import Admonition from "./Admonition.js"
 import Badge from "./Badge.js"
 import ClassMember from "./ClassMember.js"
@@ -53,6 +54,7 @@ const ClassSection = ({
   component: Component,
   sourceUrl,
   extraTypes,
+  apiCategories,
 }) => {
   const members = luaClass[section].filter(filter || (() => true))
 
@@ -60,24 +62,41 @@ const ClassSection = ({
     return null
   }
 
+  // same grouping as the table of contents, so its category links land here
+  const { uncategorized, groups } = groupByApiCategory(members, apiCategories)
+
+  const renderMember = (member) => (
+    <ClassMember
+      key={member.name}
+      luaClassName={luaClass.name}
+      {...member}
+      sourceUrl={sourceUrl}
+    >
+      <Component
+        luaClassName={luaClass.name}
+        {...member}
+        extraTypes={extraTypes.get(member)}
+      />
+    </ClassMember>
+  )
+
   return (
     <>
       <Heading as="h2" id={section}>
         {capitalize(section)}
       </Heading>
-      {members.map((member, key) => (
-        <ClassMember
-          key={key}
-          luaClassName={luaClass.name}
-          {...member}
-          sourceUrl={sourceUrl}
-        >
-          <Component
-            luaClassName={luaClass.name}
-            {...member}
-            extraTypes={extraTypes.get(member)}
-          />
-        </ClassMember>
+      {uncategorized.map(renderMember)}
+      {groups.map(({ category, members }) => (
+        <React.Fragment key={category}>
+          <Heading
+            as="h3"
+            id={apiCategoryId(section, category)}
+            className={styles.apiCategory}
+          >
+            {capitalize(category)}
+          </Heading>
+          {members.map(renderMember)}
+        </React.Fragment>
       ))}
     </>
   )
@@ -363,6 +382,7 @@ export default function LuaClass({
                             sourceUrl={options.sourceUrl}
                             filter={(member) => !skipMembers.has(member)}
                             extraTypes={extraTypes}
+                            apiCategories={options.apiCategories}
                           />
                         ))}
                       </div>
