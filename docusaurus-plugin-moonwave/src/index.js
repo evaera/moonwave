@@ -2,6 +2,7 @@ import { resolve } from "path"
 import { existsSync } from "fs"
 import { promisify } from "util"
 const exec = promisify(require("child_process").exec)
+import { apiCategoryId, groupByApiCategory } from "./apiCategories.js"
 import { generateRobloxTypes } from "./generateRobloxTypes.js"
 
 const capitalize = (text) => text[0].toUpperCase() + text.substring(1)
@@ -225,67 +226,35 @@ function parseApiCategories(luaClass, apiCategories) {
   // Loop through each member type of a LuaClass and check if it has any tagged children. If the tags match any tag provided by the user with the apiCategories config option, add it to it's own subheading in the table of contents
   const SECTIONS = ["types", "properties", "functions"]
   SECTIONS.forEach((section) => {
-    const tagSet = new Set(
-      luaClass[section]
-        .filter((member) => !member.ignore)
-        .filter((member) => member.tags)
-        .flatMap((member) => member.tags)
+    const toTocItems = (members, level) =>
+      members
+        .map((member) => ({
+          value:
+            member.name === "__call"
+              ? luaClass.name + "()"
+              : getFunctionCallOperator(member.function_type) + member.name,
+          id: member.name,
+          children: [],
+          level,
+          private: member.private,
+        }))
+        .sort((childA, childB) => childA.value.localeCompare(childB.value))
+
+    // the class page groups members the same way, under headings with these ids
+    const { uncategorized, groups } = groupByApiCategory(
+      luaClass[section].filter((member) => !member.ignore),
+      apiCategories
     )
 
-    const sectionChildren = []
-
-    for (const category of apiCategories) {
-      if (!tagSet.has(category)) {
-        continue
-      }
-
-      const apiCategoryChild = []
-
-      apiCategoryChild.push({
+    const sectionChildren = [
+      ...toTocItems(uncategorized, 3),
+      ...groups.map(({ category, members }) => ({
         value: capitalize(category),
-        id: category,
+        id: apiCategoryId(section, category),
         level: 3,
-        children: luaClass[section]
-          .filter((member) => !member.ignore)
-          .filter((member) => member.tags && member.tags.includes(category))
-          .map((member) => {
-            return {
-              value:
-                member.name === "__call"
-                  ? luaClass.name + "()"
-                  : getFunctionCallOperator(member.function_type) + member.name,
-              id: member.name,
-              children: [],
-              level: 4,
-              private: member.private,
-            }
-          })
-          .sort((childA, childB) => childA.value.localeCompare(childB.value)),
-      })
-
-      sectionChildren.push(...apiCategoryChild)
-    }
-
-    const baseCategories = luaClass[section]
-      .filter((member) => !member.ignore)
-      .filter(
-        (member) =>
-          !member.tags ||
-          !member.tags.some((tag) => apiCategories.includes(tag))
-      )
-      .map((member) => ({
-        value:
-          member.name === "__call"
-            ? luaClass.name + "()"
-            : getFunctionCallOperator(member.function_type) + member.name,
-        id: member.name,
-        children: [],
-        level: 3,
-        private: member.private,
-      }))
-      .sort((childA, childB) => childA.value.localeCompare(childB.value))
-
-    sectionChildren.push(...baseCategories)
+        children: toTocItems(members, 4),
+      })),
+    ]
 
     tocData.push({
       value: capitalize(section),
